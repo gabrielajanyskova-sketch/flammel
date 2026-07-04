@@ -182,29 +182,37 @@ def _icon_fill(inner):
     return f'<svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor" stroke="none">{inner}</svg>'
 
 CAT_ICONS = {
-    # Flat single-color glyphs matching the reference screenshots (candle,
-    # bear face, gem, dreamcatcher, framed square, sparkle) — no shading.
+    # Traced from the user's own reference photos of the live site.
     'svicky': _icon_fill(
-        '<path d="M12 1.8c-.8 1.1-1.4 2-1.4 2.8a1.4 1.4 0 0 0 2.8 0c0-.8-.6-1.7-1.4-2.8z"/>'
-        '<rect x="10.4" y="6.8" width="3.2" height="14.6" rx="0.6"/>'
+        '<path d="M8.4 2.4c-1.2.6-2.1 1.5-2.1 2.4a1.9 1.9 0 0 0 3.8.5c.1-1.1-.6-2.1-1.7-2.9z"/>'
+        '<rect x="6" y="8.4" width="10.4" height="9" rx="2"/>'
     ),
     'medvidci': _icon_fill(
-        '<circle cx="5.7" cy="6.9" r="2.5"/><circle cx="18.3" cy="6.9" r="2.5"/>'
-        '<circle cx="12" cy="14.4" r="6.8"/>'
+        '<circle cx="8.2" cy="5.4" r="1.7"/><circle cx="15.8" cy="5.4" r="1.7"/>'
+        '<circle cx="12" cy="8.3" r="4.1"/>'
+        '<circle cx="5.7" cy="14.7" r="2.1"/><circle cx="18.3" cy="14.7" r="2.1"/>'
+        '<ellipse cx="12" cy="16.2" rx="5.5" ry="5.1"/>'
+        '<circle cx="8.3" cy="20.6" r="1.9"/><circle cx="15.7" cy="20.6" r="1.9"/>'
     ),
     'mineralni-kameny': _icon_fill(
-        '<path d="M6 9 12 2.6 18 9l-6 12.4z"/>'
+        '<path d="M12 2.4 7 6.6 2.8 9.2 12 21.4l9.2-12.2L17 6.6z"/>'
+        '<path d="M7 6.6h10M9.4 6.6 12 9.2M14.6 6.6 12 9.2M2.8 9.2h18.4M12 9.2 12 21.4" stroke="#cda43c" stroke-width="0.5" fill="none"/>'
     ),
     'makrame-dekorace': _icon_fill(
-        '<circle cx="12" cy="8.2" r="5.4" fill="none" stroke="currentColor" stroke-width="1.5"/>'
-        '<path d="M7.5 5.6 16.5 10.8M16.5 5.6 7.5 10.8M12 3.2v9.6" stroke="currentColor" stroke-width="0.7" fill="none"/>'
-        '<path d="M8 13.4v6.4M12 13.8v7.4M16 13.4v6.4" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+        '<circle cx="12" cy="7.6" r="5.2" fill="none" stroke="currentColor" stroke-width="1.4"/>'
+        '<circle cx="12" cy="7.6" r="1.1"/>'
+        '<path d="M12 2.4v10.4M7.2 4.4 16.8 10.8M16.8 4.4 7.2 10.8M6.8 7.6h10.4M8.3 3.7 15.7 11.5M15.7 3.7 8.3 11.5" stroke="currentColor" stroke-width="0.55" fill="none"/>'
+        '<path d="M8 13v6.6M12 13.2v7.6M16 13v6.6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/>'
+        '<circle cx="8" cy="20" r="1"/><circle cx="12" cy="21.2" r="1"/><circle cx="16" cy="20" r="1"/>'
     ),
     'bytove-dekorace': _icon_fill(
-        '<rect x="5" y="5" width="14" height="14"/>'
+        '<rect x="5.6" y="3.6" width="12.8" height="16.8" rx="0.8"/>'
+        '<path d="M6.6 4.6 17 4.6 6.6 15z" fill="#d9b64e"/>'
     ),
     'akcni-nabidky': _icon_fill(
         '<path d="M12 1.5c.7 4 2.6 7.9 6.3 10-3.7 2.1-5.6 6-6.3 10-.7-4-2.6-7.9-6.3-10 3.7-2.1 5.6-6 6.3-10z"/>'
+        '<path d="M19 2.6c.3 1.5.9 2.4 2.3 2.8-1.4.4-2 1.3-2.3 2.8-.3-1.5-.9-2.4-2.3-2.8 1.4-.4 2-1.3 2.3-2.8z"/>'
+        '<path d="M4.4 14.6c.2 1 .6 1.7 1.6 2-1 .3-1.4.9-1.6 2-.2-1-.6-1.7-1.6-2 1-.3 1.4-.9 1.6-2z"/>'
     ),
 }
 CART_ICON = _icon('<path d="M6 8V6a6 6 0 0 1 12 0v2"/><rect x="3.5" y="8" width="17" height="13" rx="2"/>')
