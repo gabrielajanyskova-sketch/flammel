@@ -34,6 +34,7 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+html, body { overflow-x: hidden; max-width: 100%; }
 body {
   margin: 0;
   font-family: var(--font-body);
@@ -270,7 +271,7 @@ p { margin: 0 0 1em; }
 .cat-card {
   width: 100%;
   background: linear-gradient(180deg, var(--gold) 0%, var(--gold-light) 100%);
-  border-radius: var(--radius) var(--radius) 4px 4px;
+  border-radius: var(--radius);
   padding: 30px 22px 24px;
   text-align: center;
   color: var(--ink);
