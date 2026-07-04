@@ -1,0 +1,4 @@
+# Sem vložte odkaz na export Google Sheets ve formátu CSV a smažte tento
+# komentář i prázdný řádek - viz návod v README.md ("Napojení na Google
+# Sheets"). Dokud tu je jen tento text (nezačíná na http), generátor
+# použije poslední lokálně uloženou verzi data/products.csv.

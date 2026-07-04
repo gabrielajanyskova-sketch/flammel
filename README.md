@@ -16,7 +16,8 @@ assets/js/main.js               mobilní menu, galerie produktu
 assets/js/cart.js               košík (localStorage) a odeslání objednávky
 assets/fonts/                   font Darloune (viz assets/fonts/README.md)
 data/content.json               obsah webu (produkty, stránky, menu) — zdroj pro generátor
-data/products.csv               ceny a sklad — TOTO upravujete v Excelu
+data/products.csv               ceny a sklad — TOTO upravujete v Excelu (nebo se sem stáhne z Google Sheets)
+data/sheet_url.txt               volitelný odkaz na Google Sheets export (viz níže)
 scripts/extract_content.py      načte WordPress XML export a vytvoří data/content.json
 scripts/export_products_csv.py  vytvoří/obnoví data/products.csv z content.json
 scripts/generate_site.py        z content.json + products.csv vygeneruje všechny .html soubory
@@ -43,6 +44,37 @@ python3 scripts/generate_site.py
 Skript automaticky načte `data/products.csv` a promítne nové ceny/sklad
 do všech vygenerovaných `.html` souborů. Pak stačí nahrát změněné soubory
 na hosting.
+
+## Napojení na Google Sheets (místo ručního Excelu)
+
+Aby se ceny/sklad daly upravovat online (bez posílání souboru sem a tam) a
+web si je sám natáhl přes odkaz, funguje to takto:
+
+1. V Google Sheets vytvořte nový sešit a naimportujte do něj `data/products.csv`
+   (Soubor → Import → Nahrát).
+2. Klikněte na **Sdílet** → **Obecný přístup** → nastavte na *"Kdokoli s
+   odkazem"* → role *Prohlížející*.
+3. Zjistěte **ID sešitu** a **gid listu** z adresy v prohlížeči, adresa
+   vypadá takto:
+   `https://docs.google.com/spreadsheets/d/TOTO_JE_ID_SESITU/edit#gid=TOTO_JE_GID`
+4. Sestavte odkaz pro export do CSV podle vzoru:
+   `https://docs.google.com/spreadsheets/d/TOTO_JE_ID_SESITU/export?format=csv&gid=TOTO_JE_GID`
+5. Tento odkaz vložte (samotný, na první řádek) do souboru `data/sheet_url.txt`
+   místo textu, co je tam teď.
+
+Od té chvíle si `python3 scripts/generate_site.py` sám při každém spuštění
+stáhne aktuální tabulku z Google Sheets a použije ji místo lokálního
+`data/products.csv` (ten se zároveň přepíše jako záložní kopie pro případ,
+že by internet zrovna nešel — pak se použije ta poslední stažená).
+
+Sloupce v tabulce zůstávají stejné jako v Excelu (ID, Nazev, Kategorie,
+Cena, Puvodni_cena, Skladem) — needitujte ID.
+
+Pozn.: Spouštění `generate_site.py` (ať už ručně, nebo naplánovaně přes
+GitHub Actions/cron) je pořád potřeba, aby se stažená data promítla do
+vygenerovaných `.html` souborů — tohle řešení odstraňuje jen krok
+"stáhnout/nahrát CSV soubor ručně", ne krok "spustit generátor a nahrát
+výsledek na hosting".
 
 ## Jak web znovu vygenerovat od nuly
 

@@ -4,14 +4,16 @@
 Run after scripts/extract_content.py has produced data/content.json:
     python3 scripts/generate_site.py
 
-If data/products.csv exists (see scripts/export_products_csv.py), its
-Cena/Skladem columns override the price/stock status from content.json —
-that's the file to edit in Excel to update prices and stock.
+Price/stock come from data/products.csv (see scripts/export_products_csv.py).
+If data/sheet_url.txt contains a Google Sheets CSV export link, that sheet
+is downloaded and used instead (falling back to the local products.csv
+copy if there's no network access) — see README.md for setup.
 """
 import csv
 import json
 import re
 import html as html_lib
+import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -22,12 +24,33 @@ SITE_TAGLINE = 'Ručně vyráběné přírodní dárky a dekorace s duší'
 BASE_DESCRIPTION = 'Ručně vyráběné sójové svíčky, medvídci z růží, šperky a bytové dekorace. Přírodní materiály, poctivá řemeslná výroba.'
 
 
+def sync_products_csv_from_sheet():
+    url_path = ROOT / 'data' / 'sheet_url.txt'
+    if not url_path.exists():
+        return
+    url = url_path.read_text(encoding='utf-8').strip()
+    if not url or not url.startswith('http'):
+        return
+    csv_path = ROOT / 'data' / 'products.csv'
+    try:
+        with urllib.request.urlopen(url, timeout=15) as resp:
+            content = resp.read()
+        csv_path.write_bytes(content)
+        print('Staženo aktuální data/products.csv z Google Sheets.')
+    except Exception as exc:
+        print(f'Nepodařilo se stáhnout Google Sheet ({exc}), použiji poslední uložený data/products.csv.')
+
+
 def apply_products_csv():
+    sync_products_csv_from_sheet()
     csv_path = ROOT / 'data' / 'products.csv'
     if not csv_path.exists():
         return
     with open(csv_path, encoding='utf-8-sig', newline='') as f:
-        rows = {row['ID']: row for row in csv.DictReader(f, delimiter=';')}
+        sample = f.read(2048)
+        f.seek(0)
+        delimiter = ';' if sample.count(';') >= sample.count(',') else ','
+        rows = {row['ID']: row for row in csv.DictReader(f, delimiter=delimiter)}
     for p in DATA['products']:
         row = rows.get(p['id'])
         if not row:
