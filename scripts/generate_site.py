@@ -256,7 +256,7 @@ def render_home():
 
 <section class="section" style="padding-top:24px">
   <div class="container">
-    <div class="cat-grid">{cat_cards}</div>
+    <div class="cat-grid home-cat-grid">{cat_cards}</div>
   </div>
 </section>
 
