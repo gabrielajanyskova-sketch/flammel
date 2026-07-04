@@ -22,6 +22,31 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  // Homepage hero image slider
+  var slider = document.querySelector('.hero-slider');
+  if (slider) {
+    var slides = slider.querySelectorAll('.slide');
+    var dots = slider.querySelectorAll('.dot');
+    var current = 0;
+    var timer;
+
+    function goTo(index) {
+      current = (index + slides.length) % slides.length;
+      slides.forEach(function (s, i) { s.classList.toggle('active', i === current); });
+      dots.forEach(function (d, i) { d.classList.toggle('active', i === current); });
+    }
+    function restartAutoplay() {
+      clearInterval(timer);
+      timer = setInterval(function () { goTo(current + 1); }, 5000);
+    }
+    slider.querySelector('.slide-arrow.prev').addEventListener('click', function () { goTo(current - 1); restartAutoplay(); });
+    slider.querySelector('.slide-arrow.next').addEventListener('click', function () { goTo(current + 1); restartAutoplay(); });
+    dots.forEach(function (dot, i) {
+      dot.addEventListener('click', function () { goTo(i); restartAutoplay(); });
+    });
+    if (slides.length > 1) restartAutoplay();
+  }
+
   // Product gallery thumbnail swap
   var mainImg = document.querySelector('.gallery-main img');
   var thumbs = document.querySelectorAll('.gallery-thumbs img');

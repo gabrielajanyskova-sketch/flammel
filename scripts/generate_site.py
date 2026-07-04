@@ -63,54 +63,44 @@ def nav_html(active_url=''):
 
 
 def footer_html():
-    o_nas = PAGES_BY_SLUG
     return f'''
 <footer class="site-footer">
-  <div class="container footer-top">
-    <div class="footer-brand">
-      <div class="logo">{SITE_NAME}</div>
-      <p>{SITE_TAGLINE}. Vyrábíme ručně, s láskou a péčí o detail.</p>
-      <div class="social-row">
-        <a href="http://www.facebook.com/Flammel-109217181002268" aria-label="Facebook">{FACEBOOK_ICON}</a>
-        <a href="https://instagram.com/flammel.cz" aria-label="Instagram">{INSTAGRAM_ICON}</a>
+  <div class="footer-gold">
+    <div class="container footer-top">
+      <div class="footer-col">
+        <h4>O nás</h4>
+        <ul>
+          <li><a href="/zakladni-informace.html">Základní informace</a></li>
+          <li><a href="/reference.html">Reference</a></li>
+          <li><a href="/kontakty.html">Kontakty</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Produkty</h4>
+        <ul>
+          <li><a href="/kategorie/svicky.html">Přírodní svíčky</a></li>
+          <li><a href="/kategorie/medvidci.html">Medvídci z růží</a></li>
+          <li><a href="/kategorie/mineralni-kameny.html">Stylové šperky</a></li>
+          <li><a href="/kategorie/makrame-dekorace.html">Trendy háčkování</a></li>
+          <li><a href="/kategorie/bytove-dekorace.html">Bytové dekorace</a></li>
+          <li><a href="/kategorie/akcni-nabidky.html">Vánoční dekorace</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Důležité odkazy</h4>
+        <ul>
+          <li><a href="/moznosti-doruceni.html">Možnosti doručení</a></li>
+          <li><a href="/platebni-podminky.html">Platební podmínky</a></li>
+          <li><a href="/obchodni-podminky.html">Obchodní podmínky</a></li>
+          <li><a href="/privacy-policy.html">Ochrana osobních údajů</a></li>
+        </ul>
       </div>
     </div>
-    <div class="footer-col">
-      <h4>O nás</h4>
-      <ul>
-        <li><a href="/zakladni-informace.html">Základní informace</a></li>
-        <li><a href="/reference.html">Reference</a></li>
-        <li><a href="/kontakty.html">Kontakty</a></li>
-      </ul>
+    <div class="footer-heart">{HEART_ICON}</div>
+    <div class="container footer-bottom">
+      <span>NEXTER Group s.r.o. — Opletalova 1015/55, 110 00 Praha 1, IČ: 076 90 517</span>
+      <span>Fio banka: 2501848682/2010 (CZK) · 2301826155/2010 (EUR)</span>
     </div>
-    <div class="footer-col">
-      <h4>Produkty</h4>
-      <ul>
-        <li><a href="/kategorie/svicky.html">Přírodní svíčky</a></li>
-        <li><a href="/kategorie/medvidci.html">Medvídci z růží</a></li>
-        <li><a href="/kategorie/mineralni-kameny.html">Stylové šperky</a></li>
-        <li><a href="/kategorie/makrame-dekorace.html">Trendy háčkování</a></li>
-        <li><a href="/kategorie/bytove-dekorace.html">Bytové dekorace</a></li>
-        <li><a href="/kategorie/akcni-nabidky.html">Vánoční dekorace</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Důležité odkazy</h4>
-      <ul>
-        <li><a href="/moznosti-doruceni.html">Možnosti doručení</a></li>
-        <li><a href="/platebni-podminky.html">Platební podmínky</a></li>
-        <li><a href="/obchodni-podminky.html">Obchodní podmínky</a></li>
-        <li><a href="/privacy-policy.html">Ochrana osobních údajů</a></li>
-      </ul>
-      <ul style="margin-top:14px">
-        <li><span>flammel@flammel.cz</span></li>
-        <li><span>+420 734 518 868</span></li>
-      </ul>
-    </div>
-  </div>
-  <div class="container footer-bottom">
-    <span>&copy; {SITE_NAME}.cz — NEXTER Group s.r.o., Opletalova 1015/55, 110 00 Praha 1, IČ: 076 90 517</span>
-    <span>Fio banka: 2501848682/2010 (CZK) · 2301826155/2010 (EUR)</span>
   </div>
 </footer>
 '''
@@ -132,6 +122,16 @@ def base_layout(title, description, body, extra_head=''):
 {extra_head}
 </head>
 <body>
+<div class="announce-bar">
+  <div class="container">
+    <span>Vítejte na e-shopu {SITE_NAME} &hearts;</span>
+    <div class="social-row">
+      <a href="http://www.facebook.com/Flammel-109217181002268" aria-label="Facebook">{FACEBOOK_ICON}</a>
+      <a href="https://instagram.com/flammel.cz" aria-label="Instagram">{INSTAGRAM_ICON}</a>
+      <a href="mailto:flammel@flammel.cz" aria-label="E-mail">{MAIL_ICON}</a>
+    </div>
+  </div>
+</div>
 <header class="site-header">
   <div class="container">
     <a href="/index.html" class="logo">{SITE_NAME}</a>
@@ -186,9 +186,11 @@ CAT_ICONS = {
     'bytove-dekorace': _icon('<path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/><path d="M10 19v-5h4v5"/>'),
     'akcni-nabidky': _icon('<path d="M12 3l2.5 4.5L19 9l-4 3 1 5-4-2.5L8 17l1-5-4-3 4.5-1.5z"/>'),
 }
-CART_ICON = _icon('<circle cx="9" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/><path d="M2.5 3h2l2.2 12.2a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6"/>')
+CART_ICON = _icon('<path d="M6 8V6a6 6 0 0 1 12 0v2"/><rect x="3.5" y="8" width="17" height="13" rx="2"/>')
+HEART_ICON = '<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.2 2 4.5 5.6 4a5 5 0 0 1 6.4 2.6A5 5 0 0 1 18.4 4c3.6.5 5.2 4.2 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg>'
 FACEBOOK_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.3-1.5 1.6-1.5h1.7V3.7C16.5 3.6 15.5 3.5 14.3 3.5c-2.4 0-4 1.5-4 4.1v2.3H7.6v3.1h2.7v8h3.2z"/></svg>'
 INSTAGRAM_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="0.7" fill="currentColor" stroke="none"/></svg>'
+MAIL_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>'
 
 
 def parse_testimonials():
@@ -199,13 +201,31 @@ def parse_testimonials():
 
 def render_home():
     cat_cards = ''.join(
-        f'''<a class="cat-card" href="/kategorie/{slug}.html">
-          <div class="cat-icon">{CAT_ICONS.get(slug, "✦")}</div>
-          <h3>{CAT_BY_SLUG[slug]['name']}</h3>
-          <p>{CATEGORY_TAGLINES[slug][0]}</p>
-          <span class="tag">{CATEGORY_TAGLINES[slug][1]}</span>
-        </a>'''
+        f'''<div class="cat-card-wrap">
+          <a class="cat-card" href="/kategorie/{slug}.html">
+            <div class="cat-icon">{CAT_ICONS.get(slug, "✦")}</div>
+            <h3>{CAT_BY_SLUG[slug]['name']}</h3>
+            <p>{CATEGORY_TAGLINES[slug][0]}</p>
+          </a>
+          <a class="cat-tag-btn" href="/kategorie/{slug}.html">{CATEGORY_TAGLINES[slug][1]}</a>
+        </div>'''
         for slug in HOME_NAV_CATS
+    )
+
+    slide_images = []
+    for p in DATA['products']:
+        img = p['thumbnail_url'] or (p['gallery_urls'][0] if p['gallery_urls'] else '')
+        if img and img not in slide_images:
+            slide_images.append(img)
+        if len(slide_images) >= 5:
+            break
+    slides = ''.join(
+        f'<div class="slide{" active" if i == 0 else ""}" style="background-image:url(\'{img}\')"></div>'
+        for i, img in enumerate(slide_images)
+    )
+    dots = ''.join(
+        f'<button class="dot{" active" if i == 0 else ""}" data-slide="{i}" aria-label="Snímek {i+1}"></button>'
+        for i in range(len(slide_images))
     )
 
     about_content = PAGES_BY_SLUG['o-nas']['content']
@@ -223,21 +243,19 @@ def render_home():
     featured_cards = ''.join(product_card(p) for p in featured)
 
     body = f'''
-<section class="hero">
-  <div class="container">
-    <span class="eyebrow">Ručně vyráběno v Česku</span>
-    <h1>{SITE_NAME}</h1>
-    <p class="lead">{SITE_TAGLINE}. Sójové svíčky, medvídci z růží, šperky a dekorace vyráběné s péčí o každý detail.</p>
-    <a class="btn" href="/produkty.html">Všechny produkty</a>
-  </div>
+<section class="hero-slider">
+  <div class="slides">{slides}</div>
+  <button class="slide-arrow prev" aria-label="Předchozí">&#10094;</button>
+  <button class="slide-arrow next" aria-label="Další">&#10095;</button>
+  <div class="slide-dots">{dots}</div>
 </section>
 
-<section class="section">
+<div class="hero-cta">
+  <a class="btn" href="/produkty.html">Všechny produkty</a>
+</div>
+
+<section class="section" style="padding-top:24px">
   <div class="container">
-    <div class="section-head">
-      <span class="eyebrow">Kategorie</span>
-      <h2>Kategorie produktů</h2>
-    </div>
     <div class="cat-grid">{cat_cards}</div>
   </div>
 </section>
