@@ -178,16 +178,46 @@ HOME_NAV_CATS = ['svicky', 'medvidci', 'mineralni-kameny', 'makrame-dekorace', '
 def _icon(path_d):
     return f'<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{path_d}</svg>'
 
-def _icon_fill(path_d):
-    return f'<svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">{path_d}</svg>'
+def _icon_fill(inner):
+    return f'<svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor" stroke="none">{inner}</svg>'
 
 CAT_ICONS = {
-    'svicky': _icon_fill('<path d="M12 2c-1 1.3-1.7 2.4-1.7 3.3 0 1 .8 1.7 1.7 1.7s1.7-.8 1.7-1.7C13.7 4.4 13 3.3 12 2z"/><rect x="8.3" y="8" width="7.4" height="13.5" rx="1.4"/><rect x="8.3" y="11.6" width="7.4" height="1.1" opacity="0.35"/>'),
-    'medvidci': _icon_fill('<circle cx="12" cy="14.8" r="6.7"/><circle cx="5.5" cy="6.6" r="2.7"/><circle cx="18.5" cy="6.6" r="2.7"/>'),
-    'mineralni-kameny': _icon_fill('<path d="M6 9.2 12 2.5l6 6.7-6 12z"/>'),
-    'makrame-dekorace': _icon('<circle cx="12" cy="8.3" r="5.3"/><path d="M6.9 12.7l-1.1 8M12 13v8M17.1 12.7l1.1 8"/><circle cx="12" cy="8.3" r="1.6" fill="currentColor" stroke="none"/>'),
-    'bytove-dekorace': _icon_fill('<path d="M12 2 2 10h3v10.5h5.2V14h3.6v6.5H19V10h3z"/>'),
-    'akcni-nabidky': _icon_fill('<path d="M12 1.5c.7 4 2.6 7.9 6.3 10-3.7 2.1-5.6 6-6.3 10-.7-4-2.6-7.9-6.3-10 3.7-2.1 5.6-6 6.3-10z"/>'),
+    'svicky': _icon_fill(
+        '<path d="M12 1.6c-1.1 1.4-2.1 2.8-2.1 3.9a2.1 2.1 0 0 0 4.2 0c0-1.1-1-2.5-2.1-3.9z"/>'
+        '<rect x="7.6" y="8.2" width="8.8" height="13.4" rx="2.4"/>'
+        '<rect x="7.6" y="11.6" width="8.8" height="1.3" fill="#fff" opacity="0.3"/>'
+        '<rect x="9.9" y="14.6" width="4.2" height="4.6" rx="1.4" fill="#fff" opacity="0.16"/>'
+    ),
+    'medvidci': _icon_fill(
+        '<circle cx="5.6" cy="7.1" r="2.6"/><circle cx="18.4" cy="7.1" r="2.6"/>'
+        '<circle cx="12" cy="14.6" r="7"/>'
+        '<ellipse cx="12" cy="16.4" rx="3.1" ry="2.4" fill="#fff" opacity="0.22"/>'
+        '<circle cx="9.6" cy="12.6" r="1" fill="#fff" opacity="0.85"/>'
+        '<circle cx="14.4" cy="12.6" r="1" fill="#fff" opacity="0.85"/>'
+    ),
+    'mineralni-kameny': _icon_fill(
+        '<path d="M6 9 12 2.4 18 9l-6 12.6z"/>'
+        '<path d="M6 9h12L12 21.6z" fill="#fff" opacity="0.14"/>'
+        '<path d="M9 9 12 2.4M15 9 12 2.4M12 9v12.6" stroke="#fff" stroke-width="0.55" opacity="0.55" fill="none"/>'
+    ),
+    'makrame-dekorace': _icon_fill(
+        '<circle cx="12" cy="8.4" r="5.6" fill="none" stroke="currentColor" stroke-width="1.5"/>'
+        '<path d="M7.3 5.6 16.7 11.2M16.7 5.6 7.3 11.2M12 3v10.8" stroke="currentColor" stroke-width="0.7" opacity="0.55" fill="none"/>'
+        '<path d="M8 13.6v6M12 14v7M16 13.6v6" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+        '<circle cx="8" cy="17.3" r="0.85"/><circle cx="12" cy="18.4" r="0.85"/><circle cx="16" cy="17.3" r="0.85"/>'
+    ),
+    'bytove-dekorace': _icon_fill(
+        '<path d="M12 1.8 1.6 10.2h3V21.4h6V15h2.8v6.4h6V10.2h3z"/>'
+        '<rect x="9.6" y="15.6" width="4.8" height="5.8" rx="0.6" fill="#fff" opacity="0.18"/>'
+        '<rect x="5.6" y="12" width="2.6" height="2.6" rx="0.4" fill="#fff" opacity="0.8"/>'
+    ),
+    'akcni-nabidky': _icon_fill(
+        '<rect x="10.4" y="3.6" width="3.2" height="2.6" rx="0.6"/>'
+        '<path d="M12 1.2a1.7 1.7 0 1 0 0 3.4 1.7 1.7 0 0 0 0-3.4z" fill="none" stroke="currentColor" stroke-width="1.1"/>'
+        '<circle cx="12" cy="14.6" r="7"/>'
+        '<path d="M7.8 12.6c1.9-2.1 6.5-2.1 8.4 0" stroke="#fff" stroke-width="1" fill="none" opacity="0.55" stroke-linecap="round"/>'
+        '<path d="M8.4 17.6c1.6 1.6 5.6 1.6 7.2 0" stroke="#fff" stroke-width="1" fill="none" opacity="0.35" stroke-linecap="round"/>'
+    ),
 }
 CART_ICON = _icon('<path d="M6 8V6a6 6 0 0 1 12 0v2"/><rect x="3.5" y="8" width="17" height="13" rx="2"/>')
 HEART_ICON = '<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.2 2 4.5 5.6 4a5 5 0 0 1 6.4 2.6A5 5 0 0 1 18.4 4c3.6.5 5.2 4.2 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg>'
