@@ -201,7 +201,7 @@ CAT_ICONS = {
         '<path d="M8 13.4v6.4M12 13.8v7.4M16 13.4v6.4" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
     ),
     'bytove-dekorace': _icon_fill(
-        '<rect x="4.5" y="4.5" width="15" height="15" rx="1" fill="none" stroke="currentColor" stroke-width="1.8"/>'
+        '<rect x="5" y="5" width="14" height="14"/>'
     ),
     'akcni-nabidky': _icon_fill(
         '<path d="M12 1.5c.7 4 2.6 7.9 6.3 10-3.7 2.1-5.6 6-6.3 10-.7-4-2.6-7.9-6.3-10 3.7-2.1 5.6-6 6.3-10z"/>'
