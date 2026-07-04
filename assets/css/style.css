@@ -488,9 +488,12 @@ article.post .prose { max-width: 720px; }
 .footer-gold {
   position: relative;
   background: linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 55%, var(--ink) 100%);
-  clip-path: polygon(0 36px, 47% 36px, 50% 0, 53% 36px, 100% 36px, 100% 100%, 0 100%);
+  clip-path: polygon(0 0, 50% 130px, 100% 0, 100% 100%, 0 100%);
   color: var(--ink);
-  padding-top: 44px;
+  padding-top: 190px;
+}
+@media (max-width: 720px) {
+  .footer-gold { clip-path: polygon(0 0, 50% 70px, 100% 0, 100% 100%, 0 100%); padding-top: 110px; }
 }
 .footer-top { padding: 12px 0 28px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; }
 .footer-col h4 { color: var(--ink); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1em; }

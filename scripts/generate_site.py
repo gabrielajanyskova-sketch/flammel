@@ -178,13 +178,16 @@ HOME_NAV_CATS = ['svicky', 'medvidci', 'mineralni-kameny', 'makrame-dekorace', '
 def _icon(path_d):
     return f'<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{path_d}</svg>'
 
+def _icon_fill(path_d):
+    return f'<svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">{path_d}</svg>'
+
 CAT_ICONS = {
-    'svicky': _icon('<path d="M9 3c0 1.5 1.5 2 1.5 3.5S9 8.5 9 9"/><rect x="6" y="9" width="6" height="11" rx="1"/><line x1="6" y1="13" x2="12" y2="13"/>'),
-    'medvidci': _icon('<circle cx="12" cy="13" r="7"/><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="6" r="2.4"/><path d="M9.5 14a2.5 2.5 0 0 0 5 0"/>'),
-    'mineralni-kameny': _icon('<path d="M6 9l6-6 6 6-6 11z"/><path d="M6 9h12M9.5 9L12 20M14.5 9L12 20"/>'),
-    'makrame-dekorace': _icon('<circle cx="12" cy="12" r="8"/><path d="M8 9c1.5 1 1.5 2.7 0 4M12 8c1.5 1.2 1.5 6.8 0 8M16 9c-1.5 1-1.5 2.7 0 4"/>'),
-    'bytove-dekorace': _icon('<path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/><path d="M10 19v-5h4v5"/>'),
-    'akcni-nabidky': _icon('<path d="M12 3l2.5 4.5L19 9l-4 3 1 5-4-2.5L8 17l1-5-4-3 4.5-1.5z"/>'),
+    'svicky': _icon_fill('<path d="M12 2c-1 1.3-1.7 2.4-1.7 3.3 0 1 .8 1.7 1.7 1.7s1.7-.8 1.7-1.7C13.7 4.4 13 3.3 12 2z"/><rect x="8.3" y="8" width="7.4" height="13.5" rx="1.4"/><rect x="8.3" y="11.6" width="7.4" height="1.1" opacity="0.35"/>'),
+    'medvidci': _icon_fill('<circle cx="12" cy="14.8" r="6.7"/><circle cx="5.5" cy="6.6" r="2.7"/><circle cx="18.5" cy="6.6" r="2.7"/>'),
+    'mineralni-kameny': _icon_fill('<path d="M6 9.2 12 2.5l6 6.7-6 12z"/>'),
+    'makrame-dekorace': _icon('<circle cx="12" cy="8.3" r="5.3"/><path d="M6.9 12.7l-1.1 8M12 13v8M17.1 12.7l1.1 8"/><circle cx="12" cy="8.3" r="1.6" fill="currentColor" stroke="none"/>'),
+    'bytove-dekorace': _icon_fill('<path d="M12 2 2 10h3v10.5h5.2V14h3.6v6.5H19V10h3z"/>'),
+    'akcni-nabidky': _icon_fill('<path d="M12 1.5c.7 4 2.6 7.9 6.3 10-3.7 2.1-5.6 6-6.3 10-.7-4-2.6-7.9-6.3-10 3.7-2.1 5.6-6 6.3-10z"/>'),
 }
 CART_ICON = _icon('<path d="M6 8V6a6 6 0 0 1 12 0v2"/><rect x="3.5" y="8" width="17" height="13" rx="2"/>')
 HEART_ICON = '<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.2 2 4.5 5.6 4a5 5 0 0 1 6.4 2.6A5 5 0 0 1 18.4 4c3.6.5 5.2 4.2 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg>'
