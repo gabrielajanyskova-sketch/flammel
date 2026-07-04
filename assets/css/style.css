@@ -73,7 +73,7 @@ p { margin: 0 0 1em; }
   border-radius: 10px;
   border: none;
   background: var(--cyan);
-  color: var(--ink);
+  color: var(--white);
   font-weight: 700;
   font-size: 0.95rem;
   transition: background 0.2s, color 0.2s, transform 0.15s;
@@ -285,7 +285,7 @@ p { margin: 0 0 1em; }
 .cat-tag-btn {
   margin-top: -18px;
   background: var(--cyan);
-  color: var(--ink);
+  color: var(--white);
   font-weight: 700;
   font-size: 0.85rem;
   padding: 11px 26px;
@@ -356,7 +356,7 @@ p { margin: 0 0 1em; }
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
 .product-card {
@@ -495,12 +495,13 @@ article.post .prose { max-width: 720px; }
 .footer-col li { margin-bottom: 0.6em; }
 .footer-col a, .footer-col span { color: rgba(33, 28, 23, 0.82); font-size: 0.9rem; }
 .footer-col a:hover { color: var(--ink); }
-.footer-heart { display: flex; justify-content: center; padding: 28px 0 6px; color: var(--ink); }
+.footer-heart { display: flex; justify-content: center; padding: 30px 0 4px; color: var(--ink); }
+.footer-heart svg { width: 54px; height: 54px; }
 .footer-bottom {
-  padding: 8px 0 30px;
-  font-size: 0.78rem;
-  color: rgba(255,255,255,0.65);
-  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  padding: 6px 0 34px;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.7);
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
   text-align: center;
 }
 
@@ -512,6 +513,7 @@ article.post .prose { max-width: 720px; }
   .product-detail { grid-template-columns: 1fr; }
   .checkout-grid { grid-template-columns: 1fr; }
   .footer-top { grid-template-columns: 1fr 1fr; }
+  .product-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 720px) {
   .main-nav { position: fixed; top: 84px; left: 0; right: 0; height: calc(100vh - 84px); background: var(--white); flex-direction: column; align-items: stretch; padding: 16px; overflow-y: auto; transform: translateX(100%); transition: transform 0.25s; }
@@ -522,4 +524,7 @@ article.post .prose { max-width: 720px; }
   .nav-toggle { display: block; }
   .form-row { grid-template-columns: 1fr; }
   .footer-top { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  .product-grid { grid-template-columns: 1fr; }
 }
