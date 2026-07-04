@@ -3,7 +3,12 @@
 
 Run after scripts/extract_content.py has produced data/content.json:
     python3 scripts/generate_site.py
+
+If data/products.csv exists (see scripts/export_products_csv.py), its
+Cena/Skladem columns override the price/stock status from content.json —
+that's the file to edit in Excel to update prices and stock.
 """
+import csv
 import json
 import re
 import html as html_lib
@@ -15,6 +20,33 @@ DATA = json.loads((ROOT / 'data' / 'content.json').read_text(encoding='utf-8'))
 SITE_NAME = 'flammel'
 SITE_TAGLINE = 'Ručně vyráběné přírodní dárky a dekorace s duší'
 BASE_DESCRIPTION = 'Ručně vyráběné sójové svíčky, medvídci z růží, šperky a bytové dekorace. Přírodní materiály, poctivá řemeslná výroba.'
+
+
+def apply_products_csv():
+    csv_path = ROOT / 'data' / 'products.csv'
+    if not csv_path.exists():
+        return
+    with open(csv_path, encoding='utf-8-sig', newline='') as f:
+        rows = {row['ID']: row for row in csv.DictReader(f, delimiter=';')}
+    for p in DATA['products']:
+        row = rows.get(p['id'])
+        if not row:
+            continue
+        cena = row.get('Cena', '').strip()
+        puvodni = row.get('Puvodni_cena', '').strip()
+        if cena:
+            if puvodni and puvodni != cena:
+                p['price'] = cena
+                p['sale_price'] = cena
+                p['regular_price'] = puvodni
+            else:
+                p['price'] = cena
+                p['regular_price'] = cena
+                p['sale_price'] = ''
+        p['stock_status'] = 'instock' if row.get('Skladem', '').strip().lower() == 'ano' else 'outofstock'
+
+
+apply_products_csv()
 
 PAGES_BY_SLUG = {p['slug']: p for p in DATA['pages']}
 CAT_BY_SLUG = {c['slug']: c for c in DATA['product_cats']}

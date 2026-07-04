@@ -16,22 +16,48 @@ assets/js/main.js               mobilní menu, galerie produktu
 assets/js/cart.js               košík (localStorage) a odeslání objednávky
 assets/fonts/                   font Darloune (viz assets/fonts/README.md)
 data/content.json               obsah webu (produkty, stránky, menu) — zdroj pro generátor
+data/products.csv               ceny a sklad — TOTO upravujete v Excelu
 scripts/extract_content.py      načte WordPress XML export a vytvoří data/content.json
-scripts/generate_site.py        z data/content.json vygeneruje všechny .html soubory
+scripts/export_products_csv.py  vytvoří/obnoví data/products.csv z content.json
+scripts/generate_site.py        z content.json + products.csv vygeneruje všechny .html soubory
 ```
 
-## Jak web znovu vygenerovat
+## Jak upravit ceny a sklad (Excel)
 
-Pokud upravíte obsah v exportu z WordPressu nebo přímo v `data/content.json`,
-znovu vygenerujte stránky:
+Otevřete `data/products.csv` v Excelu (je to tabulka oddělená středníkem,
+Excel by ji měl po dvojkliku rovnou otevřít jako tabulku i s českými znaky).
+Sloupce:
+
+- **ID**, **Nazev**, **Kategorie** — jen pro orientaci, needitujte je (ID musí
+  zůstat stejné, podle něj se produkt v datech dohledává).
+- **Cena** — cena v Kč, číslo bez mezer a bez "Kč".
+- **Skladem** — napište `Ano` nebo `Ne`.
+
+Po uložení souboru (zůstaňte u formátu CSV, Excel se může ptát, potvrďte
+"Zachovat aktuální formát") spusťte:
 
 ```
-python3 scripts/extract_content.py cesta/k/exportu.xml   # jen pokud máte nový XML export
 python3 scripts/generate_site.py
 ```
 
-Skript `generate_site.py` přepíše všechny `.html` soubory podle šablon
-v sobě a dat v `data/content.json`.
+Skript automaticky načte `data/products.csv` a promítne nové ceny/sklad
+do všech vygenerovaných `.html` souborů. Pak stačí nahrát změněné soubory
+na hosting.
+
+## Jak web znovu vygenerovat od nuly
+
+Pokud budete mít úplně nový export z WordPressu (např. přidáte nové
+produkty přímo tam), znovu z něj vytáhněte obsah — pozor, tím se ale
+přepíše i `data/content.json`, takže `data/products.csv` je potřeba
+následně obnovit příkazem níže (tím se ale ztratí ruční úpravy cen/skladu
+v CSV, pokud jste je mezitím dělali — pro běžné úpravy cen/skladu stačí
+rovnou upravit `data/products.csv`, viz výše, tenhle krok navíc není potřeba):
+
+```
+python3 scripts/extract_content.py cesta/k/exportu.xml
+python3 scripts/export_products_csv.py   # jen pokud chcete CSV přegenerovat od nuly
+python3 scripts/generate_site.py
+```
 
 ## Co je potřeba doplnit před nasazením
 
