@@ -42,10 +42,17 @@ NEW_COLLECTIONS = [
 
 # From the client's collection moodboard (Perenelle "perla v mušličce",
 # Ignis "jiskra", Luna "měsíc s hvězdou").
+# Exact hex codes from the client's collection moodboard.
 COLLECTION_COLORS = {
-    'perenelle': {'bg': '#a9862a', 'hover': '#8c6e22', 'text': '#ffffff'},
-    'ignis': {'bg': '#a9862a', 'hover': '#8c6e22', 'text': '#ffffff'},
-    'luna': {'bg': '#f2e2ae', 'hover': '#e8d28a', 'text': '#211c17'},
+    'perenelle': {'bg': '#D8B4BC', 'hover': '#c69aa4', 'text': '#3d2327'},
+    'ignis': {'bg': '#B67A3A', 'hover': '#96632f', 'text': '#ffffff'},
+    'luna': {'bg': '#2E3135', 'hover': '#1c1e21', 'text': '#ffffff'},
+}
+# Whole-card gradient stops (top color, bottom tint) built from the same
+# hex codes, replacing the shared gold background on collection cards.
+COLLECTION_CARD_GRADIENT = {
+    'perenelle': {'a': '#D8B4BC', 'b': '#f0e2e5'},
+    'ignis': {'a': '#B67A3A', 'b': '#e6c9a8'},
 }
 # Cards themed dark to match their own artwork (Luna = night sky).
 DARK_THEMED_CARDS = {'luna'}
@@ -391,6 +398,12 @@ def render_home():
             return ''
         return f' style="--tag-bg:{c["bg"]};--tag-bg-hover:{c["hover"]};--tag-text:{c["text"]}"'
 
+    def card_style(slug):
+        g = COLLECTION_CARD_GRADIENT.get(slug)
+        if not g:
+            return ''
+        return f' style="--card-a:{g["a"]};--card-b:{g["b"]}"'
+
     def icon_html(slug):
         img = COLLECTION_ICON_IMAGES.get(slug)
         if img:
@@ -399,7 +412,7 @@ def render_home():
 
     cat_cards = ''.join(
         f'''<div class="cat-card-wrap">
-          <a class="cat-card{' cat-card--dark' if slug in DARK_THEMED_CARDS else ''}" href="/kategorie/{slug}.html">
+          <a class="cat-card{' cat-card--dark' if slug in DARK_THEMED_CARDS else ''}" href="/kategorie/{slug}.html"{card_style(slug)}>
             {'<span class="collection-badge">Kolekce</span>' if slug in collection_slugs else ''}
             <div class="cat-icon">{icon_html(slug)}</div>
             <h3>{CAT_BY_SLUG[slug]['name']}</h3>
