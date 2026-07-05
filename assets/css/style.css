@@ -335,8 +335,18 @@ p { margin: 0 0 1em; }
   box-shadow: inset 0 0 0 1px rgba(33, 28, 23, 0.08);
   color: var(--ink);
 }
+.cat-card .cat-icon img { width: 34px; height: 34px; object-fit: contain; }
 .cat-card h3 { font-size: 1.1rem; margin-bottom: 0.3em; }
 .cat-card p { color: rgba(33, 28, 23, 0.72); font-size: 0.85rem; margin: 0; }
+.cat-card--dark {
+  background: linear-gradient(155deg, #3a3d42 0%, #3a3d42 35%, #1a1c1f 100%) !important;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.cat-card--dark h3 { color: var(--white); }
+.cat-card--dark p { color: rgba(255, 255, 255, 0.65); }
+.cat-card--dark .cat-icon { background: rgba(255, 255, 255, 0.12); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15); }
+.cat-card--dark .cat-icon img { filter: invert(1) brightness(1.4); }
+.cat-card--dark .collection-badge { background: var(--gold); color: var(--ink); }
 .cat-tag-btn {
   margin-top: -18px;
   background: var(--tag-bg, var(--accent));

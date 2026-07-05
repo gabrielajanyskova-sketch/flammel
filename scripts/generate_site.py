@@ -43,10 +43,12 @@ NEW_COLLECTIONS = [
 # From the client's collection moodboard (Perenelle "perla v mušličce",
 # Ignis "jiskra", Luna "měsíc s hvězdou").
 COLLECTION_COLORS = {
-    'perenelle': {'bg': '#D8B4BC', 'hover': '#c69aa4', 'text': '#3d2327'},
-    'ignis': {'bg': '#B67A3A', 'hover': '#9c652c', 'text': '#ffffff'},
-    'luna': {'bg': '#2E3135', 'hover': '#1c1e21', 'text': '#ffffff'},
+    'perenelle': {'bg': '#a9862a', 'hover': '#8c6e22', 'text': '#ffffff'},
+    'ignis': {'bg': '#a9862a', 'hover': '#8c6e22', 'text': '#ffffff'},
+    'luna': {'bg': '#f2e2ae', 'hover': '#e8d28a', 'text': '#211c17'},
 }
+# Cards themed dark to match their own artwork (Luna = night sky).
+DARK_THEMED_CARDS = {'luna'}
 
 
 def apply_new_collections():
@@ -360,21 +362,12 @@ CAT_ICONS = {
         '<rect x="5.6" y="3.6" width="12.8" height="16.8" rx="0.8"/>'
         '<path d="M6.6 4.6 17 4.6 6.6 15z" fill="#d9b64e"/>'
     ),
-    # Matching the client's collection moodboard: shell+pearl, moon+star,
-    # spark/sparkle — thin linework rather than solid fill, like the artwork.
-    'perenelle': _icon(
-        '<path d="M12 4.2c-3.1 2.7-5.4 5.9-5.4 8.8a5.4 5.4 0 0 0 10.8 0c0-2.9-2.3-6.1-5.4-8.8z"/>'
-        '<path d="M9 6.6c-.6 2.7-.6 4.9 0 7.3M15 6.6c.6 2.7.6 4.9 0 7.3M7.1 9.3c-.4 1.7-.4 3.1 0 4.6M16.9 9.3c.4 1.7.4 3.1 0 4.6"/>'
-        '<circle cx="12" cy="15.4" r="1.3" fill="currentColor" stroke="none"/>'
-    ),
-    'luna': _icon(
-        '<path d="M14.8 3.6a7.6 7.6 0 1 0 4.4 13.6A8.7 8.7 0 0 1 14.8 3.6z"/>'
-        '<path d="M19.2 14.6l.5 1.4 1.4.5-1.4.5-.5 1.4-.5-1.4-1.4-.5 1.4-.5z" fill="currentColor" stroke="none"/>'
-    ),
-    'ignis': _icon(
-        '<path d="M12 2.2c.6 3.6 2.3 7 5.6 8.9-3.3 1.9-5 5.3-5.6 8.9-.6-3.6-2.3-7-5.6-8.9 3.3-1.9 5-5.3 5.6-8.9z"/>'
-        '<path d="M18.6 3.6c.2 1.2.7 1.9 1.8 2.2-1.1.3-1.6 1-1.8 2.2-.2-1.2-.7-1.9-1.8-2.2 1.1-.3 1.6-1 1.8-2.2z"/>'
-    ),
+}
+# The client's actual collection artwork (shell+pearl, spark, moon+star).
+COLLECTION_ICON_IMAGES = {
+    'perenelle': '/assets/img/collections/perenelle.png',
+    'ignis': '/assets/img/collections/ignis.png',
+    'luna': '/assets/img/collections/luna.png',
 }
 CART_ICON = _icon('<path d="M6 8V6a6 6 0 0 1 12 0v2"/><rect x="3.5" y="8" width="17" height="13" rx="2"/>')
 HEART_ICON = '<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.2 2 4.5 5.6 4a5 5 0 0 1 6.4 2.6A5 5 0 0 1 18.4 4c3.6.5 5.2 4.2 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg>'
@@ -398,11 +391,17 @@ def render_home():
             return ''
         return f' style="--tag-bg:{c["bg"]};--tag-bg-hover:{c["hover"]};--tag-text:{c["text"]}"'
 
+    def icon_html(slug):
+        img = COLLECTION_ICON_IMAGES.get(slug)
+        if img:
+            return f'<img src="{img}" alt="{CAT_BY_SLUG[slug]["name"]}">'
+        return CAT_ICONS.get(slug, '✦')
+
     cat_cards = ''.join(
         f'''<div class="cat-card-wrap">
-          <a class="cat-card" href="/kategorie/{slug}.html">
+          <a class="cat-card{' cat-card--dark' if slug in DARK_THEMED_CARDS else ''}" href="/kategorie/{slug}.html">
             {'<span class="collection-badge">Kolekce</span>' if slug in collection_slugs else ''}
-            <div class="cat-icon">{CAT_ICONS.get(slug, "✦")}</div>
+            <div class="cat-icon">{icon_html(slug)}</div>
             <h3>{CAT_BY_SLUG[slug]['name']}</h3>
             <p>{CATEGORY_TAGLINES[slug][0]}</p>
           </a>
