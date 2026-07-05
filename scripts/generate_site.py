@@ -352,29 +352,14 @@ HOME_NAV_CATS = ['svicky', 'mineralni-kameny', 'bytove-dekorace', 'perenelle', '
 def _icon(path_d):
     return f'<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{path_d}</svg>'
 
-def _icon_fill(inner):
-    return f'<svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor" stroke="none">{inner}</svg>'
-
-CAT_ICONS = {
-    # Traced from the user's own reference photos of the live site.
-    'svicky': _icon_fill(
-        '<path d="M8.4 2.4c-1.2.6-2.1 1.5-2.1 2.4a1.9 1.9 0 0 0 3.8.5c.1-1.1-.6-2.1-1.7-2.9z"/>'
-        '<rect x="6" y="8.4" width="10.4" height="9" rx="2"/>'
-    ),
-    'mineralni-kameny': _icon_fill(
-        '<path d="M12 2.4 7 6.6 2.8 9.2 12 21.4l9.2-12.2L17 6.6z"/>'
-        '<path d="M7 6.6h10M9.4 6.6 12 9.2M14.6 6.6 12 9.2M2.8 9.2h18.4M12 9.2 12 21.4" stroke="#cda43c" stroke-width="0.5" fill="none"/>'
-    ),
-    'bytove-dekorace': _icon_fill(
-        '<rect x="5.6" y="3.6" width="12.8" height="16.8" rx="0.8"/>'
-        '<path d="M6.6 4.6 17 4.6 6.6 15z" fill="#d9b64e"/>'
-    ),
-}
-# The client's actual collection artwork (shell+pearl, spark, moon+star).
+# The client's own artwork, replacing the hand-drawn placeholder icons.
 COLLECTION_ICON_IMAGES = {
-    'perenelle': '/assets/img/collections/perenelle.png',
-    'ignis': '/assets/img/collections/ignis.png',
-    'luna': '/assets/img/collections/luna.png',
+    'perenelle': '/assets/img/icons/perenelle.png',
+    'ignis': '/assets/img/icons/ignis.png',
+    'luna': '/assets/img/icons/luna.png',
+    'svicky': '/assets/img/icons/svicky.png',
+    'bytove-dekorace': '/assets/img/icons/bytove-dekorace.png',
+    'mineralni-kameny': '/assets/img/icons/mineralni-kameny.png',
 }
 CART_ICON = _icon('<path d="M6 8V6a6 6 0 0 1 12 0v2"/><rect x="3.5" y="8" width="17" height="13" rx="2"/>')
 HEART_ICON = '<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.2 2 4.5 5.6 4a5 5 0 0 1 6.4 2.6A5 5 0 0 1 18.4 4c3.6.5 5.2 4.2 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg>'
@@ -406,9 +391,7 @@ def render_home():
 
     def icon_html(slug):
         img = COLLECTION_ICON_IMAGES.get(slug)
-        if img:
-            return f'<img src="{img}" alt="{CAT_BY_SLUG[slug]["name"]}">'
-        return CAT_ICONS.get(slug, '✦')
+        return f'<img src="{img}" alt="{CAT_BY_SLUG[slug]["name"]}">' if img else '✦'
 
     cat_cards = ''.join(
         f'''<div class="cat-card-wrap">
