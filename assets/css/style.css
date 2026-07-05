@@ -333,6 +333,7 @@ p { margin: 0 0 1em; }
 }
 .cat-card .cat-icon img { width: 50px; height: 50px; object-fit: contain; }
 .cat-card h3 { font-size: 1.1rem; margin-bottom: 0.3em; }
+.cat-card h3.collection-title { font-family: var(--font-display); font-weight: 400; font-size: 1.7rem; }
 .cat-card p { color: rgba(33, 28, 23, 0.72); font-size: 0.85rem; margin: 0; }
 .cat-card--dark {
   background: linear-gradient(155deg, #3a3d42 0%, #3a3d42 35%, #1a1c1f 100%) !important;

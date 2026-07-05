@@ -398,7 +398,7 @@ def render_home():
           <a class="cat-card{' cat-card--dark' if slug in DARK_THEMED_CARDS else ''}" href="/kategorie/{slug}.html"{card_style(slug)}>
             {'<span class="collection-badge">Kolekce</span>' if slug in collection_slugs else ''}
             <div class="cat-icon">{icon_html(slug)}</div>
-            <h3>{CAT_BY_SLUG[slug]['name']}</h3>
+            <h3{' class="collection-title"' if slug in collection_slugs else ''}>{CAT_BY_SLUG[slug]['name']}</h3>
             <p>{CATEGORY_TAGLINES[slug][0]}</p>
           </a>
           <a class="cat-tag-btn" href="/kategorie/{slug}.html"{tag_btn_style(slug)}>{CATEGORY_TAGLINES[slug][1]}</a>
