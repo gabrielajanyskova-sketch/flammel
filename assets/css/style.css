@@ -269,6 +269,7 @@ p { margin: 0 0 1em; }
 }
 .cat-card-wrap { display: flex; flex-direction: column; align-items: center; }
 .cat-card {
+  position: relative;
   width: 100%;
   background: linear-gradient(180deg, var(--gold) 0%, var(--gold-light) 100%);
   border-radius: 0;
@@ -277,6 +278,19 @@ p { margin: 0 0 1em; }
   color: var(--ink);
   box-shadow: var(--shadow);
   transition: transform 0.2s;
+}
+.collection-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--ink);
+  color: var(--gold-light);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: 999px;
 }
 .cat-card-wrap:hover .cat-card { transform: translateY(-4px); }
 .cat-card .cat-icon {

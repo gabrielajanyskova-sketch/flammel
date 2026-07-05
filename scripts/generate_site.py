@@ -379,9 +379,11 @@ def parse_testimonials():
 
 
 def render_home():
+    collection_slugs = {c['slug'] for c in NEW_COLLECTIONS}
     cat_cards = ''.join(
         f'''<div class="cat-card-wrap">
           <a class="cat-card" href="/kategorie/{slug}.html">
+            {'<span class="collection-badge">Kolekce</span>' if slug in collection_slugs else ''}
             <div class="cat-icon">{CAT_ICONS.get(slug, "✦")}</div>
             <h3>{CAT_BY_SLUG[slug]['name']}</h3>
             <p>{CATEGORY_TAGLINES[slug][0]}</p>
@@ -496,9 +498,11 @@ def render_product_listing(products, title, description, path, active_slug=None)
     )
     cards = ''.join(product_card(p) for p in products) if products else '<p class="empty-state">Momentálně zde nejsou žádné produkty.</p>'
     show_filter = active_slug is None
+    is_collection = active_slug in {c['slug'] for c in NEW_COLLECTIONS}
+    eyebrow_text = 'Kolekce' if is_collection else 'Produkty'
     body = f'''
 <section class="page-header container">
-  <span class="eyebrow">Produkty</span>
+  <span class="eyebrow">{eyebrow_text}</span>
   <h1>{title}</h1>
 </section>
 <section class="section">
