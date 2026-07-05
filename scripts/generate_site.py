@@ -230,7 +230,7 @@ def footer_html():
   <div class="footer-gold">
     <div class="container footer-top">
       <div class="footer-col">
-        <h4>O nás</h4>
+        <h4>O mně</h4>
         <ul>
           <li><a href="/zakladni-informace.html">Základní informace</a></li>
           <li><a href="/reference.html">Reference</a></li>
@@ -453,7 +453,7 @@ def render_home():
       <span class="eyebrow">Můj příběh</span>
       <h2>O Flammel</h2>
       {O_NAS_TEXT}
-      <a class="btn btn-outline" href="/o-nas.html">Více o nás</a>
+      <a class="btn btn-outline" href="/o-nas.html">Více o mně</a>
     </div>
   </div>
 </section>
@@ -663,6 +663,19 @@ def render_o_nas():
     write('o-nas.html', base_layout('O Flammel', 'Příběh Flammel — ručně vyráběné přírodní produkty s láskou.', body))
 
 
+def render_zakladni_informace():
+    body = f'''
+<section class="page-header container"><h1>Základní informace</h1></section>
+<section class="section">
+  <div class="container about-block">
+    {O_NAS_FIGURE}
+    <div class="content">{O_NAS_TEXT}</div>
+  </div>
+</section>
+'''
+    write('zakladni-informace.html', base_layout('Základní informace', 'Příběh Flammel — ručně vyráběné přírodní produkty s láskou.', body))
+
+
 def render_informace():
     links = [
         ('Možnosti doručení', '/moznosti-doruceni.html'),
@@ -758,9 +771,9 @@ def main():
     for p in DATA['products']:
         render_product_detail(p)
     render_o_nas()
+    render_zakladni_informace()
     render_kontakty()
     render_reference()
-    render_prose_page('zakladni-informace', 'Základní informace')
     render_prose_page('moznosti-doruceni', 'Možnosti doručení')
     render_prose_page('platebni-podminky', 'Platební podmínky')
     render_prose_page('obchodni-podminky', 'Obchodní podmínky')
