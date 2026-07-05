@@ -3,17 +3,12 @@
 Logo a nadpisy webu (`--font-display` v `assets/css/style.css`) používají font
 **Darloune** (elegantní kaligrafické písmo).
 
-Tento font je komerční (autor WDfont) — zdarma pouze pro osobní/nekomerční
-použití, pro e-shop je potřeba zakoupit komerční licenci. Proto soubor fontu
-není součástí tohoto repozitáře a musíte ho sem doplnit sami (podle licence,
-kterou jste zakoupili):
+Soubory `Darloune.otf`, `Darloune.woff` a `Darloune.woff2` jsou součástí
+repozitáře (woff/woff2 vygenerované z dodaného `.otf`). Tento font je
+komerční (autor WDfont) — ověřte si prosím, že máte pro použití na e-shopu
+platnou komerční licenci (ne jen osobní/nekomerční).
 
-1. Do této složky (`assets/fonts/`) nahrajte soubory:
-   - `Darloune.woff2`
-   - `Darloune.woff`
-   - `Darloune.otf`
-2. Není nutné mít všechny tři formáty — `@font-face` v `style.css` je nastaven
-   tak, aby prohlížeč použil první dostupný formát.
-
-Dokud soubor fontu nebude doplněn, web automaticky použije náhradní
-kurzívové/dekorativní písmo (fallback `cursive`), takže se nic nerozbije.
+Pokud by soubory někdy chyběly nebo je bude potřeba nahradit novou verzí,
+`@font-face` v `style.css` je nastaven tak, aby prohlížeč použil první
+dostupný formát, a v mezidobí bez souboru automaticky naskočí náhradní
+kurzívové písmo (fallback `cursive`), takže se nic nerozbije.
