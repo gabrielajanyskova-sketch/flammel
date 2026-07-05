@@ -47,24 +47,21 @@ COLLECTION_COLORS = {
     'perenelle': {'bg': '#D8B4BC', 'hover': '#c69aa4', 'text': '#3d2327'},
     'ignis': {'bg': '#B67A3A', 'hover': '#96632f', 'text': '#ffffff'},
     'luna': {'bg': '#2E3135', 'hover': '#1c1e21', 'text': '#ffffff'},
+    # The 3 material categories keep their gold card background, but their
+    # small button gets the linen tone (RGB 239,230,216, per Martina's
+    # suggestion) and turns gold on hover.
+    'svicky': {'bg': '#efe6d8', 'hover': '#d4af37', 'text': '#211c17'},
+    'mineralni-kameny': {'bg': '#efe6d8', 'hover': '#d4af37', 'text': '#211c17'},
+    'bytove-dekorace': {'bg': '#efe6d8', 'hover': '#d4af37', 'text': '#211c17'},
 }
 # Whole-card gradient stops (top color, bottom tint) built from the same
 # hex codes, replacing the shared gold background on collection cards.
 COLLECTION_CARD_GRADIENT = {
     'perenelle': {'a': '#D8B4BC', 'b': '#f0e2e5'},
     'ignis': {'a': '#B67A3A', 'b': '#e6c9a8'},
-    # The 3 material categories moved off the gold gradient to a neutral
-    # linen tone (RGB 239,230,216, per Martina's suggestion) — gold stayed
-    # too dominant covering the whole homepage. They turn gold on hover
-    # instead (see .cat-card--linen:hover in style.css).
-    'svicky': {'a': '#efe6d8', 'b': '#efe6d8'},
-    'mineralni-kameny': {'a': '#efe6d8', 'b': '#efe6d8'},
-    'bytove-dekorace': {'a': '#efe6d8', 'b': '#efe6d8'},
 }
 # Cards themed dark to match their own artwork (Luna = night sky).
 DARK_THEMED_CARDS = {'luna'}
-# Linen-colored cards get a gold hover effect (see style.css).
-LINEN_CARDS = {'svicky', 'mineralni-kameny', 'bytove-dekorace'}
 
 
 def apply_new_collections():
@@ -404,7 +401,7 @@ def render_home():
 
     def render_card(slug, show_badge):
         return f'''<div class="cat-card-wrap">
-          <a class="cat-card{' cat-card--dark' if slug in DARK_THEMED_CARDS else ''}{' cat-card--linen' if slug in LINEN_CARDS else ''}" href="/kategorie/{slug}.html"{card_style(slug)}>
+          <a class="cat-card{' cat-card--dark' if slug in DARK_THEMED_CARDS else ''}" href="/kategorie/{slug}.html"{card_style(slug)}>
             {'<span class="collection-badge">Kolekce</span>' if show_badge else ''}
             <div class="cat-icon">{icon_html(slug)}</div>
             <h3{' class="collection-title"' if slug in collection_slugs else ''}>{CAT_BY_SLUG[slug]['name']}</h3>
