@@ -43,19 +43,10 @@ NEW_COLLECTIONS = [
 # From the client's collection moodboard (Perenelle "perla v mušličce",
 # Ignis "jiskra", Luna "měsíc s hvězdou").
 # Exact hex codes from the client's collection moodboard.
-COLLECTION_COLORS = {
-    'perenelle': {'bg': '#D8B4BC', 'hover': '#c69aa4', 'text': '#3d2327'},
-    'ignis': {'bg': '#B67A3A', 'hover': '#96632f', 'text': '#ffffff'},
-    'luna': {'bg': '#2E3135', 'hover': '#1c1e21', 'text': '#ffffff'},
-    # The 3 material categories keep their gold card background, but their
-    # small button gets the linen tone (RGB 239,230,216, per Martina's
-    # suggestion) and turns gold on hover.
-    'svicky': {'bg': '#efe6d8', 'hover': '#d4af37', 'text': '#211c17'},
-    'mineralni-kameny': {'bg': '#efe6d8', 'hover': '#d4af37', 'text': '#211c17'},
-    'bytove-dekorace': {'bg': '#efe6d8', 'hover': '#d4af37', 'text': '#211c17'},
-}
 # Whole-card gradient stops (top color, bottom tint) built from the same
 # hex codes, replacing the shared gold background on collection cards.
+# All the small action buttons (.cat-tag-btn / .btn) share one linen +
+# gold-hover treatment, defined once in style.css.
 COLLECTION_CARD_GRADIENT = {
     'perenelle': {'a': '#D8B4BC', 'b': '#f0e2e5'},
     'ignis': {'a': '#B67A3A', 'b': '#e6c9a8'},
@@ -383,12 +374,6 @@ def parse_testimonials():
 def render_home():
     collection_slugs = {c['slug'] for c in NEW_COLLECTIONS}
 
-    def tag_btn_style(slug):
-        c = COLLECTION_COLORS.get(slug)
-        if not c:
-            return ''
-        return f' style="--tag-bg:{c["bg"]};--tag-bg-hover:{c["hover"]};--tag-text:{c["text"]}"'
-
     def card_style(slug):
         g = COLLECTION_CARD_GRADIENT.get(slug)
         if not g:
@@ -407,7 +392,7 @@ def render_home():
             <h3{' class="collection-title"' if slug in collection_slugs else ''}>{CAT_BY_SLUG[slug]['name']}</h3>
             {'' if slug in collection_slugs else f'<p>{CATEGORY_TAGLINES[slug][0]}</p>'}
           </a>
-          <a class="cat-tag-btn" href="/kategorie/{slug}.html"{tag_btn_style(slug)}>{CATEGORY_TAGLINES[slug][1]}</a>
+          <a class="cat-tag-btn" href="/kategorie/{slug}.html">{CATEGORY_TAGLINES[slug][1]}</a>
         </div>'''
 
     regular_slugs = [s for s in HOME_NAV_CATS if s not in collection_slugs]
@@ -460,7 +445,7 @@ def render_home():
     </div>
     <div class="cat-grid home-cat-grid">{collection_cards}</div>
     <div style="text-align:center; margin-top:44px">
-      <a class="btn btn-linen" href="/produkty.html">Všechny produkty</a>
+      <a class="btn" href="/produkty.html">Všechny produkty</a>
     </div>
   </div>
 </section>

@@ -73,18 +73,16 @@ p { margin: 0 0 1em; }
   padding: 13px 28px;
   border-radius: 10px;
   border: none;
-  background: var(--accent);
-  color: var(--white);
+  background: #efe6d8;
+  color: var(--ink);
   font-weight: 700;
   font-size: 0.95rem;
   transition: background 0.2s, color 0.2s, transform 0.15s;
 }
-.btn:hover { background: var(--accent-dark); transform: translateY(-1px); }
+.btn:hover { background: var(--gold); transform: translateY(-1px); }
 .btn.btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
 .btn.btn-outline:hover { background: var(--ink); color: var(--white); }
 .btn.btn-ghost { background: transparent; color: var(--gold-dark); border: 1.5px solid var(--gold); }
-.btn.btn-linen { background: #efe6d8; color: var(--ink); }
-.btn.btn-linen:hover { background: var(--gold); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
 /* ==========================================================================
@@ -337,7 +335,7 @@ p { margin: 0 0 1em; }
 }
 .cat-card .cat-icon img { width: 50px; height: 50px; object-fit: contain; }
 .cat-card h3 { font-size: 1.1rem; margin-bottom: 0.3em; }
-.cat-card h3.collection-title { font-family: var(--font-display); font-weight: 400; font-size: 1.7rem; }
+.cat-card h3.collection-title { font-size: 1.3rem; }
 .cat-card p { color: rgba(33, 28, 23, 0.72); font-size: 0.85rem; margin: 0; }
 .cat-card--dark {
   background: linear-gradient(155deg, #3a3d42 0%, #3a3d42 35%, #1a1c1f 100%) !important;
@@ -349,8 +347,8 @@ p { margin: 0 0 1em; }
 .cat-card--dark .cat-icon img { filter: invert(1) brightness(1.4); }
 .cat-tag-btn {
   margin-top: -18px;
-  background: var(--tag-bg, var(--accent));
-  color: var(--tag-text, var(--white));
+  background: #efe6d8;
+  color: var(--ink);
   font-weight: 700;
   font-size: 0.85rem;
   padding: 11px 26px;
@@ -359,7 +357,7 @@ p { margin: 0 0 1em; }
   z-index: 2;
   transition: background 0.2s, transform 0.15s, filter 0.2s;
 }
-.cat-tag-btn:hover { background: var(--tag-bg-hover, var(--accent-dark)); transform: translateY(-1px); }
+.cat-tag-btn:hover { background: var(--gold); transform: translateY(-1px); }
 
 /* ==========================================================================
    About / founder
@@ -371,7 +369,7 @@ p { margin: 0 0 1em; }
   align-items: center;
 }
 .about-block img { border-radius: var(--radius); box-shadow: var(--shadow); }
-.about-block .content :is(h1,h2,h3) { font-family: var(--font-display); font-size: 2.1rem; font-weight: 400; }
+.about-block .content :is(h1,h2,h3) { font-size: 1.9rem; font-weight: 700; }
 .about-block figure { margin: 0; }
 .about-block figcaption { text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 10px; }
 
@@ -518,7 +516,7 @@ textarea { resize: vertical; min-height: 90px; }
    Legal / plain content pages
    ========================================================================== */
 .page-header { padding: 48px 0 8px; text-align: center; }
-.page-header h1 { font-family: var(--font-display); font-weight: 400; font-size: 2.6rem; }
+.page-header h1 { font-weight: 700; font-size: 2.2rem; }
 .prose { max-width: 760px; margin: 0 auto; }
 .prose h2 { margin-top: 1.6em; font-size: 1.4rem; }
 .prose h3 { margin-top: 1.3em; font-size: 1.15rem; }
