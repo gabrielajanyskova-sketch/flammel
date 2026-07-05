@@ -746,7 +746,11 @@ def render_pokladna():
         </div>
         <div class="form-group" id="pickup-point-field">
           <label for="pickup_point">Vybraná pobočka / Z-BOX</label>
-          <input type="text" id="pickup_point" name="pickup_point" placeholder="Název a adresa výdejního místa">
+          <div class="pickup-picker">
+            <input type="text" id="pickup_point" name="pickup_point" placeholder="Zatím nevybráno" readonly>
+            <button type="button" class="btn btn-outline" id="pickup-point-btn">Vybrat na mapě</button>
+          </div>
+          <input type="hidden" id="pickup_point_id" name="pickup_point_id">
         </div>
         <p class="option-note" id="osobni-note">Termín osobního vyzvednutí domluvíme e-mailem po odeslání objednávky.</p>
 
@@ -765,7 +769,8 @@ def render_pokladna():
   </div>
 </section>
 '''
-    write('pokladna.html', base_layout('Pokladna', '', body))
+    extra_head = '<script src="https://widget.packeta.com/v6/www/js/library.js"></script>'
+    write('pokladna.html', base_layout('Pokladna', '', body, extra_head))
 
 
 def render_muj_ucet():

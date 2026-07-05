@@ -4,6 +4,7 @@
 // see the notice on pokladna.html.
 (function () {
   var STORAGE_KEY = 'flammel_cart';
+  var PACKETA_API_KEY = 'b8b56c3f9361b7175d2bd60f70b40c7a';
 
   function getCart() {
     try {
@@ -92,6 +93,33 @@
       radio.addEventListener('change', update);
     });
     update();
+  }
+
+  function setupPacketaWidget() {
+    var btn = document.getElementById('pickup-point-btn');
+    var form = document.getElementById('checkout-form');
+    if (!btn || !form) return;
+    var display = document.getElementById('pickup_point');
+    var idField = document.getElementById('pickup_point_id');
+
+    btn.addEventListener('click', function () {
+      if (typeof Packeta === 'undefined') {
+        alert('Výběr pobočky se nepodařilo načíst, zkuste to prosím znovu za chvíli.');
+        return;
+      }
+      var checked = form.querySelector('input[name="delivery"]:checked');
+      var isZbox = checked && checked.value === 'zasilkovna_zbox';
+      var options = {
+        language: 'cs',
+        vendors: isZbox ? [{ country: 'cz', group: 'zbox' }] : [{ country: 'cz' }],
+      };
+      Packeta.Widget.pick(PACKETA_API_KEY, function (point) {
+        if (!point) return;
+        var parts = [point.name, point.street, point.city].filter(Boolean);
+        display.value = parts.join(', ');
+        idField.value = point.id || '';
+      }, options);
+    });
   }
 
   function renderBadge() {
@@ -183,7 +211,8 @@
         var payment = data.get('payment');
         var deliveryDetail;
         if (delivery === 'zasilkovna_vydejni' || delivery === 'zasilkovna_zbox') {
-          deliveryDetail = 'Výdejní místo: ' + (data.get('pickup_point') || '-');
+          deliveryDetail = 'Výdejní místo: ' + (data.get('pickup_point') || '-') +
+            (data.get('pickup_point_id') ? ' (ID: ' + data.get('pickup_point_id') + ')' : '');
         } else if (delivery === 'osobni') {
           deliveryDetail = 'Osobní vyzvednutí (domluvit termín)';
         } else {
@@ -215,6 +244,7 @@
     renderCartPage();
     renderCheckoutSummary();
     setupCheckoutOptions();
+    setupPacketaWidget();
 
     document.querySelectorAll('[data-add-to-cart]').forEach(function (btn) {
       btn.addEventListener('click', function () {
