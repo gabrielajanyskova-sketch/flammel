@@ -53,6 +53,47 @@
     return Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' Kč';
   }
 
+  var DELIVERY_LABELS = {
+    zasilkovna_adresa: 'Zásilkovna – doručení na adresu',
+    zasilkovna_vydejni: 'Zásilkovna – výdejní místo',
+    zasilkovna_zbox: 'Zásilkovna – Z-BOX',
+    ceska_posta: 'Česká pošta',
+    osobni: 'Osobní vyzvednutí',
+  };
+  var PAYMENT_LABELS = {
+    online: 'Online platba kartou / Google Pay',
+    dobirka: 'Dobírka',
+    prevodem: 'Platba předem na účet',
+  };
+
+  function setupCheckoutOptions() {
+    var form = document.getElementById('checkout-form');
+    if (!form) return;
+    var addressFields = document.getElementById('address-fields');
+    var pickupField = document.getElementById('pickup-point-field');
+    var osobniNote = document.getElementById('osobni-note');
+    var street = document.getElementById('street');
+    var city = document.getElementById('city');
+    var zip = document.getElementById('zip');
+    var pickupInput = document.getElementById('pickup_point');
+
+    function update() {
+      var checked = form.querySelector('input[name="delivery"]:checked');
+      var value = checked ? checked.value : 'zasilkovna_adresa';
+      var isPickup = value === 'zasilkovna_vydejni' || value === 'zasilkovna_zbox';
+      var isPersonal = value === 'osobni';
+      addressFields.style.display = (isPickup || isPersonal) ? 'none' : '';
+      pickupField.style.display = isPickup ? 'block' : 'none';
+      osobniNote.style.display = isPersonal ? 'block' : 'none';
+      street.required = city.required = zip.required = !isPickup && !isPersonal;
+      pickupInput.required = isPickup;
+    }
+    form.querySelectorAll('input[name="delivery"]').forEach(function (radio) {
+      radio.addEventListener('change', update);
+    });
+    update();
+  }
+
   function renderBadge() {
     var count = cartCount(getCart());
     document.querySelectorAll('.cart-count').forEach(function (el) {
@@ -138,11 +179,23 @@
         var lines = cart.map(function (item) {
           return '- ' + item.title + ' x' + item.qty + ' = ' + formatPrice(item.price * item.qty);
         });
+        var delivery = data.get('delivery');
+        var payment = data.get('payment');
+        var deliveryDetail;
+        if (delivery === 'zasilkovna_vydejni' || delivery === 'zasilkovna_zbox') {
+          deliveryDetail = 'Výdejní místo: ' + (data.get('pickup_point') || '-');
+        } else if (delivery === 'osobni') {
+          deliveryDetail = 'Osobní vyzvednutí (domluvit termín)';
+        } else {
+          deliveryDetail = [data.get('street'), data.get('city'), data.get('zip')].filter(Boolean).join(', ');
+        }
         var body = [
           'Jméno: ' + data.get('name'),
           'E-mail: ' + data.get('email'),
           'Telefon: ' + data.get('phone'),
-          'Doručovací adresa: ' + data.get('address'),
+          'Doprava: ' + (DELIVERY_LABELS[delivery] || delivery),
+          'Doručovací údaje: ' + deliveryDetail,
+          'Platba: ' + (PAYMENT_LABELS[payment] || payment),
           'Poznámka: ' + (data.get('note') || '-'),
           '',
           'Objednávka:',
@@ -161,6 +214,7 @@
     renderBadge();
     renderCartPage();
     renderCheckoutSummary();
+    setupCheckoutOptions();
 
     document.querySelectorAll('[data-add-to-cart]').forEach(function (btn) {
       btn.addEventListener('click', function () {
