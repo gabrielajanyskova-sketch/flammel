@@ -460,7 +460,7 @@ def render_home():
     </div>
     <div class="cat-grid home-cat-grid">{collection_cards}</div>
     <div style="text-align:center; margin-top:44px">
-      <a class="btn" href="/produkty.html">Všechny produkty</a>
+      <a class="btn btn-linen" href="/produkty.html">Všechny produkty</a>
     </div>
   </div>
 </section>

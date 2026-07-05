@@ -83,6 +83,8 @@ p { margin: 0 0 1em; }
 .btn.btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
 .btn.btn-outline:hover { background: var(--ink); color: var(--white); }
 .btn.btn-ghost { background: transparent; color: var(--gold-dark); border: 1.5px solid var(--gold); }
+.btn.btn-linen { background: #efe6d8; color: var(--ink); }
+.btn.btn-linen:hover { background: var(--gold); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
 /* ==========================================================================
