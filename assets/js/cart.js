@@ -72,14 +72,16 @@
     var rows = cart.map(function (item) {
       return (
         '<tr data-id="' + item.id + '">' +
-        '<td><div class="cart-item-info"><img src="' + item.image + '" alt="' + item.title + '">' +
-        '<div><a href="' + item.url + '">' + item.title + '</a><br>' +
-        '<button class="remove-item" data-remove="' + item.id + '">Odebrat</button></div></div></td>' +
-        '<td>' + formatPrice(item.price) + '</td>' +
-        '<td><div class="qty-input"><button data-dec="' + item.id + '">−</button>' +
+        '<td><div class="cart-item-info">' +
+        '<button class="remove-item" data-remove="' + item.id + '" aria-label="Odebrat">&times;</button>' +
+        '<img src="' + item.image + '" alt="' + item.title + '">' +
+        '<a href="' + item.url + '">' + item.title + '</a>' +
+        '</div></td>' +
+        '<td data-label="Cena">' + formatPrice(item.price) + '</td>' +
+        '<td data-label="Množství"><div class="qty-input"><button data-dec="' + item.id + '">−</button>' +
         '<input type="text" value="' + item.qty + '" data-qty="' + item.id + '" readonly>' +
         '<button data-inc="' + item.id + '">+</button></div></td>' +
-        '<td>' + formatPrice(item.price * item.qty) + '</td>' +
+        '<td data-label="Mezisoučet">' + formatPrice(item.price * item.qty) + '</td>' +
         '</tr>'
       );
     }).join('');
