@@ -52,6 +52,38 @@ def apply_new_collections():
                 if url not in child_slugs:
                     item['children'].append({'label': col['name'], 'url': url})
 
+
+# Categories the client didn't ask to keep — dropped entirely, including
+# every product that isn't also listed under a surviving category.
+REMOVED_CATEGORY_SLUGS = {'medvidci', 'makrame-dekorace', 'akcni-nabidky'}
+
+
+def apply_category_removal():
+    DATA['product_cats'] = [c for c in DATA['product_cats'] if c['slug'] not in REMOVED_CATEGORY_SLUGS]
+    removed_product_slugs = []
+    kept_products = []
+    for p in DATA['products']:
+        keep_names, keep_slugs = [], []
+        for name, slug in zip(p['category_names'], p['category_slugs']):
+            if slug not in REMOVED_CATEGORY_SLUGS:
+                keep_names.append(name)
+                keep_slugs.append(slug)
+        if keep_slugs:
+            p['category_names'], p['category_slugs'] = keep_names, keep_slugs
+            kept_products.append(p)
+        else:
+            removed_product_slugs.append(p['slug'])
+    DATA['products'] = kept_products
+    for item in DATA['nav']:
+        item['children'] = [c for c in item['children']
+                             if c['url'] not in {f'/kategorie/{s}.html' for s in REMOVED_CATEGORY_SLUGS}]
+    for slug in REMOVED_CATEGORY_SLUGS:
+        (ROOT / 'kategorie' / f'{slug}.html').unlink(missing_ok=True)
+    for slug in removed_product_slugs:
+        (ROOT / 'produkt' / f'{slug}.html').unlink(missing_ok=True)
+    print(f'Odstraněny kategorie {sorted(REMOVED_CATEGORY_SLUGS)} a {len(removed_product_slugs)} produktů.')
+
+
 O_NAS_FIGURE = (
     '<figure><img src="https://www.flammel.cz/wp-content/uploads/elementor/thumbs/'
     'ja-foto-flammel-qhqfq2gy22sofqb83fkmx6pj4xokacob7c5zpgd1o8.jpeg" title="ja-foto-flammel" '
@@ -141,6 +173,7 @@ def apply_products_csv():
 
 apply_products_csv()
 apply_category_renames()
+apply_category_removal()
 apply_new_collections()
 
 PAGES_BY_SLUG = {p['slug']: p for p in DATA['pages']}
@@ -287,21 +320,15 @@ def write(path, content):
 
 CATEGORY_TAGLINES = {
     'svicky': ('Pro atmosféru', 'Zapálit'),
-    'medvidci': ('Ruční dekorování z pěnových růžiček', 'Pro radost'),
     'mineralni-kameny': ('Pro radost', 'Ozdobit se'),
-    'makrame-dekorace': ('Naše bavlněná produkce', 'Pro domov'),
     'bytove-dekorace': ('Pro pohodu', 'Zútulnit'),
-    'akcni-nabidky': ('Sezónní produkty naší značky', 'Pro Ježíška'),
     # Placeholder taglines for the new collections — easy to swap once
     # there's a final wording for each.
     'perenelle': ('Pro eleganci', 'Objevit'),
     'luna': ('Pro klid', 'Objevit'),
     'ignis': ('Pro vášeň', 'Objevit'),
 }
-HOME_NAV_CATS = [
-    'svicky', 'medvidci', 'mineralni-kameny', 'makrame-dekorace', 'bytove-dekorace', 'akcni-nabidky',
-    'perenelle', 'luna', 'ignis',
-]
+HOME_NAV_CATS = ['svicky', 'mineralni-kameny', 'bytove-dekorace', 'perenelle', 'luna', 'ignis']
 
 def _icon(path_d):
     return f'<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{path_d}</svg>'
@@ -315,32 +342,13 @@ CAT_ICONS = {
         '<path d="M8.4 2.4c-1.2.6-2.1 1.5-2.1 2.4a1.9 1.9 0 0 0 3.8.5c.1-1.1-.6-2.1-1.7-2.9z"/>'
         '<rect x="6" y="8.4" width="10.4" height="9" rx="2"/>'
     ),
-    'medvidci': _icon_fill(
-        '<circle cx="8.2" cy="5.4" r="1.7"/><circle cx="15.8" cy="5.4" r="1.7"/>'
-        '<circle cx="12" cy="8.3" r="4.1"/>'
-        '<circle cx="5.7" cy="14.7" r="2.1"/><circle cx="18.3" cy="14.7" r="2.1"/>'
-        '<ellipse cx="12" cy="16.2" rx="5.5" ry="5.1"/>'
-        '<circle cx="8.3" cy="20.6" r="1.9"/><circle cx="15.7" cy="20.6" r="1.9"/>'
-    ),
     'mineralni-kameny': _icon_fill(
         '<path d="M12 2.4 7 6.6 2.8 9.2 12 21.4l9.2-12.2L17 6.6z"/>'
         '<path d="M7 6.6h10M9.4 6.6 12 9.2M14.6 6.6 12 9.2M2.8 9.2h18.4M12 9.2 12 21.4" stroke="#cda43c" stroke-width="0.5" fill="none"/>'
     ),
-    'makrame-dekorace': _icon_fill(
-        '<circle cx="12" cy="7.6" r="5.2" fill="none" stroke="currentColor" stroke-width="1.4"/>'
-        '<circle cx="12" cy="7.6" r="1.1"/>'
-        '<path d="M12 2.4v10.4M7.2 4.4 16.8 10.8M16.8 4.4 7.2 10.8M6.8 7.6h10.4M8.3 3.7 15.7 11.5M15.7 3.7 8.3 11.5" stroke="currentColor" stroke-width="0.55" fill="none"/>'
-        '<path d="M8 13v6.6M12 13.2v7.6M16 13v6.6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/>'
-        '<circle cx="8" cy="20" r="1"/><circle cx="12" cy="21.2" r="1"/><circle cx="16" cy="20" r="1"/>'
-    ),
     'bytove-dekorace': _icon_fill(
         '<rect x="5.6" y="3.6" width="12.8" height="16.8" rx="0.8"/>'
         '<path d="M6.6 4.6 17 4.6 6.6 15z" fill="#d9b64e"/>'
-    ),
-    'akcni-nabidky': _icon_fill(
-        '<path d="M12 1.5c.7 4 2.6 7.9 6.3 10-3.7 2.1-5.6 6-6.3 10-.7-4-2.6-7.9-6.3-10 3.7-2.1 5.6-6 6.3-10z"/>'
-        '<path d="M19 2.6c.3 1.5.9 2.4 2.3 2.8-1.4.4-2 1.3-2.3 2.8-.3-1.5-.9-2.4-2.3-2.8 1.4-.4 2-1.3 2.3-2.8z"/>'
-        '<path d="M4.4 14.6c.2 1 .6 1.7 1.6 2-1 .3-1.4.9-1.6 2-.2-1-.6-1.7-1.6-2 1-.3 1.4-.9 1.6-2z"/>'
     ),
     # Placeholder glyphs for the new collections.
     'perenelle': _icon_fill(
