@@ -9,17 +9,25 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // On touch/mobile, tapping a nav item with a submenu opens it instead of navigating away.
+  // Clicking a nav item that has a submenu opens the list instead of
+  // navigating straight to its own page — the visitor picks a specific
+  // item from the dropdown rather than landing on it by accident.
   document.querySelectorAll('.nav-item').forEach(function (item) {
     var link = item.querySelector(':scope > a');
     var submenu = item.querySelector('.submenu');
     if (!submenu || !link) return;
     link.addEventListener('click', function (e) {
-      if (window.innerWidth <= 720) {
-        e.preventDefault();
-        item.classList.toggle('open');
-      }
+      e.preventDefault();
+      document.querySelectorAll('.nav-item.open').forEach(function (other) {
+        if (other !== item) other.classList.remove('open');
+      });
+      item.classList.toggle('open');
     });
+  });
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.nav-item')) {
+      document.querySelectorAll('.nav-item.open').forEach(function (item) { item.classList.remove('open'); });
+    }
   });
 
   // Highlight the nav link matching the current page (and its parent

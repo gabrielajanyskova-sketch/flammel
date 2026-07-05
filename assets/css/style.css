@@ -178,7 +178,7 @@ p { margin: 0 0 1em; }
   transform: translateY(6px);
   transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
 }
-.nav-item:hover .submenu, .nav-item:focus-within .submenu {
+.nav-item:hover .submenu, .nav-item:focus-within .submenu, .nav-item.open .submenu {
   opacity: 1; visibility: visible; transform: translateY(0);
 }
 .submenu a {
