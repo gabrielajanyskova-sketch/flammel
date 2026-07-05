@@ -393,18 +393,20 @@ def render_home():
         img = COLLECTION_ICON_IMAGES.get(slug)
         return f'<img src="{img}" alt="{CAT_BY_SLUG[slug]["name"]}">' if img else '✦'
 
-    cat_cards = ''.join(
-        f'''<div class="cat-card-wrap">
+    def render_card(slug, show_badge):
+        return f'''<div class="cat-card-wrap">
           <a class="cat-card{' cat-card--dark' if slug in DARK_THEMED_CARDS else ''}" href="/kategorie/{slug}.html"{card_style(slug)}>
-            {'<span class="collection-badge">Kolekce</span>' if slug in collection_slugs else ''}
+            {'<span class="collection-badge">Kolekce</span>' if show_badge else ''}
             <div class="cat-icon">{icon_html(slug)}</div>
             <h3{' class="collection-title"' if slug in collection_slugs else ''}>{CAT_BY_SLUG[slug]['name']}</h3>
             {'' if slug in collection_slugs else f'<p>{CATEGORY_TAGLINES[slug][0]}</p>'}
           </a>
           <a class="cat-tag-btn" href="/kategorie/{slug}.html"{tag_btn_style(slug)}>{CATEGORY_TAGLINES[slug][1]}</a>
         </div>'''
-        for slug in HOME_NAV_CATS
-    )
+
+    regular_slugs = [s for s in HOME_NAV_CATS if s not in collection_slugs]
+    regular_cards = ''.join(render_card(slug, show_badge=False) for slug in regular_slugs)
+    collection_cards = ''.join(render_card(slug, show_badge=False) for slug in HOME_NAV_CATS if slug in collection_slugs)
 
     slide_images = []
     for p in DATA['products']:
@@ -439,13 +441,21 @@ def render_home():
   <div class="slide-dots">{dots}</div>
 </section>
 
-<div class="hero-cta">
-  <a class="btn" href="/produkty.html">Všechny produkty</a>
-</div>
+<section class="section" style="padding-top:40px; padding-bottom:24px">
+  <div class="container">
+    <div class="cat-grid home-cat-grid">{regular_cards}</div>
+  </div>
+</section>
 
 <section class="section" style="padding-top:24px">
   <div class="container">
-    <div class="cat-grid home-cat-grid">{cat_cards}</div>
+    <div class="section-head">
+      <h2>Kolekce našich produktů</h2>
+    </div>
+    <div class="cat-grid home-cat-grid">{collection_cards}</div>
+    <div style="text-align:center; margin-top:44px">
+      <a class="btn" href="/produkty.html">Všechny produkty</a>
+    </div>
   </div>
 </section>
 
