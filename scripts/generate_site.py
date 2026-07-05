@@ -29,6 +29,29 @@ CATEGORY_NAME_OVERRIDES = {
     'Bytové dekorace': 'Útulný domov',
 }
 
+# New named collections (don't exist in the WordPress export — the client
+# assigns products to them herself via the "Kolekce" column in
+# data/products.csv, same workflow as price/stock).
+NEW_COLLECTIONS = [
+    {'slug': 'perenelle', 'name': 'Perenelle'},
+    {'slug': 'luna', 'name': 'Luna'},
+    {'slug': 'ignis', 'name': 'Ignis'},
+]
+
+
+def apply_new_collections():
+    existing_slugs = {c['slug'] for c in DATA['product_cats']}
+    for col in NEW_COLLECTIONS:
+        if col['slug'] not in existing_slugs:
+            DATA['product_cats'].append(dict(col))
+    for item in DATA['nav']:
+        if item['label'] == 'PRODUKTY':
+            child_slugs = {c['url'] for c in item['children']}
+            for col in NEW_COLLECTIONS:
+                url = f"/kategorie/{col['slug']}.html"
+                if url not in child_slugs:
+                    item['children'].append({'label': col['name'], 'url': url})
+
 O_NAS_FIGURE = (
     '<figure><img src="https://www.flammel.cz/wp-content/uploads/elementor/thumbs/'
     'ja-foto-flammel-qhqfq2gy22sofqb83fkmx6pj4xokacob7c5zpgd1o8.jpeg" title="ja-foto-flammel" '
@@ -80,6 +103,8 @@ def sync_products_csv_from_sheet():
 
 
 def apply_products_csv():
+    for p in DATA['products']:
+        p['collection_slugs'] = []
     sync_products_csv_from_sheet()
     csv_path = ROOT / 'data' / 'products.csv'
     if not csv_path.exists():
@@ -105,10 +130,18 @@ def apply_products_csv():
                 p['regular_price'] = cena
                 p['sale_price'] = ''
         p['stock_status'] = 'instock' if row.get('Skladem', '').strip().lower() == 'ano' else 'outofstock'
+        collection_names = {c['name'].lower(): c['slug'] for c in NEW_COLLECTIONS}
+        raw = row.get('Kolekce', '')
+        p['collection_slugs'] = [
+            collection_names[part.strip().lower()]
+            for part in raw.split(',')
+            if part.strip().lower() in collection_names
+        ]
 
 
 apply_products_csv()
 apply_category_renames()
+apply_new_collections()
 
 PAGES_BY_SLUG = {p['slug']: p for p in DATA['pages']}
 CAT_BY_SLUG = {c['slug']: c for c in DATA['product_cats']}
@@ -259,8 +292,16 @@ CATEGORY_TAGLINES = {
     'makrame-dekorace': ('Naše bavlněná produkce', 'Pro domov'),
     'bytove-dekorace': ('Pro pohodu', 'Zútulnit'),
     'akcni-nabidky': ('Sezónní produkty naší značky', 'Pro Ježíška'),
+    # Placeholder taglines for the new collections — easy to swap once
+    # there's a final wording for each.
+    'perenelle': ('Pro eleganci', 'Objevit'),
+    'luna': ('Pro klid', 'Objevit'),
+    'ignis': ('Pro vášeň', 'Objevit'),
 }
-HOME_NAV_CATS = ['svicky', 'medvidci', 'mineralni-kameny', 'makrame-dekorace', 'bytove-dekorace', 'akcni-nabidky']
+HOME_NAV_CATS = [
+    'svicky', 'medvidci', 'mineralni-kameny', 'makrame-dekorace', 'bytove-dekorace', 'akcni-nabidky',
+    'perenelle', 'luna', 'ignis',
+]
 
 def _icon(path_d):
     return f'<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{path_d}</svg>'
@@ -300,6 +341,18 @@ CAT_ICONS = {
         '<path d="M12 1.5c.7 4 2.6 7.9 6.3 10-3.7 2.1-5.6 6-6.3 10-.7-4-2.6-7.9-6.3-10 3.7-2.1 5.6-6 6.3-10z"/>'
         '<path d="M19 2.6c.3 1.5.9 2.4 2.3 2.8-1.4.4-2 1.3-2.3 2.8-.3-1.5-.9-2.4-2.3-2.8 1.4-.4 2-1.3 2.3-2.8z"/>'
         '<path d="M4.4 14.6c.2 1 .6 1.7 1.6 2-1 .3-1.4.9-1.6 2-.2-1-.6-1.7-1.6-2 1-.3 1.4-.9 1.6-2z"/>'
+    ),
+    # Placeholder glyphs for the new collections.
+    'perenelle': _icon_fill(
+        '<circle cx="12" cy="6.4" r="2.9"/><circle cx="17.6" cy="12" r="2.9"/>'
+        '<circle cx="12" cy="17.6" r="2.9"/><circle cx="6.4" cy="12" r="2.9"/>'
+        '<circle cx="12" cy="12" r="2.4" fill="#d9b64e"/>'
+    ),
+    'luna': _icon_fill(
+        '<path d="M15.8 3.2a9 9 0 1 0 5 13.4A7.6 7.6 0 0 1 15.8 3.2z"/>'
+    ),
+    'ignis': _icon_fill(
+        '<path d="M12 1.8c-1.3 2.6-4.8 6-4.8 10a4.8 4.8 0 0 0 9.6 0c0-1.5-.5-2.6-1.2-3.6.1 1.7-.7 2.8-1.7 2.8-1.1 0-1.6-.9-1.4-2.1.4-2-.1-4.6-.5-7.1z"/>'
     ),
 }
 CART_ICON = _icon('<path d="M6 8V6a6 6 0 0 1 12 0v2"/><rect x="3.5" y="8" width="17" height="13" rx="2"/>')
@@ -413,7 +466,8 @@ def render_home():
 def product_card(p):
     img = p['thumbnail_url'] or (p['gallery_urls'][0] if p['gallery_urls'] else '')
     cat = p['category_names'][0] if p['category_names'] else ''
-    return f'''<div class="product-card" data-cats="{','.join(p['category_slugs'])}">
+    all_slugs = p['category_slugs'] + p.get('collection_slugs', [])
+    return f'''<div class="product-card" data-cats="{','.join(all_slugs)}">
       <a class="thumb" href="/produkt/{p['slug']}.html">
         <img src="{img}" alt="{html_lib.escape(p['title'])}" loading="lazy">
       </a>
@@ -470,9 +524,10 @@ def render_products_and_categories():
     published = DATA['products']
     render_product_listing(published, 'Produkty', 'Všechny ručně vyráběné produkty flammel.', 'produkty.html')
     used_slugs = {slug for p in published for slug in p['category_slugs']}
-    for slug in used_slugs:
+    collection_slugs = {c['slug'] for c in NEW_COLLECTIONS}
+    for slug in used_slugs | collection_slugs:
         cat = CAT_BY_SLUG[slug]
-        subset = [p for p in published if slug in p['category_slugs']]
+        subset = [p for p in published if slug in p['category_slugs'] or slug in p.get('collection_slugs', [])]
         render_product_listing(subset, cat['name'], f"{cat['name']} — ručně vyráběné produkty flammel.",
                                 f'kategorie/{slug}.html', active_slug=slug)
 

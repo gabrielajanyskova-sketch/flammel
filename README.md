@@ -31,8 +31,15 @@ Sloupce:
 
 - **ID**, **Nazev**, **Kategorie** — jen pro orientaci, needitujte je (ID musí
   zůstat stejné, podle něj se produkt v datech dohledává).
-- **Cena** — cena v Kč, číslo bez mezer a bez "Kč".
+- **Cena** — aktuální prodejní cena v Kč, číslo bez mezer a bez "Kč".
+- **Puvodni_cena** — vyplňte jen když je produkt ve slevě: sem původní
+  (přeškrtnutou) cenu, do **Cena** aktuální zlevněnou. Když produkt ve
+  slevě není, nechte prázdné.
 - **Skladem** — napište `Ano` nebo `Ne`.
+- **Kolekce** — sem napište `Perenelle`, `Luna` nebo `Ignis`, pokud má
+  produkt patřit do některé z těchto kolekcí (jinak nechte prázdné).
+  Kolekce se na webu chovají jako běžné kategorie — mají vlastní kartu
+  na homepage, stránku s produkty i položku v menu.
 
 Po uložení souboru (zůstaňte u formátu CSV, Excel se může ptát, potvrďte
 "Zachovat aktuální formát") spusťte:
