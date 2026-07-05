@@ -40,6 +40,14 @@ NEW_COLLECTIONS = [
     {'slug': 'ignis', 'name': 'Ignis'},
 ]
 
+# From the client's collection moodboard (Perenelle "perla v mušličce",
+# Ignis "jiskra", Luna "měsíc s hvězdou").
+COLLECTION_COLORS = {
+    'perenelle': {'bg': '#D8B4BC', 'hover': '#c69aa4', 'text': '#3d2327'},
+    'ignis': {'bg': '#B67A3A', 'hover': '#9c652c', 'text': '#ffffff'},
+    'luna': {'bg': '#2E3135', 'hover': '#1c1e21', 'text': '#ffffff'},
+}
+
 
 def apply_new_collections():
     existing_slugs = {c['slug'] for c in DATA['product_cats']}
@@ -352,17 +360,20 @@ CAT_ICONS = {
         '<rect x="5.6" y="3.6" width="12.8" height="16.8" rx="0.8"/>'
         '<path d="M6.6 4.6 17 4.6 6.6 15z" fill="#d9b64e"/>'
     ),
-    # Placeholder glyphs for the new collections.
-    'perenelle': _icon_fill(
-        '<circle cx="12" cy="6.4" r="2.9"/><circle cx="17.6" cy="12" r="2.9"/>'
-        '<circle cx="12" cy="17.6" r="2.9"/><circle cx="6.4" cy="12" r="2.9"/>'
-        '<circle cx="12" cy="12" r="2.4" fill="#d9b64e"/>'
+    # Matching the client's collection moodboard: shell+pearl, moon+star,
+    # spark/sparkle — thin linework rather than solid fill, like the artwork.
+    'perenelle': _icon(
+        '<path d="M12 4.2c-3.1 2.7-5.4 5.9-5.4 8.8a5.4 5.4 0 0 0 10.8 0c0-2.9-2.3-6.1-5.4-8.8z"/>'
+        '<path d="M9 6.6c-.6 2.7-.6 4.9 0 7.3M15 6.6c.6 2.7.6 4.9 0 7.3M7.1 9.3c-.4 1.7-.4 3.1 0 4.6M16.9 9.3c.4 1.7.4 3.1 0 4.6"/>'
+        '<circle cx="12" cy="15.4" r="1.3" fill="currentColor" stroke="none"/>'
     ),
-    'luna': _icon_fill(
-        '<path d="M15.8 3.2a9 9 0 1 0 5 13.4A7.6 7.6 0 0 1 15.8 3.2z"/>'
+    'luna': _icon(
+        '<path d="M14.8 3.6a7.6 7.6 0 1 0 4.4 13.6A8.7 8.7 0 0 1 14.8 3.6z"/>'
+        '<path d="M19.2 14.6l.5 1.4 1.4.5-1.4.5-.5 1.4-.5-1.4-1.4-.5 1.4-.5z" fill="currentColor" stroke="none"/>'
     ),
-    'ignis': _icon_fill(
-        '<path d="M12 1.8c-1.3 2.6-4.8 6-4.8 10a4.8 4.8 0 0 0 9.6 0c0-1.5-.5-2.6-1.2-3.6.1 1.7-.7 2.8-1.7 2.8-1.1 0-1.6-.9-1.4-2.1.4-2-.1-4.6-.5-7.1z"/>'
+    'ignis': _icon(
+        '<path d="M12 2.2c.6 3.6 2.3 7 5.6 8.9-3.3 1.9-5 5.3-5.6 8.9-.6-3.6-2.3-7-5.6-8.9 3.3-1.9 5-5.3 5.6-8.9z"/>'
+        '<path d="M18.6 3.6c.2 1.2.7 1.9 1.8 2.2-1.1.3-1.6 1-1.8 2.2-.2-1.2-.7-1.9-1.8-2.2 1.1-.3 1.6-1 1.8-2.2z"/>'
     ),
 }
 CART_ICON = _icon('<path d="M6 8V6a6 6 0 0 1 12 0v2"/><rect x="3.5" y="8" width="17" height="13" rx="2"/>')
@@ -380,6 +391,13 @@ def parse_testimonials():
 
 def render_home():
     collection_slugs = {c['slug'] for c in NEW_COLLECTIONS}
+
+    def tag_btn_style(slug):
+        c = COLLECTION_COLORS.get(slug)
+        if not c:
+            return ''
+        return f' style="--tag-bg:{c["bg"]};--tag-bg-hover:{c["hover"]};--tag-text:{c["text"]}"'
+
     cat_cards = ''.join(
         f'''<div class="cat-card-wrap">
           <a class="cat-card" href="/kategorie/{slug}.html">
@@ -388,7 +406,7 @@ def render_home():
             <h3>{CAT_BY_SLUG[slug]['name']}</h3>
             <p>{CATEGORY_TAGLINES[slug][0]}</p>
           </a>
-          <a class="cat-tag-btn" href="/kategorie/{slug}.html">{CATEGORY_TAGLINES[slug][1]}</a>
+          <a class="cat-tag-btn" href="/kategorie/{slug}.html"{tag_btn_style(slug)}>{CATEGORY_TAGLINES[slug][1]}</a>
         </div>'''
         for slug in HOME_NAV_CATS
     )

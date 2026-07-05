@@ -128,11 +128,14 @@ p { margin: 0 0 1em; }
   color: var(--gold-dark);
   font-weight: 400;
   line-height: 1;
+  transition: color 0.2s;
 }
+.logo:hover { color: var(--gold); }
 .main-nav { display: flex; align-items: center; gap: 4px; }
 .main-nav > ul { display: flex; gap: 4px; }
 .main-nav .nav-item { position: relative; }
 .main-nav .nav-item > a {
+  position: relative;
   display: block;
   padding: 12px 16px;
   font-size: 0.82rem;
@@ -141,9 +144,25 @@ p { margin: 0 0 1em; }
   text-transform: uppercase;
   color: var(--ink);
   border-radius: 8px;
-  transition: color 0.15s, background 0.15s;
+  transition: color 0.2s, background 0.2s, letter-spacing 0.2s;
 }
-.main-nav .nav-item > a:hover { color: var(--gold-dark); background: var(--cream); }
+.main-nav .nav-item > a::after {
+  content: '';
+  position: absolute;
+  left: 50%; right: 50%;
+  bottom: 6px;
+  height: 2px;
+  background: var(--gold);
+  transition: left 0.25s ease, right 0.25s ease;
+}
+.main-nav .nav-item > a:hover {
+  color: var(--gold-dark);
+  background: var(--cream);
+  letter-spacing: 0.07em;
+}
+.main-nav .nav-item > a:hover::after { left: 16px; right: 16px; }
+.main-nav .nav-item > a.nav-active { color: var(--gold-dark); }
+.main-nav .nav-item > a.nav-active::after { left: 16px; right: 16px; }
 .submenu {
   position: absolute;
   top: 100%;
@@ -164,12 +183,21 @@ p { margin: 0 0 1em; }
 }
 .submenu a {
   display: block;
-  padding: 9px 12px;
+  padding: 9px 12px 9px 16px;
+  border-left: 2px solid transparent;
   border-radius: 6px;
   font-size: 0.88rem;
   color: var(--text);
+  transition: background 0.15s, color 0.15s, border-color 0.15s, padding-left 0.15s;
 }
-.submenu a:hover { background: var(--cream); color: var(--gold-dark); }
+.submenu a:hover { background: var(--cream); color: var(--gold-dark); border-left-color: var(--gold); padding-left: 20px; }
+.submenu a.nav-active {
+  color: var(--gold-dark);
+  background: var(--cream);
+  border: 1px solid var(--gold);
+  border-left: 1px solid var(--gold);
+  padding-left: 15px;
+}
 
 .header-actions { display: flex; align-items: center; gap: 14px; }
 .cart-link {
@@ -311,17 +339,17 @@ p { margin: 0 0 1em; }
 .cat-card p { color: rgba(33, 28, 23, 0.72); font-size: 0.85rem; margin: 0; }
 .cat-tag-btn {
   margin-top: -18px;
-  background: var(--accent);
-  color: var(--white);
+  background: var(--tag-bg, var(--accent));
+  color: var(--tag-text, var(--white));
   font-weight: 700;
   font-size: 0.85rem;
   padding: 11px 26px;
   border-radius: 8px;
   box-shadow: var(--shadow);
   z-index: 2;
-  transition: background 0.2s, transform 0.15s;
+  transition: background 0.2s, transform 0.15s, filter 0.2s;
 }
-.cat-tag-btn:hover { background: var(--accent-dark); transform: translateY(-1px); }
+.cat-tag-btn:hover { background: var(--tag-bg-hover, var(--accent-dark)); transform: translateY(-1px); }
 
 /* ==========================================================================
    About / founder

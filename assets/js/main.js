@@ -22,6 +22,21 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  // Highlight the nav link matching the current page (and its parent
+  // dropdown) in gold, like the original site's active-category style.
+  var currentPath = window.location.pathname;
+  document.querySelectorAll('.main-nav a').forEach(function (link) {
+    var linkPath = new URL(link.href).pathname;
+    if (linkPath === currentPath) {
+      link.classList.add('nav-active');
+      var parentItem = link.closest('.nav-item');
+      if (parentItem) {
+        var topLink = parentItem.querySelector(':scope > a');
+        if (topLink && topLink !== link) topLink.classList.add('nav-active');
+      }
+    }
+  });
+
   // Homepage hero image slider
   var slider = document.querySelector('.hero-slider');
   if (slider) {
