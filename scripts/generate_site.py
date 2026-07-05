@@ -27,6 +27,8 @@ BASE_DESCRIPTION = 'Ručně vyráběné sójové svíčky, medvídci z růží, 
 # without touching the underlying WordPress category slug/URLs.
 CATEGORY_NAME_OVERRIDES = {
     'Bytové dekorace': 'Útulný domov',
+    # Not a product category, but reuses the same nav-label rename pass.
+    'O NÁS': 'O FLAMMEL',
 }
 
 # New named collections (don't exist in the WordPress export — the client
@@ -446,7 +448,7 @@ def render_home():
   <div class="container about-block">
     {O_NAS_FIGURE}
     <div class="content">
-      <span class="eyebrow">Náš příběh</span>
+      <span class="eyebrow">Můj příběh</span>
       <h2>O Flammel</h2>
       {O_NAS_TEXT}
       <a class="btn btn-outline" href="/o-nas.html">Více o nás</a>
