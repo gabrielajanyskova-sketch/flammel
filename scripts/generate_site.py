@@ -23,6 +23,44 @@ SITE_NAME = 'flammel'
 SITE_TAGLINE = 'Ručně vyráběné přírodní dárky a dekorace s duší'
 BASE_DESCRIPTION = 'Ručně vyráběné sójové svíčky, medvídci z růží, šperky a bytové dekorace. Přírodní materiály, poctivá řemeslná výroba.'
 
+# Display-name overrides — the client wants "Bytové dekorace" rebranded
+# without touching the underlying WordPress category slug/URLs.
+CATEGORY_NAME_OVERRIDES = {
+    'Bytové dekorace': 'Útulný domov',
+}
+
+O_NAS_FIGURE = (
+    '<figure><img src="https://www.flammel.cz/wp-content/uploads/elementor/thumbs/'
+    'ja-foto-flammel-qhqfq2gy22sofqb83fkmx6pj4xokacob7c5zpgd1o8.jpeg" title="ja-foto-flammel" '
+    'alt="ja-foto-flammel" loading="lazy" /><figcaption>Vaše M ♥ flammel</figcaption></figure>'
+)
+O_NAS_TEXT = (
+    '<p>Věřím, že ty nejkrásnější dárky nemusí být velké ani okázalé.</p>'
+    '<p>Stačí drobnost, která potěší. Svíčka, kterou si zapálíte po náročném dni. '
+    'Šperk, který budete nosit každý den. Nebo maličkost, která udělá radost '
+    'někomu, na kom vám záleží.</p>'
+    '<p>Právě z této myšlenky vznikl Flammel.</p>'
+    '<p>Tvořím a vybírám produkty z kvalitních materiálů s důrazem na jednoduchost, '
+    'přírodní krásu a poctivé zpracování. Každý kousek vzniká v malém množství, '
+    'bez spěchu a s láskou k detailu.</p>'
+    '<p>Přeji si, aby Flammel nebyl jen e-shopem, ale místem, kam se budete rádi '
+    'vracet, když budete hledat dárek, který má smysl. Nebo když si budete chtít '
+    'udělat radost jen tak.</p>'
+    '<p>Děkuji, že jste tady.</p>'
+    '<p><b>Martina ♥</b></p>'
+)
+
+
+def apply_category_renames():
+    for c in DATA['product_cats']:
+        c['name'] = CATEGORY_NAME_OVERRIDES.get(c['name'], c['name'])
+    for p in DATA['products']:
+        p['category_names'] = [CATEGORY_NAME_OVERRIDES.get(n, n) for n in p['category_names']]
+    for item in DATA['nav']:
+        item['label'] = CATEGORY_NAME_OVERRIDES.get(item['label'], item['label'])
+        for child in item['children']:
+            child['label'] = CATEGORY_NAME_OVERRIDES.get(child['label'], child['label'])
+
 
 def sync_products_csv_from_sheet():
     url_path = ROOT / 'data' / 'sheet_url.txt'
@@ -70,6 +108,7 @@ def apply_products_csv():
 
 
 apply_products_csv()
+apply_category_renames()
 
 PAGES_BY_SLUG = {p['slug']: p for p in DATA['pages']}
 CAT_BY_SLUG = {c['slug']: c for c in DATA['product_cats']}
@@ -132,14 +171,7 @@ def footer_html():
       </div>
       <div class="footer-col">
         <h4>Produkty</h4>
-        <ul>
-          <li><a href="/kategorie/svicky.html">Přírodní svíčky</a></li>
-          <li><a href="/kategorie/medvidci.html">Medvídci z růží</a></li>
-          <li><a href="/kategorie/mineralni-kameny.html">Stylové šperky</a></li>
-          <li><a href="/kategorie/makrame-dekorace.html">Trendy háčkování</a></li>
-          <li><a href="/kategorie/bytove-dekorace.html">Bytové dekorace</a></li>
-          <li><a href="/kategorie/akcni-nabidky.html">Vánoční dekorace</a></li>
-        </ul>
+        <ul>{''.join(f'<li><a href="/kategorie/{slug}.html">{CAT_BY_SLUG[slug]["name"]}</a></li>' for slug in HOME_NAV_CATS)}</ul>
       </div>
       <div class="footer-col">
         <h4>Důležité odkazy</h4>
@@ -221,11 +253,11 @@ def write(path, content):
 # ---------------------------------------------------------------------------
 
 CATEGORY_TAGLINES = {
-    'svicky': ('Domácí výroba aromatických svíček', 'Pro relax'),
+    'svicky': ('Pro atmosféru', 'Zapálit'),
     'medvidci': ('Ruční dekorování z pěnových růžiček', 'Pro radost'),
-    'mineralni-kameny': ('Různé typy a styly z naší dílny', 'Pro půvab'),
+    'mineralni-kameny': ('Pro radost', 'Ozdobit se'),
     'makrame-dekorace': ('Naše bavlněná produkce', 'Pro domov'),
-    'bytove-dekorace': ('Vlastní originální produkty', 'Pro interiér'),
+    'bytove-dekorace': ('Pro pohodu', 'Zútulnit'),
     'akcni-nabidky': ('Sezónní produkty naší značky', 'Pro Ježíška'),
 }
 HOME_NAV_CATS = ['svicky', 'medvidci', 'mineralni-kameny', 'makrame-dekorace', 'bytove-dekorace', 'akcni-nabidky']
@@ -312,11 +344,6 @@ def render_home():
         for i in range(len(slide_images))
     )
 
-    about_content = PAGES_BY_SLUG['o-nas']['content']
-    figure_match = re.search(r'<figure>.*?</figure>', about_content, re.S)
-    figure_html = figure_match.group(0) if figure_match else ''
-    paragraphs = re.sub(r'<figure>.*?</figure>', '', about_content, flags=re.S)
-
     testimonials = parse_testimonials()[:6]
     testi_cards = ''.join(
         f'<div class="testi-card"><p>&ldquo;{t["quote"]}&rdquo;</p><cite>{t["category"]}</cite></div>'
@@ -356,11 +383,11 @@ def render_home():
 
 <section class="section">
   <div class="container about-block">
-    {figure_html}
+    {O_NAS_FIGURE}
     <div class="content">
       <span class="eyebrow">Náš příběh</span>
-      <h2>O flammel</h2>
-      {paragraphs}
+      <h2>O Flammel</h2>
+      {O_NAS_TEXT}
       <a class="btn btn-outline" href="/o-nas.html">Více o nás</a>
     </div>
   </div>
@@ -555,21 +582,16 @@ def render_produkty_redirect_page():
 
 
 def render_o_nas():
-    page = PAGES_BY_SLUG['o-nas']
-    content = page['content']
-    figure_match = re.search(r'<figure>.*?</figure>', content, re.S)
-    figure_html = figure_match.group(0) if figure_match else ''
-    paragraphs = re.sub(r'<figure>.*?</figure>', '', content, flags=re.S)
     body = f'''
-<section class="page-header container"><h1>O nás</h1></section>
+<section class="page-header container"><h1>O Flammel</h1></section>
 <section class="section">
   <div class="container about-block">
-    {figure_html}
-    <div class="content">{paragraphs}</div>
+    {O_NAS_FIGURE}
+    <div class="content">{O_NAS_TEXT}</div>
   </div>
 </section>
 '''
-    write('o-nas.html', base_layout('O nás', 'Příběh flammel — ručně vyráběné přírodní produkty s láskou.', body))
+    write('o-nas.html', base_layout('O Flammel', 'Příběh Flammel — ručně vyráběné přírodní produkty s láskou.', body))
 
 
 def render_informace():
