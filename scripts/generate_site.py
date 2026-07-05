@@ -399,7 +399,7 @@ def render_home():
             {'<span class="collection-badge">Kolekce</span>' if slug in collection_slugs else ''}
             <div class="cat-icon">{icon_html(slug)}</div>
             <h3{' class="collection-title"' if slug in collection_slugs else ''}>{CAT_BY_SLUG[slug]['name']}</h3>
-            <p>{CATEGORY_TAGLINES[slug][0]}</p>
+            {'' if slug in collection_slugs else f'<p>{CATEGORY_TAGLINES[slug][0]}</p>'}
           </a>
           <a class="cat-tag-btn" href="/kategorie/{slug}.html"{tag_btn_style(slug)}>{CATEGORY_TAGLINES[slug][1]}</a>
         </div>'''
