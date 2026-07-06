@@ -270,7 +270,11 @@
           step3.classList.remove('hidden-block');
           step3.innerHTML =
             '<p><strong>Vaše odstoupení od smlouvy bylo přijato dne ' + timestamp + '.</strong></p>' +
-            '<p>Písemné potvrzení vám zašleme na e-mail ' + escapeHtml(collected.email) + '. Peníze vrátíme na uvedený účet nejpozději do 14 dnů od obdržení vráceného zboží.</p>';
+            '<p>Písemné potvrzení vám zašleme na e-mail ' + escapeHtml(collected.email) + '.</p>' +
+            '<p><strong>Co teď udělat se zbožím:</strong> zašlete ho prosím do 14 dnů na adresu ' +
+            '<strong>NEXTER Group s.r.o., Opletalova 1015/55, 110 00 Praha 1</strong>, nebo ho po domluvě doručte osobně. ' +
+            'Náklady na vrácení zboží hradí zákazník.</p>' +
+            '<p>Peníze vrátíme na uvedený účet nejpozději do 14 dnů od odstoupení (počítáno od doručení zboží zpět k nám).</p>';
           step3.scrollIntoView({ behavior: 'smooth', block: 'start' });
         })
         .catch(function () {

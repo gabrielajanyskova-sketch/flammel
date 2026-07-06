@@ -736,6 +736,9 @@ def render_odstoupeni_od_smlouvy():
     <p>Jako spotřebitel máte podle zákona právo odstoupit od smlouvy uzavřené na dálku (přes internet)
     bez udání důvodu, a to do <strong>14 dnů</strong> od převzetí zboží. Stačí vyplnit formulář níže
     a potvrdit ho — žádné psaní dopisů ani stahování formulářů není potřeba.</p>
+    <p>Zboží pak zašlete do 14 dnů od odstoupení na adresu <strong>NEXTER Group s.r.o., Opletalova 1015/55,
+    110 00 Praha 1</strong> (nebo ho po domluvě doručte osobně) — náklady na vrácení hradí zákazník.
+    Peníze vrátíme na stejný způsob platby, jakým jste platili, nejpozději do 14 dnů od odstoupení.</p>
 
     <div class="notice-box" id="withdraw-step-1">
       <form id="withdraw-form-step1">
