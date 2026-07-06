@@ -1,0 +1,821 @@
+[
+  {
+    "id": "new-caj-o-pate",
+    "title": "Čaj o páté",
+    "slug": "caj-o-pate",
+    "description": "",
+    "category_names": [
+      "Přírodní svíčky"
+    ],
+    "category_slugs": [
+      "svicky"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "perenelle"
+    ]
+  },
+  {
+    "id": "new-pivonkova-zahrada",
+    "title": "Pivoňková zahrada",
+    "slug": "pivonkova-zahrada",
+    "description": "",
+    "category_names": [
+      "Přírodní svíčky"
+    ],
+    "category_slugs": [
+      "svicky"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "perenelle"
+    ]
+  },
+  {
+    "id": "new-perenelle",
+    "title": "Perenelle",
+    "slug": "perenelle",
+    "description": "",
+    "category_names": [
+      "Přírodní svíčky"
+    ],
+    "category_slugs": [
+      "svicky"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "perenelle"
+    ]
+  },
+  {
+    "id": "new-prvni-pripitek",
+    "title": "První přípitek",
+    "slug": "prvni-pripitek",
+    "description": "",
+    "category_names": [
+      "Přírodní svíčky"
+    ],
+    "category_slugs": [
+      "svicky"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "perenelle"
+    ]
+  },
+  {
+    "id": "new-pod-dekou",
+    "title": "Pod dekou",
+    "slug": "pod-dekou",
+    "description": "",
+    "category_names": [
+      "Přírodní svíčky"
+    ],
+    "category_slugs": [
+      "svicky"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "ignis"
+    ]
+  },
+  {
+    "id": "new-u-babicky",
+    "title": "U babičky",
+    "slug": "u-babicky",
+    "description": "",
+    "category_names": [
+      "Přírodní svíčky"
+    ],
+    "category_slugs": [
+      "svicky"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "ignis"
+    ]
+  },
+  {
+    "id": "new-v-korunach-stromu",
+    "title": "V korunách stromů",
+    "slug": "v-korunach-stromu",
+    "description": "",
+    "category_names": [
+      "Přírodní svíčky"
+    ],
+    "category_slugs": [
+      "svicky"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "ignis"
+    ]
+  },
+  {
+    "id": "new-stedry-vecer",
+    "title": "Štědrý večer",
+    "slug": "stedry-vecer",
+    "description": "",
+    "category_names": [
+      "Přírodní svíčky"
+    ],
+    "category_slugs": [
+      "svicky"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "ignis"
+    ]
+  },
+  {
+    "id": "new-po-setmeni",
+    "title": "Po setmění",
+    "slug": "po-setmeni",
+    "description": "",
+    "category_names": [
+      "Přírodní svíčky"
+    ],
+    "category_slugs": [
+      "svicky"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "luna"
+    ]
+  },
+  {
+    "id": "new-sametova-noc",
+    "title": "Sametová noc",
+    "slug": "sametova-noc",
+    "description": "",
+    "category_names": [
+      "Přírodní svíčky"
+    ],
+    "category_slugs": [
+      "svicky"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "luna"
+    ]
+  },
+  {
+    "id": "new-mesicni-svit",
+    "title": "Měsíční svit",
+    "slug": "mesicni-svit",
+    "description": "",
+    "category_names": [
+      "Přírodní svíčky"
+    ],
+    "category_slugs": [
+      "svicky"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "luna"
+    ]
+  },
+  {
+    "id": "new-hvezdny-prach",
+    "title": "Hvězdný prach",
+    "slug": "hvezdny-prach",
+    "description": "",
+    "category_names": [
+      "Přírodní svíčky"
+    ],
+    "category_slugs": [
+      "svicky"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "luna"
+    ]
+  },
+  {
+    "id": "new-vosky-do-svicek",
+    "title": "Vosky (do svíček)",
+    "slug": "vosky-do-svicek",
+    "description": "",
+    "category_names": [
+      "Přírodní svíčky"
+    ],
+    "category_slugs": [
+      "svicky"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "ignis"
+    ]
+  },
+  {
+    "id": "new-vosky-do-svicek-2",
+    "title": "Vosky (do svíček)",
+    "slug": "vosky-do-svicek-2",
+    "description": "",
+    "category_names": [
+      "Přírodní svíčky"
+    ],
+    "category_slugs": [
+      "svicky"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "ignis"
+    ]
+  },
+  {
+    "id": "new-vosky-do-svicek-3",
+    "title": "Vosky (do svíček)",
+    "slug": "vosky-do-svicek-3",
+    "description": "",
+    "category_names": [
+      "Přírodní svíčky"
+    ],
+    "category_slugs": [
+      "svicky"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "perenelle"
+    ]
+  },
+  {
+    "id": "new-vosky-do-svicek-4",
+    "title": "Vosky (do svíček)",
+    "slug": "vosky-do-svicek-4",
+    "description": "",
+    "category_names": [
+      "Přírodní svíčky"
+    ],
+    "category_slugs": [
+      "svicky"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "perenelle"
+    ]
+  },
+  {
+    "id": "new-hackovana-podlozka-bezova",
+    "title": "Háčkovaná podložka béžová",
+    "slug": "hackovana-podlozka-bezova",
+    "description": "",
+    "category_names": [
+      "Útulný domov"
+    ],
+    "category_slugs": [
+      "bytove-dekorace"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "perenelle"
+    ]
+  },
+  {
+    "id": "new-hackovany-podtacek-bily",
+    "title": "Háčkovaný podtácek - bílý",
+    "slug": "hackovany-podtacek-bily",
+    "description": "",
+    "category_names": [
+      "Útulný domov"
+    ],
+    "category_slugs": [
+      "bytove-dekorace"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "perenelle"
+    ]
+  },
+  {
+    "id": "new-hackovany-podtacek-ruzovy",
+    "title": "Háčkovaný podtácek - růžový",
+    "slug": "hackovany-podtacek-ruzovy",
+    "description": "",
+    "category_names": [
+      "Útulný domov"
+    ],
+    "category_slugs": [
+      "bytove-dekorace"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "perenelle"
+    ]
+  },
+  {
+    "id": "new-hackovany-podtacek-bezovy",
+    "title": "Háčkovaný podtácek - béžový",
+    "slug": "hackovany-podtacek-bezovy",
+    "description": "",
+    "category_names": [
+      "Útulný domov"
+    ],
+    "category_slugs": [
+      "bytove-dekorace"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "perenelle"
+    ]
+  },
+  {
+    "id": "new-hackovany-podtacek-salvejovy",
+    "title": "Háčkovaný podtácek - šalvějový",
+    "slug": "hackovany-podtacek-salvejovy",
+    "description": "",
+    "category_names": [
+      "Útulný domov"
+    ],
+    "category_slugs": [
+      "bytove-dekorace"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "perenelle"
+    ]
+  },
+  {
+    "id": "new-hackovany-podtacek-sedy",
+    "title": "Háčkovaný podtácek- šedý",
+    "slug": "hackovany-podtacek-sedy",
+    "description": "",
+    "category_names": [
+      "Útulný domov"
+    ],
+    "category_slugs": [
+      "bytove-dekorace"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "luna"
+    ]
+  },
+  {
+    "id": "new-hackovane-prostirani",
+    "title": "Háčkované prostírání",
+    "slug": "hackovane-prostirani",
+    "description": "",
+    "category_names": [
+      "Útulný domov"
+    ],
+    "category_slugs": [
+      "bytove-dekorace"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "ignis"
+    ]
+  },
+  {
+    "id": "new-hackovany-tac-ruzovy",
+    "title": "Háčkovaný tác - růžový",
+    "slug": "hackovany-tac-ruzovy",
+    "description": "",
+    "category_names": [
+      "Útulný domov"
+    ],
+    "category_slugs": [
+      "bytove-dekorace"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "perenelle"
+    ]
+  },
+  {
+    "id": "new-hackovany-tac-bezovy",
+    "title": "Háčkovaný tác - béžový",
+    "slug": "hackovany-tac-bezovy",
+    "description": "",
+    "category_names": [
+      "Útulný domov"
+    ],
+    "category_slugs": [
+      "bytove-dekorace"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "perenelle"
+    ]
+  },
+  {
+    "id": "new-hackovany-tac-sedy",
+    "title": "Háčkovaný tác - šedý",
+    "slug": "hackovany-tac-sedy",
+    "description": "",
+    "category_names": [
+      "Útulný domov"
+    ],
+    "category_slugs": [
+      "bytove-dekorace"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "luna"
+    ]
+  },
+  {
+    "id": "new-hackovany-obal-na-svicku-cerveny",
+    "title": "Háčkovaný obal na svíčku - červený",
+    "slug": "hackovany-obal-na-svicku-cerveny",
+    "description": "",
+    "category_names": [
+      "Útulný domov"
+    ],
+    "category_slugs": [
+      "bytove-dekorace"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "ignis"
+    ]
+  },
+  {
+    "id": "new-hackovany-obal-na-svicku-terracotta",
+    "title": "Háčkovaný obal na svíčku - terracotta",
+    "slug": "hackovany-obal-na-svicku-terracotta",
+    "description": "",
+    "category_names": [
+      "Útulný domov"
+    ],
+    "category_slugs": [
+      "bytove-dekorace"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "ignis"
+    ]
+  },
+  {
+    "id": "new-makrame-vanocni-ozdoby-1",
+    "title": "Makramé vánoční ozdoby 1",
+    "slug": "makrame-vanocni-ozdoby-1",
+    "description": "",
+    "category_names": [
+      "Útulný domov"
+    ],
+    "category_slugs": [
+      "bytove-dekorace"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "ignis"
+    ]
+  },
+  {
+    "id": "new-makrame-vanocni-ozdoby-2",
+    "title": "Makramé vánoční ozdoby 2",
+    "slug": "makrame-vanocni-ozdoby-2",
+    "description": "",
+    "category_names": [
+      "Útulný domov"
+    ],
+    "category_slugs": [
+      "bytove-dekorace"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "ignis"
+    ]
+  },
+  {
+    "id": "new-makrame-vanocni-ozdoby-3",
+    "title": "Makramé vánoční ozdoby 3",
+    "slug": "makrame-vanocni-ozdoby-3",
+    "description": "",
+    "category_names": [
+      "Útulný domov"
+    ],
+    "category_slugs": [
+      "bytove-dekorace"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "ignis"
+    ]
+  },
+  {
+    "id": "new-makrame-vanocni-ozdoby-4",
+    "title": "Makramé vánoční ozdoby 4",
+    "slug": "makrame-vanocni-ozdoby-4",
+    "description": "",
+    "category_names": [
+      "Útulný domov"
+    ],
+    "category_slugs": [
+      "bytove-dekorace"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "ignis"
+    ]
+  },
+  {
+    "id": "new-makrame-vanocni-ozdoby-5",
+    "title": "Makramé vánoční ozdoby 5",
+    "slug": "makrame-vanocni-ozdoby-5",
+    "description": "",
+    "category_names": [
+      "Útulný domov"
+    ],
+    "category_slugs": [
+      "bytove-dekorace"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "ignis"
+    ]
+  },
+  {
+    "id": "new-nahrdelnik-ryba",
+    "title": "Náhrdelník ryba",
+    "slug": "nahrdelnik-ryba",
+    "description": "",
+    "category_names": [
+      "Šperky"
+    ],
+    "category_slugs": [
+      "mineralni-kameny"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "perenelle"
+    ]
+  },
+  {
+    "id": "new-nahrdelnik-perla-visaci",
+    "title": "Náhrdelník perla visací",
+    "slug": "nahrdelnik-perla-visaci",
+    "description": "",
+    "category_names": [
+      "Šperky"
+    ],
+    "category_slugs": [
+      "mineralni-kameny"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "perenelle"
+    ]
+  },
+  {
+    "id": "new-nahrdelnik-perla-koralek",
+    "title": "Náhrdelník perla korálek",
+    "slug": "nahrdelnik-perla-koralek",
+    "description": "",
+    "category_names": [
+      "Šperky"
+    ],
+    "category_slugs": [
+      "mineralni-kameny"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "perenelle"
+    ]
+  },
+  {
+    "id": "new-nausnice-perla",
+    "title": "Náušnice perla",
+    "slug": "nausnice-perla",
+    "description": "",
+    "category_names": [
+      "Šperky"
+    ],
+    "category_slugs": [
+      "mineralni-kameny"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "perenelle"
+    ]
+  },
+  {
+    "id": "new-nahrdelnik-mesic",
+    "title": "Náhrdelník měsíc",
+    "slug": "nahrdelnik-mesic",
+    "description": "",
+    "category_names": [
+      "Šperky"
+    ],
+    "category_slugs": [
+      "mineralni-kameny"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "luna"
+    ]
+  },
+  {
+    "id": "new-nahrdelnik-mesicni-kamen",
+    "title": "Náhrdelník měsíční kámen",
+    "slug": "nahrdelnik-mesicni-kamen",
+    "description": "",
+    "category_names": [
+      "Šperky"
+    ],
+    "category_slugs": [
+      "mineralni-kameny"
+    ],
+    "price": "",
+    "regular_price": "",
+    "sale_price": "",
+    "stock_status": "comingsoon",
+    "thumbnail_url": "/assets/img/placeholder-produkt.svg",
+    "gallery_urls": [],
+    "collection_slugs": [
+      "luna"
+    ]
+  }
+]

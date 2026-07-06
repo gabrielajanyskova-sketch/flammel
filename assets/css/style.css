@@ -445,6 +445,8 @@ p { margin: 0 0 1em; }
 .stock-badge { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
 .stock-badge.in { color: #4c7a4c; }
 .stock-badge.out { color: var(--text-muted); }
+.stock-badge.soon { color: var(--gold-dark); }
+.price.price-tbd { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
 
 .empty-state { text-align: center; color: var(--text-muted); padding: 60px 0; }
 

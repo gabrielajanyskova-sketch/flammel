@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <rect width="600" height="600" fill="#f6f1e6"/>
+  <rect x="24" y="24" width="552" height="552" fill="none" stroke="#d4af37" stroke-width="2"/>
+  <circle cx="300" cy="255" r="70" fill="none" stroke="#a9862a" stroke-width="3"/>
+  <path d="M300 210 v45 l30 30" fill="none" stroke="#a9862a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="300" y="380" text-anchor="middle" font-family="Georgia, serif" font-size="26" fill="#211c17">flammel</text>
+  <text x="300" y="415" text-anchor="middle" font-family="Georgia, serif" font-size="17" fill="#8a7f72">Fotka bude brzy doplněna</text>
+</svg>

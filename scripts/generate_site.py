@@ -218,12 +218,26 @@ def apply_product_allowlist():
     print(f'Ponechány jen produkty z tabulky Martiny ({len(DATA["products"])}), smazáno {len(removed)} ostatních.')
 
 
+def apply_new_products():
+    """Add hand-authored products (no WordPress ID yet) from new_products.json —
+    e.g. items Martina wants listed before their price/popis/foto are ready.
+    Kept separate from content.json, which stays a straight WordPress export.
+    """
+    path = ROOT / 'data' / 'new_products.json'
+    if not path.exists():
+        return
+    new_products = json.loads(path.read_text(encoding='utf-8'))
+    DATA['products'].extend(new_products)
+    print(f'Přidáno {len(new_products)} nových produktů (bez ceny/foto) z new_products.json.')
+
+
 apply_products_csv()
 apply_product_allowlist()
 apply_out_of_stock_removal()
 apply_category_renames()
 apply_category_removal()
 apply_new_collections()
+apply_new_products()
 
 PAGES_BY_SLUG = {p['slug']: p for p in DATA['pages']}
 CAT_BY_SLUG = {c['slug']: c for c in DATA['product_cats']}
@@ -245,6 +259,8 @@ def price_block(p, tag='span'):
     price = p.get('price') or p.get('regular_price')
     regular = p.get('regular_price')
     sale = p.get('sale_price')
+    if not price:
+        return f'<{tag} class="price price-tbd">Cena bude brzy doplněna</{tag}>'
     if sale and regular and sale != regular:
         return (f'<{tag} class="price sale">{fmt_price(sale)}</{tag}> '
                 f'<{tag} class="price-old">{fmt_price(regular)}</{tag}>')
@@ -252,8 +268,11 @@ def price_block(p, tag='span'):
 
 
 def stock_badge(p):
-    if p.get('stock_status') == 'instock':
+    status = p.get('stock_status')
+    if status == 'instock':
         return '<span class="stock-badge in">Skladem</span>'
+    if status == 'comingsoon':
+        return '<span class="stock-badge soon">Připravujeme</span>'
     return '<span class="stock-badge out">Vyprodáno</span>'
 
 
@@ -612,6 +631,7 @@ def render_product_detail(p):
     breadcrumb_cat = f'<a href="/kategorie/{cat_slug}.html">{cat}</a> / ' if cat_slug else ''
     price = p.get('sale_price') or p.get('price') or p.get('regular_price')
     disabled = '' if p['stock_status'] == 'instock' else 'disabled'
+    btn_label = {'instock': 'Přidat do košíku', 'comingsoon': 'Připravujeme'}.get(p['stock_status'], 'Vyprodáno')
     body = f'''
 <section class="container" style="padding-top:32px">
   <div class="breadcrumb"><a href="/produkty.html">Produkty</a> / {breadcrumb_cat}{p['title']}</div>
@@ -633,7 +653,7 @@ def render_product_detail(p):
         <button class="btn" {disabled} data-add-to-cart
           data-id="{p['id']}" data-title="{html_lib.escape(p['title'])}"
           data-price="{price}" data-image="{main_img}" data-url="/produkt/{p['slug']}.html">
-          {'Přidat do košíku' if p['stock_status'] == 'instock' else 'Vyprodáno'}
+          {btn_label}
         </button>
       </div>
       <p class="added-msg">Produkt byl přidán do košíku.</p>
