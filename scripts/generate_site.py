@@ -608,6 +608,25 @@ def product_card(p):
     </div>'''
 
 
+COLLECTION_PAGE_TEXT = {
+    'perenelle': {
+        'tagline': 'Jemnost, světlo a drobné radosti.',
+        'body': '''<p>Perenelle je kolekce inspirovaná klidnými chvílemi, jemnými vůněmi a světlými tóny. Najdete v ní produkty, které spolu přirozeně ladí – od svíček přes šperky až po doplňky pro útulný domov.</p>
+<p>Pokud hledáte dárek nebo si chcete vytvořit vlastní malý rituál, právě tady můžete snadno kombinovat jednotlivé produkty. Stejné barvy, podobná atmosféra a jeden společný pocit – lehkost, elegance a něha.</p>''',
+    },
+    'luna': {
+        'tagline': 'Ticho, které má své kouzlo.',
+        'body': '''<p>Luna patří večerům, kdy svět zpomalí a ztiší se. Beton, tmavší tóny, tlumené světlo a vůně, které připomínají klid po dlouhém dni.</p>
+<p>Produkty v této kolekci byly vybrány tak, aby spolu vytvářely harmonický celek. Můžete je mezi sebou libovolně kombinovat a vytvořit si vlastní večerní kout – se svíčkou, oblíbenou knihou a drobnostmi, které promění obyčejný večer v malý rituál.</p>''',
+    },
+    'ignis': {
+        'tagline': 'Teplo domova v každém detailu.',
+        'body': '''<p>Ignis je kolekce inspirovaná hřejivou atmosférou domova. Najdete v ní vůně koření, lesa, podzimu i Vánoc, přírodní materiály a doplňky, které vybízejí ke společným chvílím.</p>
+<p>Stejně jako ostatní kolekce je i Ignis sestavená tak, aby se jednotlivé produkty daly snadno kombinovat. Ať už vybíráte dárek, nebo si chcete vytvořit útulný kout jen pro sebe, vše spolu barevně i náladou přirozeně ladí.</p>''',
+    },
+}
+
+
 def render_product_listing(products, title, description, path, active_slug=None):
     filter_buttons = '<button class="active" data-filter="all">Vše</button>' + ''.join(
         f'<button data-filter="{slug}">{CAT_BY_SLUG[slug]["name"]}</button>' for slug in HOME_NAV_CATS
@@ -616,11 +635,21 @@ def render_product_listing(products, title, description, path, active_slug=None)
     show_filter = active_slug is None
     is_collection = active_slug in {c['slug'] for c in NEW_COLLECTIONS}
     eyebrow_text = 'Kolekce' if is_collection else 'Produkty'
+    collection_intro = ''
+    if is_collection and active_slug in COLLECTION_PAGE_TEXT:
+        info = COLLECTION_PAGE_TEXT[active_slug]
+        collection_intro = f'''<div class="container">
+      <div class="collection-intro">
+        <p class="collection-tagline">{info['tagline']}</p>
+        {info['body']}
+      </div>
+    </div>'''
     body = f'''
 <section class="page-header container">
   <span class="eyebrow">{eyebrow_text}</span>
   <h1>{title}</h1>
 </section>
+{collection_intro}
 <section class="section">
   <div class="container">
     {'<div class="filter-bar" id="cat-filter">' + filter_buttons + '</div>' if show_filter else ''}

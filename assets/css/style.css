@@ -65,6 +65,14 @@ p { margin: 0 0 1em; }
   font-weight: 600;
   margin-bottom: 0.5em;
 }
+.collection-intro {
+  max-width: 680px; margin: 0 auto 8px; text-align: center; padding: 0 20px 24px;
+}
+.collection-tagline {
+  font-size: 1.15rem; font-weight: 600; font-style: italic;
+  color: var(--gold-dark); margin-bottom: 0.6em;
+}
+.collection-intro p:not(.collection-tagline) { color: var(--text); margin-bottom: 1em; }
 
 .btn {
   display: inline-flex;
