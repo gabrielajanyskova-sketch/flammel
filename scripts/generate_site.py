@@ -201,7 +201,27 @@ def apply_out_of_stock_removal():
     print(f'Odstraněno {len(removed)} vyprodaných produktů.')
 
 
+# Clean-slate catalog per Martina's "Produkty_master" sheet — only these IDs
+# (leftover WordPress products she confirmed keeping, incl. ones just needing
+# Skladem flipped back to Ano) may ever appear. Everything else from the old
+# WordPress export is gone for good, no matter what products.csv says.
+ALLOWED_PRODUCT_IDS = {
+    '2372', '2543', '2545', '2547', '2549', '2584', '2586', '2588', '2964',
+    '4178', '4182', '4223', '4225', '4227', '4460', '4493', '5118', '5293',
+    '5828', '6071', '6143', '6214', '6261',
+}
+
+
+def apply_product_allowlist():
+    removed = [p for p in DATA['products'] if p['id'] not in ALLOWED_PRODUCT_IDS]
+    DATA['products'] = [p for p in DATA['products'] if p['id'] in ALLOWED_PRODUCT_IDS]
+    for p in removed:
+        (ROOT / 'produkt' / f"{p['slug']}.html").unlink(missing_ok=True)
+    print(f'Ponechány jen produkty z tabulky Martiny ({len(DATA["products"])}), smazáno {len(removed)} ostatních.')
+
+
 apply_products_csv()
+apply_product_allowlist()
 apply_out_of_stock_removal()
 apply_category_renames()
 apply_category_removal()
