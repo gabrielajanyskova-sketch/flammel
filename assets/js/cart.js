@@ -44,6 +44,14 @@
     saveCart(cart);
   }
 
+  function generateOrderNumber() {
+    var d = new Date();
+    var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+    var datePart = d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate());
+    var rand = Math.floor(1000 + Math.random() * 9000);
+    return 'FL-' + datePart + '-' + rand;
+  }
+
   function cartCount(cart) {
     return cart.reduce(function (sum, i) { return sum + i.qty; }, 0);
   }
@@ -290,6 +298,7 @@
         });
         var delivery = data.get('delivery');
         var payment = data.get('payment');
+        var orderNumber = generateOrderNumber();
         var shipping = shippingCostFor(delivery, cartTotal(cart));
         var paymentFee = PAYMENT_SURCHARGE[payment] || 0;
         var deliveryDetail;
@@ -307,6 +316,7 @@
           billingDetail = billingParts + (data.get('fakt_ico') ? ', IČO: ' + data.get('fakt_ico') : '');
         }
         var body = [
+          'Číslo objednávky: ' + orderNumber,
           'Jméno: ' + data.get('name'),
           'E-mail: ' + data.get('email'),
           'Telefon: ' + data.get('phone'),
@@ -337,7 +347,7 @@
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({
             access_key: WEB3FORMS_ACCESS_KEY,
-            subject: 'Nová objednávka z webu flammel.cz',
+            subject: 'Nová objednávka ' + orderNumber + ' z webu flammel.cz',
             from_name: data.get('name'),
             email: data.get('email'),
             message: body,
@@ -348,10 +358,40 @@
             if (!result.success) throw new Error(result.message || 'unknown error');
             saveCart([]);
             form.style.display = 'none';
+
             var confirmEl = document.createElement('div');
             confirmEl.className = 'notice-box';
-            confirmEl.textContent = 'Děkujeme! Objednávka byla úspěšně odeslána, brzy se vám ozveme na uvedený e-mail nebo telefon.';
+            confirmEl.innerHTML =
+              'Děkujeme! Objednávka <strong>č. ' + orderNumber + '</strong> byla úspěšně odeslána, brzy se vám ozveme na uvedený e-mail nebo telefon.' +
+              '<br><button type="button" class="btn btn-outline" id="cancel-order-btn" style="margin-top:14px">Zrušit objednávku</button>';
             form.parentNode.insertBefore(confirmEl, form);
+
+            document.getElementById('cancel-order-btn').addEventListener('click', function () {
+              var cancelBtn = this;
+              cancelBtn.disabled = true;
+              cancelBtn.textContent = 'Ruším…';
+              fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                body: JSON.stringify({
+                  access_key: WEB3FORMS_ACCESS_KEY,
+                  subject: 'Žádost o zrušení objednávky ' + orderNumber,
+                  from_name: data.get('name'),
+                  email: data.get('email'),
+                  message: 'Zákazník žádá o zrušení objednávky č. ' + orderNumber + '.\nJméno: ' + data.get('name') + '\nE-mail: ' + data.get('email') + '\nTelefon: ' + data.get('phone'),
+                }),
+              })
+                .then(function (res) { return res.json(); })
+                .then(function (result) {
+                  if (!result.success) throw new Error(result.message || 'unknown error');
+                  cancelBtn.outerHTML = '<p style="margin-top:14px">Žádost o zrušení objednávky byla odeslána, brzy se vám ozveme.</p>';
+                })
+                .catch(function () {
+                  cancelBtn.disabled = false;
+                  cancelBtn.textContent = 'Zrušit objednávku';
+                  alert('Zrušení se nepovedlo odeslat. Napište nám prosím přímo na flammel@flammel.cz.');
+                });
+            });
           })
           .catch(function () {
             submitBtn.disabled = false;
@@ -370,9 +410,20 @@
     setupBillingAddress();
     setupPacketaWidget();
 
+    document.querySelectorAll('.qty-input').forEach(function (wrap) {
+      var input = wrap.querySelector('input');
+      if (!input) return;
+      var inc = wrap.querySelector('[data-qty-inc]');
+      var dec = wrap.querySelector('[data-qty-dec]');
+      if (inc) inc.addEventListener('click', function () { input.value = Math.max(1, (parseInt(input.value, 10) || 1) + 1); });
+      if (dec) dec.addEventListener('click', function () { input.value = Math.max(1, (parseInt(input.value, 10) || 1) - 1); });
+    });
+
     document.querySelectorAll('[data-add-to-cart]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var qtyInput = document.getElementById('qty');
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var row = btn.closest('.qty-row, .quick-add');
+        var qtyInput = row ? row.querySelector('.qty-input input') : null;
         var qty = qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1;
         addToCart({
           id: btn.dataset.id,
@@ -381,22 +432,15 @@
           image: btn.dataset.image,
           url: btn.dataset.url,
         }, qty);
-        var msg = document.querySelector('.added-msg');
+        var msg = row ? row.parentElement.querySelector('.added-msg') : document.querySelector('.added-msg');
         if (msg) {
           msg.classList.add('show');
           setTimeout(function () { msg.classList.remove('show'); }, 2500);
+        } else {
+          btn.textContent = 'Přidáno ✓';
+          setTimeout(function () { btn.textContent = 'Přidat'; }, 1500);
         }
       });
     });
-
-    var qtyInput = document.getElementById('qty');
-    if (qtyInput) {
-      document.querySelectorAll('[data-qty-inc]').forEach(function (b) {
-        b.addEventListener('click', function () { qtyInput.value = Math.max(1, (parseInt(qtyInput.value, 10) || 1) + 1); });
-      });
-      document.querySelectorAll('[data-qty-dec]').forEach(function (b) {
-        b.addEventListener('click', function () { qtyInput.value = Math.max(1, (parseInt(qtyInput.value, 10) || 1) - 1); });
-      });
-    }
   });
 })();

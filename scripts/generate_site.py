@@ -545,6 +545,19 @@ def product_card(p):
     img = p['thumbnail_url'] or (p['gallery_urls'][0] if p['gallery_urls'] else '')
     cat = p['category_names'][0] if p['category_names'] else ''
     all_slugs = p['category_slugs'] + p.get('collection_slugs', [])
+    price = p.get('sale_price') or p.get('price') or p.get('regular_price')
+    quick_add = ''
+    if p['stock_status'] == 'instock':
+        quick_add = f'''<div class="quick-add">
+          <div class="qty-input qty-input--sm">
+            <button type="button" data-qty-dec>−</button>
+            <input type="text" value="1" readonly>
+            <button type="button" data-qty-inc>+</button>
+          </div>
+          <button type="button" class="btn btn-quick-add" data-add-to-cart
+            data-id="{p['id']}" data-title="{html_lib.escape(p['title'])}"
+            data-price="{price}" data-image="{img}" data-url="/produkt/{p['slug']}.html">Přidat</button>
+        </div>'''
     return f'''<div class="product-card" data-cats="{','.join(all_slugs)}">
       <a class="thumb" href="/produkt/{p['slug']}.html">
         <img src="{img}" alt="{html_lib.escape(p['title'])}" loading="lazy">
@@ -554,6 +567,7 @@ def product_card(p):
         <h3><a href="/produkt/{p['slug']}.html">{p['title']}</a></h3>
         <div class="price-row">{price_block(p)}</div>
         {stock_badge(p)}
+        {quick_add}
       </div>
     </div>'''
 

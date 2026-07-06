@@ -447,6 +447,20 @@ p { margin: 0 0 1em; }
 .stock-badge.out { color: var(--text-muted); }
 .stock-badge.soon { color: var(--gold-dark); }
 .price.price-tbd { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+.quick-add {
+  display: flex; align-items: center; gap: 8px; margin-top: 6px;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+}
+.product-card:hover .quick-add,
+.product-card:focus-within .quick-add { opacity: 1; transform: none; pointer-events: auto; }
+@media (hover: none) {
+  .quick-add { opacity: 1; transform: none; pointer-events: auto; }
+}
+.qty-input--sm button { width: 28px; height: 28px; font-size: 0.9rem; }
+.qty-input--sm input { width: 28px; font-size: 0.85rem; }
+.btn-quick-add { flex: 1; padding: 8px 10px; font-size: 0.82rem; }
 
 .empty-state { text-align: center; color: var(--text-muted); padding: 60px 0; }
 
