@@ -86,6 +86,28 @@
     return checked ? checked.value : 'online';
   }
 
+  var FREE_SHIPPING_THRESHOLD = 2500;
+
+  function shippingCostFor(delivery, subtotal) {
+    if (subtotal >= FREE_SHIPPING_THRESHOLD) return 0;
+    return SHIPPING_PRICES[delivery] || 0;
+  }
+
+  function renderFreeShippingBanner(subtotal) {
+    var root = document.getElementById('free-shipping-banner');
+    if (!root) return;
+    var remaining = FREE_SHIPPING_THRESHOLD - subtotal;
+    var pct = Math.max(0, Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100));
+    var text = remaining <= 0
+      ? 'Máte dopravu zdarma! ✨'
+      : 'Ještě ' + formatPrice(remaining) + ' a máte dopravu zdarma!';
+    root.innerHTML =
+      '<div class="shipping-banner">' +
+      '<div class="shipping-banner-text">' + text + '</div>' +
+      '<div class="shipping-progress"><div class="shipping-progress-fill" style="width:' + pct + '%"></div></div>' +
+      '</div>';
+  }
+
   function setupCheckoutOptions() {
     var form = document.getElementById('checkout-form');
     if (!form) return;
@@ -162,6 +184,7 @@
     var root = document.getElementById('cart-root');
     if (!root) return;
     var cart = getCart();
+    renderFreeShippingBanner(cartTotal(cart));
     if (cart.length === 0) {
       root.innerHTML = '<div class="empty-state"><p>Váš košík je prázdný.</p><a class="btn" href="/produkty.html">Prohlédnout produkty</a></div>';
       return;
@@ -216,6 +239,7 @@
     var form = document.getElementById('checkout-form');
     if (!root) return;
     var cart = getCart();
+    renderFreeShippingBanner(cartTotal(cart));
     if (cart.length === 0) {
       root.innerHTML = '<p>Váš košík je prázdný. <a href="/produkty.html">Vybrat produkty</a></p>';
       if (form) form.style.display = 'none';
@@ -233,7 +257,8 @@
       '<div class="total-row total-row--grand" id="summary-grand-total"><span>Celkem</span><span></span></div>';
 
     function updateTotals() {
-      var shipping = form ? SHIPPING_PRICES[selectedDelivery(form)] || 0 : 0;
+      var freeShipping = subtotal >= FREE_SHIPPING_THRESHOLD;
+      var shipping = form ? shippingCostFor(selectedDelivery(form), subtotal) : 0;
       var paymentFee = form ? PAYMENT_SURCHARGE[selectedPayment(form)] || 0 : 0;
       var shippingEl = document.querySelector('#summary-shipping span:last-child');
       var paymentEl = document.querySelector('#summary-payment span:last-child');
@@ -241,6 +266,11 @@
       if (shippingEl) shippingEl.textContent = shipping ? formatPrice(shipping) : 'Zdarma';
       if (paymentEl) paymentEl.textContent = paymentFee ? formatPrice(paymentFee) : 'Zdarma';
       if (grandEl) grandEl.textContent = formatPrice(subtotal + shipping + paymentFee);
+      if (form) {
+        form.querySelectorAll('.option-price[data-shipping-price]').forEach(function (el) {
+          el.textContent = freeShipping ? 'Zdarma' : el.dataset.shippingPrice + ' Kč';
+        });
+      }
     }
     updateTotals();
     if (form) {
@@ -258,7 +288,7 @@
         });
         var delivery = data.get('delivery');
         var payment = data.get('payment');
-        var shipping = SHIPPING_PRICES[delivery] || 0;
+        var shipping = shippingCostFor(delivery, cartTotal(cart));
         var paymentFee = PAYMENT_SURCHARGE[payment] || 0;
         var deliveryDetail;
         if (delivery === 'zasilkovna_vydejni' || delivery === 'zasilkovna_zbox') {

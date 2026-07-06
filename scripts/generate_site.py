@@ -763,7 +763,12 @@ def render_informace():
 def render_kosik():
     body = '''
 <section class="page-header container"><h1>Košík</h1></section>
-<section class="section"><div class="container" id="cart-root"></div></section>
+<section class="section">
+  <div class="container">
+    <div id="free-shipping-banner"></div>
+    <div id="cart-root"></div>
+  </div>
+</section>
 '''
     write('kosik.html', base_layout('Košík', '', body))
 
@@ -775,20 +780,14 @@ def render_pokladna():
   <div class="container checkout-grid">
     <div>
       <div class="notice-box">Tento web je statická prezentace bez napojení na platební bránu. Po odeslání formuláře se otevře e-mail s Vaší objednávkou i vybraným způsobem dopravy a platby — obratem ji potvrdíme, u online platby zároveň pošleme platební odkaz/QR platbu.</div>
+      <div id="free-shipping-banner"></div>
       <form id="checkout-form">
-        <h2 class="checkout-section-title">Kontaktní údaje</h2>
-        <div class="form-row">
-          <div class="form-group"><label for="name">Jméno a příjmení</label><input type="text" id="name" name="name" required></div>
-          <div class="form-group"><label for="email">E-mail</label><input type="email" id="email" name="email" required></div>
-        </div>
-        <div class="form-group"><label for="phone">Telefon</label><input type="tel" id="phone" name="phone" required></div>
-
         <h2 class="checkout-section-title">Doprava</h2>
         <div class="option-group">
-          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_adresa" checked><span>Zásilkovna – doručení na adresu</span><span class="option-price">89 Kč</span></label>
-          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_vydejni"><span>Zásilkovna – výdejní místo</span><span class="option-price">69 Kč</span></label>
-          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_zbox"><span>Zásilkovna – Z-BOX</span><span class="option-price">65 Kč</span></label>
-          <label class="option-item"><input type="radio" name="delivery" value="ceska_posta"><span>Česká pošta</span><span class="option-price">99 Kč</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_adresa" checked><span>Zásilkovna – doručení na adresu</span><span class="option-price" data-shipping-price="89">89 Kč</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_vydejni"><span>Zásilkovna – výdejní místo</span><span class="option-price" data-shipping-price="69">69 Kč</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_zbox"><span>Zásilkovna – Z-BOX</span><span class="option-price" data-shipping-price="65">65 Kč</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="ceska_posta"><span>Česká pošta</span><span class="option-price" data-shipping-price="99">99 Kč</span></label>
           <label class="option-item"><input type="radio" name="delivery" value="osobni"><span>Osobní vyzvednutí</span><span class="option-price">Zdarma</span></label>
         </div>
 
@@ -798,7 +797,12 @@ def render_pokladna():
           <label class="option-item"><input type="radio" name="payment" value="prevodem"><span>Platba předem na účet</span><span class="option-price">Zdarma</span></label>
         </div>
 
-        <h2 class="checkout-section-title">Dodací adresa</h2>
+        <h2 class="checkout-section-title">Kontaktní a dodací údaje</h2>
+        <div class="form-row">
+          <div class="form-group"><label for="name">Jméno a příjmení</label><input type="text" id="name" name="name" required></div>
+          <div class="form-group"><label for="email">E-mail</label><input type="email" id="email" name="email" required></div>
+        </div>
+        <div class="form-group"><label for="phone">Telefon</label><input type="tel" id="phone" name="phone" required></div>
         <div id="address-fields">
           <div class="form-row">
             <div class="form-group"><label for="street">Ulice a číslo popisné</label><input type="text" id="street" name="street" required></div>
