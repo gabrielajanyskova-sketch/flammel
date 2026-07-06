@@ -437,8 +437,9 @@
           msg.classList.add('show');
           setTimeout(function () { msg.classList.remove('show'); }, 2500);
         } else {
+          var originalText = btn.textContent;
           btn.textContent = 'Přidáno ✓';
-          setTimeout(function () { btn.textContent = 'Přidat'; }, 1500);
+          setTimeout(function () { btn.textContent = originalText; }, 1500);
         }
       });
     });

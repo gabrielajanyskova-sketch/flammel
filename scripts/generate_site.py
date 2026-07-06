@@ -276,6 +276,23 @@ def stock_badge(p):
     return '<span class="stock-badge out">Vyprodáno</span>'
 
 
+def build_search_index():
+    items = []
+    for p in DATA['products']:
+        img = p['thumbnail_url'] or (p['gallery_urls'][0] if p['gallery_urls'] else '')
+        price = p.get('sale_price') or p.get('price') or p.get('regular_price')
+        items.append({
+            't': html_lib.escape(p['title']),
+            'u': f"/produkt/{p['slug']}.html",
+            'i': img,
+            'p': fmt_price(price) if price else '',
+        })
+    return items
+
+
+SEARCH_INDEX_JSON = json.dumps(build_search_index(), ensure_ascii=False)
+
+
 def nav_html(active_url=''):
     items = []
     for item in DATA['nav']:
@@ -358,6 +375,13 @@ def base_layout(title, description, body, extra_head=''):
     <a href="/index.html" class="logo">{SITE_NAME}</a>
     <nav class="main-nav">{nav_html()}</nav>
     <div class="header-actions">
+      <div class="search-widget">
+        <button class="search-toggle" aria-label="Hledat" aria-expanded="false">{SEARCH_ICON}</button>
+        <div class="search-box">
+          <input type="text" class="search-input" placeholder="Hledat produkty…" autocomplete="off">
+          <div class="search-results"></div>
+        </div>
+      </div>
       <a href="/kosik.html" class="cart-link" aria-label="Košík">
         {CART_ICON}<span class="cart-count" style="display:none">0</span>
       </a>
@@ -369,6 +393,7 @@ def base_layout(title, description, body, extra_head=''):
 {body}
 </main>
 {footer_html()}
+<script>window.SEARCH_INDEX = {SEARCH_INDEX_JSON};</script>
 <script src="/assets/js/cart.js"></script>
 <script src="/assets/js/main.js"></script>
 </body>
@@ -411,6 +436,7 @@ COLLECTION_ICON_IMAGES = {
     'mineralni-kameny': '/assets/img/icons/mineralni-kameny.png',
 }
 CART_ICON = _icon('<path d="M6 8V6a6 6 0 0 1 12 0v2"/><rect x="3.5" y="8" width="17" height="13" rx="2"/>')
+SEARCH_ICON = _icon('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>')
 HEART_ICON = '<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.2 2 4.5 5.6 4a5 5 0 0 1 6.4 2.6A5 5 0 0 1 18.4 4c3.6.5 5.2 4.2 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg>'
 FACEBOOK_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.3-1.5 1.6-1.5h1.7V3.7C16.5 3.6 15.5 3.5 14.3 3.5c-2.4 0-4 1.5-4 4.1v2.3H7.6v3.1h2.7v8h3.2z"/></svg>'
 INSTAGRAM_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="0.7" fill="currentColor" stroke="none"/></svg>'
@@ -556,7 +582,7 @@ def product_card(p):
           </div>
           <button type="button" class="btn btn-quick-add" data-add-to-cart
             data-id="{p['id']}" data-title="{html_lib.escape(p['title'])}"
-            data-price="{price}" data-image="{img}" data-url="/produkt/{p['slug']}.html">Přidat</button>
+            data-price="{price}" data-image="{img}" data-url="/produkt/{p['slug']}.html">Přidat do košíku</button>
         </div>'''
     return f'''<div class="product-card" data-cats="{','.join(all_slugs)}">
       <a class="thumb" href="/produkt/{p['slug']}.html">

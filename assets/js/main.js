@@ -81,4 +81,52 @@ document.addEventListener('DOMContentLoaded', function () {
       thumb.classList.add('active');
     });
   });
+
+  // Header search — filters the embedded product index client-side,
+  // since this static site has no server to query.
+  var searchToggle = document.querySelector('.search-toggle');
+  var searchWidget = document.querySelector('.search-widget');
+  var searchInput = document.querySelector('.search-input');
+  var searchResults = document.querySelector('.search-results');
+  if (searchToggle && searchWidget && searchInput && searchResults) {
+    searchToggle.addEventListener('click', function () {
+      var isOpen = searchWidget.classList.toggle('open');
+      searchToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      if (isOpen) searchInput.focus();
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.search-widget')) {
+        searchWidget.classList.remove('open');
+        searchToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        searchWidget.classList.remove('open');
+        searchToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+    searchInput.addEventListener('input', function () {
+      var index = window.SEARCH_INDEX || [];
+      var q = searchInput.value.trim().toLowerCase();
+      if (!q) {
+        searchResults.innerHTML = '';
+        searchResults.classList.remove('show');
+        return;
+      }
+      var matches = index.filter(function (item) {
+        return item.t.toLowerCase().indexOf(q) !== -1;
+      }).slice(0, 8);
+      searchResults.innerHTML = matches.length
+        ? matches.map(function (item) {
+            return '<a class="search-result" href="' + item.u + '">' +
+              '<img src="' + item.i + '" alt="">' +
+              '<span><span class="search-result-title">' + item.t + '</span>' +
+              (item.p ? '<span class="search-result-price">' + item.p + '</span>' : '') +
+              '</span></a>';
+          }).join('')
+        : '<p class="search-empty">Nic jsme nenašli.</p>';
+      searchResults.classList.add('show');
+    });
+  }
 });
