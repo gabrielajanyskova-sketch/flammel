@@ -187,7 +187,22 @@ def apply_products_csv():
         ]
 
 
+def apply_out_of_stock_removal():
+    """Drop products marked Skladem=Ne in products.csv from the live site.
+
+    Driven entirely by products.csv, so restocking a product (flipping it
+    back to Ano) makes it reappear on the next run — nothing to delete by
+    hand either way.
+    """
+    removed = [p for p in DATA['products'] if p.get('stock_status') == 'outofstock']
+    DATA['products'] = [p for p in DATA['products'] if p.get('stock_status') != 'outofstock']
+    for p in removed:
+        (ROOT / 'produkt' / f"{p['slug']}.html").unlink(missing_ok=True)
+    print(f'Odstraněno {len(removed)} vyprodaných produktů.')
+
+
 apply_products_csv()
+apply_out_of_stock_removal()
 apply_category_renames()
 apply_category_removal()
 apply_new_collections()
