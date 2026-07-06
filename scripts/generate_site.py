@@ -354,7 +354,7 @@ def footer_html():
 '''
 
 
-def base_layout(title, description, body, extra_head=''):
+def base_layout(title, description, body, extra_head='', body_class=''):
     full_title = f'{title} | {SITE_NAME}' if title else f'{SITE_NAME} — {SITE_TAGLINE}'
     return f'''<!DOCTYPE html>
 <html lang="cs">
@@ -373,7 +373,7 @@ def base_layout(title, description, body, extra_head=''):
 <link rel="stylesheet" href="/assets/css/style.css">
 {extra_head}
 </head>
-<body>
+<body class="{body_class}">
 <div class="announce-bar">
   <div class="container">
     <span>Vítejte na e-shopu {SITE_NAME} &hearts;</span>
@@ -574,7 +574,7 @@ def render_home():
   </div>
 </section>
 '''
-    write('index.html', base_layout('', BASE_DESCRIPTION, body))
+    write('index.html', base_layout('', BASE_DESCRIPTION, body, body_class='home'))
 
 
 # ---------------------------------------------------------------------------
