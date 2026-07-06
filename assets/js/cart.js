@@ -182,6 +182,106 @@
     });
   }
 
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str == null ? '' : str;
+    return div.innerHTML;
+  }
+
+  function setupWithdrawalForm() {
+    var step1Form = document.getElementById('withdraw-form-step1');
+    if (!step1Form) return;
+    var step1 = document.getElementById('withdraw-step-1');
+    var step2 = document.getElementById('withdraw-step-2');
+    var step3 = document.getElementById('withdraw-step-3');
+    var summaryEl = document.getElementById('withdraw-summary');
+    var confirmBtn = document.getElementById('withdraw-confirm-btn');
+    var backBtn = document.getElementById('withdraw-back-btn');
+    var collected = null;
+
+    step1Form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      collected = {
+        name: document.getElementById('w-name').value,
+        email: document.getElementById('w-email').value,
+        phone: document.getElementById('w-phone').value,
+        order: document.getElementById('w-order').value,
+        orderDate: document.getElementById('w-order-date').value,
+        bank: document.getElementById('w-bank').value,
+        address: document.getElementById('w-address').value,
+        goods: document.getElementById('w-goods').value,
+      };
+      summaryEl.innerHTML =
+        '<p><strong>Jméno:</strong> ' + escapeHtml(collected.name) + '</p>' +
+        '<p><strong>E-mail:</strong> ' + escapeHtml(collected.email) + '</p>' +
+        (collected.phone ? '<p><strong>Telefon:</strong> ' + escapeHtml(collected.phone) + '</p>' : '') +
+        (collected.order ? '<p><strong>Číslo objednávky:</strong> ' + escapeHtml(collected.order) + '</p>' : '') +
+        '<p><strong>Datum objednávky/převzetí:</strong> ' + escapeHtml(collected.orderDate) + '</p>' +
+        '<p><strong>Adresa:</strong> ' + escapeHtml(collected.address) + '</p>' +
+        '<p><strong>Číslo účtu pro vrácení peněz:</strong> ' + escapeHtml(collected.bank) + '</p>' +
+        '<p><strong>Zboží:</strong> ' + escapeHtml(collected.goods) + '</p>';
+      step1.classList.add('hidden-block');
+      step2.classList.remove('hidden-block');
+      step2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    backBtn.addEventListener('click', function () {
+      step2.classList.add('hidden-block');
+      step1.classList.remove('hidden-block');
+    });
+
+    confirmBtn.addEventListener('click', function () {
+      if (!collected) return;
+      confirmBtn.disabled = true;
+      backBtn.disabled = true;
+      confirmBtn.textContent = 'Odesílám…';
+
+      var now = new Date();
+      var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+      var timestamp = pad(now.getDate()) + '.' + pad(now.getMonth() + 1) + '.' + now.getFullYear() + ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes());
+
+      var message = [
+        'Odstoupení od smlouvy přijato: ' + timestamp,
+        'Jméno: ' + collected.name,
+        'E-mail: ' + collected.email,
+        'Telefon: ' + (collected.phone || '-'),
+        'Číslo objednávky: ' + (collected.order || '-'),
+        'Datum objednávky/převzetí: ' + collected.orderDate,
+        'Adresa: ' + collected.address,
+        'Číslo účtu pro vrácení peněz: ' + collected.bank,
+        'Zboží k vrácení: ' + collected.goods,
+      ].join('\n');
+
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: 'Odstoupení od smlouvy — ' + collected.name,
+          from_name: collected.name,
+          email: collected.email,
+          message: message,
+        }),
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (result) {
+          if (!result.success) throw new Error(result.message || 'unknown error');
+          step2.classList.add('hidden-block');
+          step3.classList.remove('hidden-block');
+          step3.innerHTML =
+            '<p><strong>Vaše odstoupení od smlouvy bylo přijato dne ' + timestamp + '.</strong></p>' +
+            '<p>Písemné potvrzení vám zašleme na e-mail ' + escapeHtml(collected.email) + '. Peníze vrátíme na uvedený účet nejpozději do 14 dnů od obdržení vráceného zboží.</p>';
+          step3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        })
+        .catch(function () {
+          confirmBtn.disabled = false;
+          backBtn.disabled = false;
+          confirmBtn.textContent = 'Potvrzuji odstoupení od smlouvy';
+          alert('Odeslání se nepovedlo. Zkuste to prosím znovu, nebo nás kontaktujte přímo na flammel@flammel.cz.');
+        });
+    });
+  }
+
   function renderBadge() {
     var count = cartCount(getCart());
     document.querySelectorAll('.cart-count').forEach(function (el) {
@@ -409,6 +509,7 @@
     setupCheckoutOptions();
     setupBillingAddress();
     setupPacketaWidget();
+    setupWithdrawalForm();
 
     document.querySelectorAll('.qty-input').forEach(function (wrap) {
       var input = wrap.querySelector('input');

@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vosky (do svíček) | flammel</title>
-<meta name="description" content="Vosky (do svíček) — Přírodní svíčky, flammel.cz">
+<title>Odstoupení od smlouvy | flammel</title>
+<meta name="description" content="Formulář pro odstoupení od kupní smlouvy do 14 dnů.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -43,32 +43,44 @@
 </header>
 <main>
 
-<section class="container" style="padding-top:32px">
-  <div class="breadcrumb"><a href="/produkty.html">Produkty</a> / <a href="/kategorie/svicky.html">Přírodní svíčky</a> / Vosky (do svíček)</div>
-  <div class="product-detail">
-    <div class="gallery">
-      <div class="gallery-main"><img src="/assets/img/placeholder-produkt.svg" alt="Vosky (do svíček)"></div>
-      <div class="gallery-thumbs"></div>
-    </div>
-    <div class="product-info">
-      <span class="cat">Přírodní svíčky</span>
-      <h1>Vosky (do svíček)</h1>
-      <div class="price-row"><span class="price price-tbd">Cena bude brzy doplněna</span> <span class="stock-badge soon">Připravujeme</span></div>
-      <div class="qty-row">
-        <div class="qty-input">
-          <button type="button" data-qty-dec>−</button>
-          <input type="text" id="qty" value="1">
-          <button type="button" data-qty-inc>+</button>
+<section class="page-header container"><h1>Odstoupení od smlouvy</h1></section>
+<section class="section">
+  <div class="container prose" style="max-width:760px">
+    <p>Jako spotřebitel máte podle zákona právo odstoupit od smlouvy uzavřené na dálku (přes internet)
+    bez udání důvodu, a to do <strong>14 dnů</strong> od převzetí zboží. Stačí vyplnit formulář níže
+    a potvrdit ho — žádné psaní dopisů ani stahování formulářů není potřeba.</p>
+
+    <div class="notice-box" id="withdraw-step-1">
+      <form id="withdraw-form-step1">
+        <div class="form-row">
+          <div class="form-group"><label for="w-name">Jméno a příjmení</label><input type="text" id="w-name" required></div>
+          <div class="form-group"><label for="w-email">E-mail</label><input type="email" id="w-email" required></div>
         </div>
-        <button class="btn" disabled data-add-to-cart
-          data-id="new-vosky-do-svicek-3" data-title="Vosky (do svíček)"
-          data-price="" data-image="/assets/img/placeholder-produkt.svg" data-url="/produkt/vosky-do-svicek-3.html">
-          Připravujeme
-        </button>
-      </div>
-      <p class="added-msg">Produkt byl přidán do košíku.</p>
-      <div class="product-desc"></div>
+        <div class="form-row">
+          <div class="form-group"><label for="w-phone">Telefon</label><input type="tel" id="w-phone"></div>
+          <div class="form-group"><label for="w-order">Číslo objednávky (pokud ho znáte)</label><input type="text" id="w-order"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label for="w-order-date">Datum objednávky / převzetí zboží</label><input type="date" id="w-order-date" required></div>
+          <div class="form-group"><label for="w-bank">Číslo účtu pro vrácení peněz</label><input type="text" id="w-bank" required></div>
+        </div>
+        <div class="form-group"><label for="w-address">Vaše adresa</label><input type="text" id="w-address" required></div>
+        <div class="form-group"><label for="w-goods">Zboží, od jehož nákupu odstupujete</label><textarea id="w-goods" required></textarea></div>
+        <button type="submit" class="btn">Pokračovat</button>
+      </form>
     </div>
+
+    <div class="notice-box hidden-block" id="withdraw-step-2">
+      <p><strong>Oznamuji, že tímto odstupuji od smlouvy o nákupu níže uvedeného zboží:</strong></p>
+      <div id="withdraw-summary" style="margin:14px 0"></div>
+      <p>Kliknutím na tlačítko níže tuto žádost závazně odešlete flammel.cz.</p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap">
+        <button type="button" class="btn" id="withdraw-confirm-btn">Potvrzuji odstoupení od smlouvy</button>
+        <button type="button" class="btn btn-outline" id="withdraw-back-btn">Zpět upravit údaje</button>
+      </div>
+    </div>
+
+    <div class="notice-box hidden-block" id="withdraw-step-3"></div>
   </div>
 </section>
 

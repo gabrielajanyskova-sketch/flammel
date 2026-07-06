@@ -240,6 +240,15 @@ apply_new_collections()
 apply_new_products()
 
 PAGES_BY_SLUG = {p['slug']: p for p in DATA['pages']}
+# The old WordPress terms linked to a downloadable .docx withdrawal form —
+# replaced by the actual on-site withdrawal button/form (legally required
+# "tlačítková novela" — a static download link no longer qualifies).
+if 'obchodni-podminky' in PAGES_BY_SLUG:
+    PAGES_BY_SLUG['obchodni-podminky']['content'] = re.sub(
+        r'<a href="[^"]*Formular-odstoupeni-od-smlouvy\.docx">zde</a>',
+        '<a href="/odstoupeni-od-smlouvy.html">zde</a>',
+        PAGES_BY_SLUG['obchodni-podminky']['content'],
+    )
 CAT_BY_SLUG = {c['slug']: c for c in DATA['product_cats']}
 
 
@@ -331,6 +340,7 @@ def footer_html():
           <li><a href="/platebni-podminky.html">Platební podmínky</a></li>
           <li><a href="/obchodni-podminky.html">Obchodní podmínky</a></li>
           <li><a href="/privacy-policy.html">Ochrana osobních údajů</a></li>
+          <li><a href="/odstoupeni-od-smlouvy.html"><strong>Odstoupit od smlouvy</strong></a></li>
         </ul>
       </div>
     </div>
@@ -718,6 +728,52 @@ def render_prose_page(slug, title, path=None):
     write(path or f'{slug}.html', base_layout(title, '', body))
 
 
+def render_odstoupeni_od_smlouvy():
+    body = '''
+<section class="page-header container"><h1>Odstoupení od smlouvy</h1></section>
+<section class="section">
+  <div class="container prose" style="max-width:760px">
+    <p>Jako spotřebitel máte podle zákona právo odstoupit od smlouvy uzavřené na dálku (přes internet)
+    bez udání důvodu, a to do <strong>14 dnů</strong> od převzetí zboží. Stačí vyplnit formulář níže
+    a potvrdit ho — žádné psaní dopisů ani stahování formulářů není potřeba.</p>
+
+    <div class="notice-box" id="withdraw-step-1">
+      <form id="withdraw-form-step1">
+        <div class="form-row">
+          <div class="form-group"><label for="w-name">Jméno a příjmení</label><input type="text" id="w-name" required></div>
+          <div class="form-group"><label for="w-email">E-mail</label><input type="email" id="w-email" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label for="w-phone">Telefon</label><input type="tel" id="w-phone"></div>
+          <div class="form-group"><label for="w-order">Číslo objednávky (pokud ho znáte)</label><input type="text" id="w-order"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label for="w-order-date">Datum objednávky / převzetí zboží</label><input type="date" id="w-order-date" required></div>
+          <div class="form-group"><label for="w-bank">Číslo účtu pro vrácení peněz</label><input type="text" id="w-bank" required></div>
+        </div>
+        <div class="form-group"><label for="w-address">Vaše adresa</label><input type="text" id="w-address" required></div>
+        <div class="form-group"><label for="w-goods">Zboží, od jehož nákupu odstupujete</label><textarea id="w-goods" required></textarea></div>
+        <button type="submit" class="btn">Pokračovat</button>
+      </form>
+    </div>
+
+    <div class="notice-box hidden-block" id="withdraw-step-2">
+      <p><strong>Oznamuji, že tímto odstupuji od smlouvy o nákupu níže uvedeného zboží:</strong></p>
+      <div id="withdraw-summary" style="margin:14px 0"></div>
+      <p>Kliknutím na tlačítko níže tuto žádost závazně odešlete flammel.cz.</p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap">
+        <button type="button" class="btn" id="withdraw-confirm-btn">Potvrzuji odstoupení od smlouvy</button>
+        <button type="button" class="btn btn-outline" id="withdraw-back-btn">Zpět upravit údaje</button>
+      </div>
+    </div>
+
+    <div class="notice-box hidden-block" id="withdraw-step-3"></div>
+  </div>
+</section>
+'''
+    write('odstoupeni-od-smlouvy.html', base_layout('Odstoupení od smlouvy', 'Formulář pro odstoupení od kupní smlouvy do 14 dnů.', body))
+
+
 def render_kontakty():
     page = PAGES_BY_SLUG['kontakty']
     content = page['content']
@@ -939,6 +995,7 @@ def main():
     render_prose_page('platebni-podminky', 'Platební podmínky')
     render_prose_page('obchodni-podminky', 'Obchodní podmínky')
     render_prose_page('privacy-policy', 'Ochrana osobních údajů')
+    render_odstoupeni_od_smlouvy()
     render_informace()
     render_kosik()
     render_pokladna()
