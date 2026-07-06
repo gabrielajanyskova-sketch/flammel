@@ -524,6 +524,8 @@ textarea { resize: vertical; min-height: 90px; }
 .order-summary ul { margin-bottom: 4px; }
 .order-summary li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
 .order-summary .total-row { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 700; padding-top: 14px; }
+.order-summary .total-row--sub { font-size: 0.92rem; font-weight: 400; padding-top: 4px; color: var(--text); }
+.order-summary .total-row--grand { border-top: 1.5px solid var(--border); margin-top: 6px; }
 .notice-box {
   background: var(--cream); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; font-size: 0.88rem; color: var(--text-muted); margin-bottom: 24px;
 }
@@ -538,7 +540,10 @@ textarea { resize: vertical; min-height: 90px; }
 }
 .option-item:has(input:checked) { border-color: var(--gold); background: var(--cream); }
 .option-item input { accent-color: var(--gold-dark); width: 17px; height: 17px; flex-shrink: 0; }
+.option-item .option-price { margin-left: auto; font-weight: 700; color: var(--text-muted); font-size: 0.85rem; }
+.option-item.option-item--checkbox { margin-bottom: 18px; }
 .option-note { font-size: 0.85rem; color: var(--text-muted); margin: -8px 0 20px; }
+.hidden-block { display: none; }
 .pickup-picker { display: flex; gap: 10px; align-items: center; }
 .pickup-picker input { flex: 1; background: var(--cream); color: var(--text); }
 .pickup-picker .btn { flex-shrink: 0; padding: 11px 20px; white-space: nowrap; }

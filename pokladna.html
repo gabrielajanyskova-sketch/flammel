@@ -51,13 +51,20 @@
 
         <h2 class="checkout-section-title">Doprava</h2>
         <div class="option-group">
-          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_adresa" checked><span>Zásilkovna – doručení na adresu</span></label>
-          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_vydejni"><span>Zásilkovna – výdejní místo</span></label>
-          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_zbox"><span>Zásilkovna – Z-BOX</span></label>
-          <label class="option-item"><input type="radio" name="delivery" value="ceska_posta"><span>Česká pošta</span></label>
-          <label class="option-item"><input type="radio" name="delivery" value="osobni"><span>Osobní vyzvednutí</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_adresa" checked><span>Zásilkovna – doručení na adresu</span><span class="option-price">89 Kč</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_vydejni"><span>Zásilkovna – výdejní místo</span><span class="option-price">69 Kč</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_zbox"><span>Zásilkovna – Z-BOX</span><span class="option-price">65 Kč</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="ceska_posta"><span>Česká pošta</span><span class="option-price">99 Kč</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="osobni"><span>Osobní vyzvednutí</span><span class="option-price">Zdarma</span></label>
         </div>
 
+        <h2 class="checkout-section-title">Platba</h2>
+        <div class="option-group">
+          <label class="option-item"><input type="radio" name="payment" value="online" checked><span>Online platba kartou / Google Pay</span><span class="option-price">Zdarma</span></label>
+          <label class="option-item"><input type="radio" name="payment" value="prevodem"><span>Platba předem na účet</span><span class="option-price">Zdarma</span></label>
+        </div>
+
+        <h2 class="checkout-section-title">Dodací adresa</h2>
         <div id="address-fields">
           <div class="form-row">
             <div class="form-group"><label for="street">Ulice a číslo popisné</label><input type="text" id="street" name="street" required></div>
@@ -75,11 +82,19 @@
         </div>
         <p class="option-note" id="osobni-note">Termín osobního vyzvednutí domluvíme e-mailem po odeslání objednávky.</p>
 
-        <h2 class="checkout-section-title">Platba</h2>
-        <div class="option-group">
-          <label class="option-item"><input type="radio" name="payment" value="online" checked><span>Online platba kartou / Google Pay</span></label>
-          <label class="option-item"><input type="radio" name="payment" value="dobirka"><span>Dobírka</span></label>
-          <label class="option-item"><input type="radio" name="payment" value="prevodem"><span>Platba předem na účet</span></label>
+        <label class="option-item option-item--checkbox">
+          <input type="checkbox" id="different-billing">
+          <span>Chci zadat jinou fakturační adresu</span>
+        </label>
+        <div id="billing-fields" class="hidden-block">
+          <div class="form-row">
+            <div class="form-group"><label for="fakt_street">Ulice a číslo popisné</label><input type="text" id="fakt_street" name="fakt_street"></div>
+            <div class="form-group"><label for="fakt_city">Město</label><input type="text" id="fakt_city" name="fakt_city"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label for="fakt_zip">PSČ</label><input type="text" id="fakt_zip" name="fakt_zip"></div>
+            <div class="form-group"><label for="fakt_ico">IČO (u firem)</label><input type="text" id="fakt_ico" name="fakt_ico"></div>
+          </div>
         </div>
 
         <div class="form-group"><label for="note">Poznámka k objednávce</label><textarea id="note" name="note"></textarea></div>

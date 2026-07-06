@@ -61,11 +61,30 @@
     ceska_posta: 'Česká pošta',
     osobni: 'Osobní vyzvednutí',
   };
+  var SHIPPING_PRICES = {
+    zasilkovna_adresa: 89,
+    zasilkovna_vydejni: 69,
+    zasilkovna_zbox: 65,
+    ceska_posta: 99,
+    osobni: 0,
+  };
   var PAYMENT_LABELS = {
     online: 'Online platba kartou / Google Pay',
-    dobirka: 'Dobírka',
     prevodem: 'Platba předem na účet',
   };
+  var PAYMENT_SURCHARGE = {
+    online: 0,
+    prevodem: 0,
+  };
+
+  function selectedDelivery(form) {
+    var checked = form.querySelector('input[name="delivery"]:checked');
+    return checked ? checked.value : 'zasilkovna_adresa';
+  }
+  function selectedPayment(form) {
+    var checked = form.querySelector('input[name="payment"]:checked');
+    return checked ? checked.value : 'online';
+  }
 
   function setupCheckoutOptions() {
     var form = document.getElementById('checkout-form');
@@ -93,6 +112,15 @@
       radio.addEventListener('change', update);
     });
     update();
+  }
+
+  function setupBillingAddress() {
+    var checkbox = document.getElementById('different-billing');
+    var fields = document.getElementById('billing-fields');
+    if (!checkbox || !fields) return;
+    checkbox.addEventListener('change', function () {
+      fields.classList.toggle('hidden-block', !checkbox.checked);
+    });
   }
 
   function setupPacketaWidget() {
@@ -193,12 +221,33 @@
       if (form) form.style.display = 'none';
       return;
     }
+    var subtotal = cartTotal(cart);
     var items = cart.map(function (item) {
       return '<li><span>' + item.title + ' × ' + item.qty + '</span><span>' + formatPrice(item.price * item.qty) + '</span></li>';
     }).join('');
     root.innerHTML =
       '<ul>' + items + '</ul>' +
-      '<div class="total-row"><span>Celkem</span><span>' + formatPrice(cartTotal(cart)) + '</span></div>';
+      '<div class="total-row total-row--sub"><span>Mezisoučet</span><span>' + formatPrice(subtotal) + '</span></div>' +
+      '<div class="total-row total-row--sub" id="summary-shipping"><span>Doprava</span><span></span></div>' +
+      '<div class="total-row total-row--sub" id="summary-payment"><span>Platba</span><span></span></div>' +
+      '<div class="total-row total-row--grand" id="summary-grand-total"><span>Celkem</span><span></span></div>';
+
+    function updateTotals() {
+      var shipping = form ? SHIPPING_PRICES[selectedDelivery(form)] || 0 : 0;
+      var paymentFee = form ? PAYMENT_SURCHARGE[selectedPayment(form)] || 0 : 0;
+      var shippingEl = document.querySelector('#summary-shipping span:last-child');
+      var paymentEl = document.querySelector('#summary-payment span:last-child');
+      var grandEl = document.querySelector('#summary-grand-total span:last-child');
+      if (shippingEl) shippingEl.textContent = shipping ? formatPrice(shipping) : 'Zdarma';
+      if (paymentEl) paymentEl.textContent = paymentFee ? formatPrice(paymentFee) : 'Zdarma';
+      if (grandEl) grandEl.textContent = formatPrice(subtotal + shipping + paymentFee);
+    }
+    updateTotals();
+    if (form) {
+      form.querySelectorAll('input[name="delivery"], input[name="payment"]').forEach(function (radio) {
+        radio.addEventListener('change', updateTotals);
+      });
+    }
 
     if (form) {
       form.addEventListener('submit', function (e) {
@@ -209,6 +258,8 @@
         });
         var delivery = data.get('delivery');
         var payment = data.get('payment');
+        var shipping = SHIPPING_PRICES[delivery] || 0;
+        var paymentFee = PAYMENT_SURCHARGE[payment] || 0;
         var deliveryDetail;
         if (delivery === 'zasilkovna_vydejni' || delivery === 'zasilkovna_zbox') {
           deliveryDetail = 'Výdejní místo: ' + (data.get('pickup_point') || '-') +
@@ -218,19 +269,28 @@
         } else {
           deliveryDetail = [data.get('street'), data.get('city'), data.get('zip')].filter(Boolean).join(', ');
         }
+        var billingDetail = 'Stejná jako dodací';
+        if (document.getElementById('different-billing').checked) {
+          var billingParts = [data.get('fakt_street'), data.get('fakt_city'), data.get('fakt_zip')].filter(Boolean).join(', ');
+          billingDetail = billingParts + (data.get('fakt_ico') ? ', IČO: ' + data.get('fakt_ico') : '');
+        }
         var body = [
           'Jméno: ' + data.get('name'),
           'E-mail: ' + data.get('email'),
           'Telefon: ' + data.get('phone'),
-          'Doprava: ' + (DELIVERY_LABELS[delivery] || delivery),
-          'Doručovací údaje: ' + deliveryDetail,
-          'Platba: ' + (PAYMENT_LABELS[payment] || payment),
+          'Doprava: ' + (DELIVERY_LABELS[delivery] || delivery) + ' (' + (shipping ? formatPrice(shipping) : 'zdarma') + ')',
+          'Doručovací adresa: ' + deliveryDetail,
+          'Fakturační adresa: ' + billingDetail,
+          'Platba: ' + (PAYMENT_LABELS[payment] || payment) + ' (' + (paymentFee ? formatPrice(paymentFee) : 'zdarma') + ')',
           'Poznámka: ' + (data.get('note') || '-'),
           '',
           'Objednávka:',
           lines.join('\n'),
           '',
-          'Celkem: ' + formatPrice(cartTotal(cart)),
+          'Mezisoučet: ' + formatPrice(cartTotal(cart)),
+          'Doprava: ' + (shipping ? formatPrice(shipping) : 'Zdarma'),
+          'Platba: ' + (paymentFee ? formatPrice(paymentFee) : 'Zdarma'),
+          'Celkem k platbě: ' + formatPrice(cartTotal(cart) + shipping + paymentFee),
         ].join('\n');
         var mailto = 'mailto:flammel@flammel.cz?subject=' + encodeURIComponent('Nová objednávka z webu flammel.cz') +
           '&body=' + encodeURIComponent(body);
@@ -244,6 +304,7 @@
     renderCartPage();
     renderCheckoutSummary();
     setupCheckoutOptions();
+    setupBillingAddress();
     setupPacketaWidget();
 
     document.querySelectorAll('[data-add-to-cart]').forEach(function (btn) {
