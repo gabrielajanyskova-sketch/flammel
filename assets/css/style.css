@@ -533,9 +533,11 @@ p { margin: 0 0 1em; }
 .qty-input button { width: 38px; height: 38px; border: none; background: var(--cream); font-size: 1.1rem; }
 .qty-input input[type="text"] { width: 46px; padding: 0; text-align: center; border: none; font-size: 1rem; font-family: inherit; }
 .product-desc { margin-top: 8px; color: var(--text); }
+.product-desc h3 { margin-top: 1.3em; font-size: 1.15rem; }
 .product-desc h4 { font-size: 1.05rem; margin-top: 1.4em; }
 .product-desc ul { list-style: disc; padding-left: 1.3em; margin-bottom: 1em; }
 .product-desc li { margin-bottom: 0.3em; }
+.product-desc a { color: var(--gold-dark); text-decoration: underline; }
 .added-msg { color: #4c7a4c; font-size: 0.88rem; font-weight: 600; margin-top: 10px; display: none; }
 .added-msg.show { display: block; }
 
