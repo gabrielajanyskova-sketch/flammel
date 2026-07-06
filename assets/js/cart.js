@@ -1,10 +1,12 @@
 // Client-side shopping cart backed by localStorage.
 // There is no backend or payment gateway behind this static site, so the
-// "checkout" step below composes an order e-mail instead of charging a card —
-// see the notice on pokladna.html.
+// "checkout" step below sends the order straight to Web3Forms (which e-mails
+// it to flammel@flammel.cz) instead of charging a card — see the notice on
+// pokladna.html.
 (function () {
   var STORAGE_KEY = 'flammel_cart';
   var PACKETA_API_KEY = 'b8b56c3f9361b7175d2bd60f70b40c7a';
+  var WEB3FORMS_ACCESS_KEY = 'e7fbbc6f-f4d1-4485-a88a-0165a3875c0d';
 
   function getCart() {
     try {
@@ -321,10 +323,41 @@
           'Doprava: ' + (shipping ? formatPrice(shipping) : 'Zdarma'),
           'Platba: ' + (paymentFee ? formatPrice(paymentFee) : 'Zdarma'),
           'Celkem k platbě: ' + formatPrice(cartTotal(cart) + shipping + paymentFee),
-        ].join('\n');
-        var mailto = 'mailto:flammel@flammel.cz?subject=' + encodeURIComponent('Nová objednávka z webu flammel.cz') +
-          '&body=' + encodeURIComponent(body);
-        window.location.href = mailto;
+        ]
+          .concat(payment === 'online' ? ['', 'Pozor: zákazník zvolil online platbu — je potřeba mu ručně poslat platební odkaz/QR platbu.'] : [])
+          .join('\n');
+
+        var submitBtn = form.querySelector('button[type="submit"]');
+        var originalLabel = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Odesílám…';
+
+        fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_ACCESS_KEY,
+            subject: 'Nová objednávka z webu flammel.cz',
+            from_name: data.get('name'),
+            email: data.get('email'),
+            message: body,
+          }),
+        })
+          .then(function (res) { return res.json(); })
+          .then(function (result) {
+            if (!result.success) throw new Error(result.message || 'unknown error');
+            saveCart([]);
+            form.style.display = 'none';
+            var confirmEl = document.createElement('div');
+            confirmEl.className = 'notice-box';
+            confirmEl.textContent = 'Děkujeme! Objednávka byla úspěšně odeslána, brzy se vám ozveme na uvedený e-mail nebo telefon.';
+            form.parentNode.insertBefore(confirmEl, form);
+          })
+          .catch(function () {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalLabel;
+            alert('Odeslání objednávky se nepovedlo. Zkuste to prosím znovu, nebo nás rovnou kontaktujte na flammel@flammel.cz.');
+          });
       });
     }
   }

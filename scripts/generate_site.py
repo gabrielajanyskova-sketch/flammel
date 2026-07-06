@@ -779,7 +779,7 @@ def render_pokladna():
 <section class="section">
   <div class="container checkout-grid">
     <div>
-      <div class="notice-box">Tento web je statická prezentace bez napojení na platební bránu. Po odeslání formuláře se otevře e-mail s Vaší objednávkou i vybraným způsobem dopravy a platby — obratem ji potvrdíme, u online platby zároveň pošleme platební odkaz/QR platbu.</div>
+      <div class="notice-box">Tento web je statická prezentace bez napojení na platební bránu. Po odeslání formuláře nám objednávka rovnou přijde i s vybraným způsobem dopravy a platby — obratem ji potvrdíme, u online platby zároveň pošleme platební odkaz/QR platbu.</div>
       <div id="free-shipping-banner"></div>
       <form id="checkout-form">
         <h2 class="checkout-section-title">Doprava</h2>
