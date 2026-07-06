@@ -1,0 +1,37 @@
+name: Přegenerovat web z Google Sheets
+
+on:
+  schedule:
+    # Každých 6 hodin
+    - cron: '0 */6 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: claude/wordpress-to-html-migration-2tlbsu
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Vygenerovat web
+        run: python3 scripts/generate_site.py
+
+      - name: Commitnout a nahrát změny (pokud nějaké jsou)
+        run: |
+          git config user.name "flammel-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Žádné změny, nic se nenahrává."
+          else
+            git commit -m "Automatické promítnutí cen/skladu z Google Sheets"
+            git push
+          fi
