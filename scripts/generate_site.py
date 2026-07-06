@@ -516,20 +516,9 @@ def render_home():
     featured = [p for p in DATA['products'] if p['stock_status'] == 'instock'][:8]
     featured_cards = ''.join(product_card(p) for p in featured)
 
-    sparkle_positions = [
-        (8, 22, 0.0, 4.5), (18, 68, 1.2, 5.5), (30, 40, 2.4, 4.0),
-        (46, 78, 0.6, 6.0), (58, 18, 3.0, 5.0), (72, 55, 1.8, 4.5),
-        (85, 30, 2.7, 5.5), (93, 70, 0.9, 4.8),
-    ]
-    sparkles = ''.join(
-        f'<span class="sparkle" style="left:{left}%;top:{top}%;animation-delay:{delay}s;animation-duration:{dur}s"></span>'
-        for left, top, delay, dur in sparkle_positions
-    )
-
     body = f'''
 <section class="hero-slider">
   <div class="slides">{slides}</div>
-  <div class="magic-sparkles">{sparkles}</div>
   <button class="slide-arrow prev" aria-label="Předchozí">&#10094;</button>
   <button class="slide-arrow next" aria-label="Další">&#10095;</button>
   <div class="slide-dots">{dots}</div>
@@ -585,7 +574,7 @@ def render_home():
   </div>
 </section>
 '''
-    write('index.html', base_layout('', BASE_DESCRIPTION, body, body_class='home'))
+    write('index.html', base_layout('', BASE_DESCRIPTION, body))
 
 
 # ---------------------------------------------------------------------------
