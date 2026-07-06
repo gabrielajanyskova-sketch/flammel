@@ -206,9 +206,7 @@ def apply_out_of_stock_removal():
 # Skladem flipped back to Ano) may ever appear. Everything else from the old
 # WordPress export is gone for good, no matter what products.csv says.
 ALLOWED_PRODUCT_IDS = {
-    '2372', '2543', '2545', '2547', '2549', '2584', '2586', '2588', '2964',
-    '4178', '4182', '4223', '4225', '4227', '4460', '4493', '5118', '5293',
-    '5828', '6071', '6143', '6214', '6261',
+    '4223', '4225', '5118', '5293', '5828',
 }
 
 
@@ -586,9 +584,11 @@ document.addEventListener('DOMContentLoaded', function () {
 def render_products_and_categories():
     published = DATA['products']
     render_product_listing(published, 'Produkty', 'Všechny ručně vyráběné produkty flammel.', 'produkty.html')
-    used_slugs = {slug for p in published for slug in p['category_slugs']}
+    # Render every known category (not just ones with current products) so a
+    # category that just lost its last product gets its page refreshed to an
+    # empty state instead of leaving stale links to now-deleted products.
     collection_slugs = {c['slug'] for c in NEW_COLLECTIONS}
-    for slug in used_slugs | collection_slugs:
+    for slug in CAT_BY_SLUG.keys() | collection_slugs:
         cat = CAT_BY_SLUG[slug]
         subset = [p for p in published if slug in p['category_slugs'] or slug in p.get('collection_slugs', [])]
         render_product_listing(subset, cat['name'], f"{cat['name']} — ručně vyráběné produkty flammel.",
