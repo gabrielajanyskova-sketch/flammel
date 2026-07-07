@@ -773,6 +773,21 @@ def render_product_detail(p):
     price = p.get('sale_price') or p.get('price') or p.get('regular_price')
     disabled = '' if p['stock_status'] == 'instock' else 'disabled'
     btn_label = {'instock': 'Přidat do košíku', 'comingsoon': 'Připravujeme'}.get(p['stock_status'], 'Vyprodáno')
+    # Candle accessories (nůžky, zhášedlo, aromalampa) live in the same
+    # "Přírodní svíčky" category as the candles themselves rather than under
+    # "Útulný domov" — cross-linking them from candle pages keeps them
+    # discoverable without needing a second category assignment.
+    related_section = ''
+    if 'svicky' in p['category_slugs'] and p['id'] not in ALLOWED_PRODUCT_IDS:
+        accessories = [q for q in DATA['products'] if q['id'] in ALLOWED_PRODUCT_IDS]
+        if accessories:
+            related_section = f'''
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="section-head"><h2>Hodí se k tomu</h2></div>
+    <div class="product-grid">{''.join(product_card(a) for a in accessories)}</div>
+  </div>
+</section>'''
     body = f'''
 <section class="container" style="padding-top:32px">
   <div class="breadcrumb"><a href="/produkty.html">Produkty</a> / {breadcrumb_cat}{p['title']}</div>
@@ -802,6 +817,7 @@ def render_product_detail(p):
     </div>
   </div>
 </section>
+{related_section}
 '''
     write(f'produkt/{p["slug"]}.html', base_layout(p['title'], f"{p['title']} — {cat}, flammel.cz", body))
 
