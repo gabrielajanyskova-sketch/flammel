@@ -133,6 +133,45 @@ def apply_category_renames():
             child['label'] = CATEGORY_NAME_OVERRIDES.get(child['label'], child['label'])
 
 
+# Updated copy for existing WordPress products, supplied by Martina —
+# content.json itself stays a straight WordPress export, so overrides
+# live here instead of being hand-edited into the export.
+PRODUCT_DESCRIPTION_OVERRIDES = {
+    '4223': '''<p><strong>Nerezové zhášedlo na svíčky v černé barvě</strong></p>
+<p>Zhášedlo na svíčky je elegantní doplněk, který ocení každý milovník svíček. Umožňuje bezpečně uhasit plamen bez zbytečného kouře a rozfouknutí horkého vosku, čímž přispívá k pohodlnější péči o svíčku i čistšímu prostředí kolem ní.</p>
+<p>Díky dlouhé rukojeti se pohodlně používá také u vyšších skleněných svíček. Stačí přiložit zvonek nad plamen a během okamžiku jej bezpečně uhasit bez sfouknutí. Zhášedlo zároveň pomáhá chránit knot před zbytečným poškozením a stává se přirozenou součástí svíčkového rituálu.</p>
+<p>Minimalistické provedení z nerezové oceli v matné černé barvě krásně doplní přírodní svíčky Flammel, nůžky na knot i dlouhé zápalky. Společně tvoří stylovou sadu, která potěší každého, kdo si rád vytváří útulnou atmosféru domova.</p>
+<h3>Detaily produktu</h3>
+<ul>
+<li>materiál: nerezová ocel</li>
+<li>barva: černá</li>
+<li>délka: 17 cm</li>
+<li>průměr zvonku: 3 cm</li>
+</ul>
+<h3>Péče</h3>
+<p>Zhášedlo doporučujeme pravidelně otírat navlhčeným hadříkem, aby se na jeho povrchu neusazoval vosk ani saze. Díky jednoduché údržbě si zachová svůj vzhled po dlouhou dobu.</p>''',
+    '5293': '''<p><strong>Nerezové zhášedlo na svíčky v barvě růžového zlata</strong></p>
+<p>Zhášedlo na svíčky je elegantní doplněk, který ocení každý milovník svíček. Umožňuje bezpečně uhasit plamen bez zbytečného kouře a rozfouknutí horkého vosku, čímž přispívá k pohodlnější péči o svíčku i čistšímu prostředí kolem ní.</p>
+<p>Díky dlouhé rukojeti se pohodlně používá také u vyšších skleněných svíček. Stačí přiložit zvonek nad plamen a během okamžiku jej bezpečně uhasit bez sfouknutí. Zhášedlo zároveň pomáhá chránit knot před zbytečným poškozením a stává se přirozenou součástí svíčkového rituálu.</p>
+<p>Elegantní provedení z nerezové oceli v barvě růžového zlata krásně doplní přírodní svíčky Flammel, nůžky na knot i dlouhé zápalky. Společně tvoří stylovou sadu, která potěší každého, kdo si rád vytváří útulnou atmosféru domova.</p>
+<h3>Detaily produktu</h3>
+<ul>
+<li>materiál: nerezová ocel</li>
+<li>barva: růžové zlato</li>
+<li>délka: 17 cm</li>
+<li>průměr zvonku: 3 cm</li>
+</ul>
+<h3>Péče</h3>
+<p>Zhášedlo doporučujeme pravidelně otírat navlhčeným hadříkem, aby se na jeho povrchu neusazoval vosk ani saze. Díky jednoduché údržbě si zachová svůj vzhled po dlouhou dobu.</p>''',
+}
+
+
+def apply_product_description_overrides():
+    for p in DATA['products']:
+        if p['id'] in PRODUCT_DESCRIPTION_OVERRIDES:
+            p['description'] = PRODUCT_DESCRIPTION_OVERRIDES[p['id']]
+
+
 def sync_products_csv_from_sheet():
     url_path = ROOT / 'data' / 'sheet_url.txt'
     if not url_path.exists():
@@ -238,6 +277,7 @@ apply_category_renames()
 apply_category_removal()
 apply_new_collections()
 apply_new_products()
+apply_product_description_overrides()
 
 PAGES_BY_SLUG = {p['slug']: p for p in DATA['pages']}
 # The old WordPress terms linked to a downloadable .docx withdrawal form —
