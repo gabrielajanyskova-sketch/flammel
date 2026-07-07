@@ -163,6 +163,34 @@ PRODUCT_DESCRIPTION_OVERRIDES = {
 </ul>
 <h3>Péče</h3>
 <p>Zhášedlo doporučujeme pravidelně otírat navlhčeným hadříkem, aby se na jeho povrchu neusazoval vosk ani saze. Díky jednoduché údržbě si zachová svůj vzhled po dlouhou dobu.</p>''',
+    '4225': '''<p><strong>Nerezové nůžky na knot svíčky</strong></p>
+<p>Nůžky na zkracování knotu jsou nepostradatelným pomocníkem pro každého milovníka svíček. Pravidelným zastřižením knotu před zapálením podpoříte rovnoměrné hoření svíčky, omezíte kouření plamene a prodloužíte její životnost.</p>
+<p>Díky dlouhým čepelím a speciálně tvarované hlavě snadno dosáhnete i ke knotu na dně vyšších skleněných svíček. Elegantní provedení z nerezové oceli z nich navíc dělá stylový doplněk, který krásně doplní vaši svíčku, zápalky i zhášedlo.</p>
+<h3>Detaily produktu</h3>
+<ul>
+<li>kategorie: <a href="/kategorie/bytove-dekorace.html">Útulný domov</a></li>
+<li>materiál: nerezová ocel</li>
+<li>barva: černá</li>
+<li>vhodné pro bavlněné i dřevěné knoty</li>
+<li>dlouhé čepele pro pohodlné zastřižení i hluboko ve sklenici</li>
+</ul>
+<h3>Jak správně zkracovat knot?</h3>
+<p>Před každým zapálením doporučujeme knot zkrátit na přibližně 3–5 mm. Díky tomu bude svíčka hořet klidněji, vytvoří rovnoměrné voskové jezírko a omezí se tvorba kouře i usazenin na skle.</p>
+<p>Další tipy k péči o sójové svíčky najdete na <a href="/blog/pece-o-bavlneny-a-dreveny-knot.html">našem blogu</a>.</p>''',
+    '5118': '''<p><strong>Nerezové nůžky na knot svíčky</strong></p>
+<p>Nůžky na zkracování knotu jsou nepostradatelným pomocníkem pro každého milovníka svíček. Pravidelným zastřižením knotu před zapálením podpoříte rovnoměrné hoření svíčky, omezíte kouření plamene a prodloužíte její životnost.</p>
+<p>Díky dlouhým čepelím a speciálně tvarované hlavě snadno dosáhnete i ke knotu na dně vyšších skleněných svíček. Elegantní provedení z nerezové oceli v barvě růžového zlata z nich navíc dělá stylový doplněk, který krásně doplní vaši svíčku, zápalky i zhášedlo.</p>
+<h3>Detaily produktu</h3>
+<ul>
+<li>kategorie: <a href="/kategorie/bytove-dekorace.html">Útulný domov</a></li>
+<li>materiál: nerezová ocel</li>
+<li>barva: růžové zlato</li>
+<li>vhodné pro bavlněné i dřevěné knoty</li>
+<li>dlouhé čepele pro pohodlné zastřižení i hluboko ve sklenici</li>
+</ul>
+<h3>Jak správně zkracovat knot?</h3>
+<p>Před každým zapálením doporučujeme knot zkrátit na přibližně 3–5 mm. Díky tomu bude svíčka hořet klidněji, vytvoří rovnoměrné voskové jezírko a omezí se tvorba kouře i usazenin na skle.</p>
+<p>Další tipy k péči o sójové svíčky najdete na <a href="/blog/pece-o-bavlneny-a-dreveny-knot.html">našem blogu</a>.</p>''',
 }
 
 
