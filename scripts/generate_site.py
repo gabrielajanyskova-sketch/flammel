@@ -273,6 +273,11 @@ def apply_product_allowlist():
     for p in DATA['products']:
         if p['stock_status'] == 'outofstock':
             p['stock_status'] = 'comingsoon'
+        # These are candle accessories, not candles — belong under Bytové
+        # dekorace (Útulný domov); the "Hodí se k tomu" section on candle
+        # pages keeps them cross-linked from Přírodní svíčky anyway.
+        p['category_names'] = ['Bytové dekorace']
+        p['category_slugs'] = ['bytove-dekorace']
     print(f'Ponechány jen produkty z tabulky Martiny ({len(DATA["products"])}), smazáno {len(removed)} ostatních.')
 
 
@@ -773,10 +778,9 @@ def render_product_detail(p):
     price = p.get('sale_price') or p.get('price') or p.get('regular_price')
     disabled = '' if p['stock_status'] == 'instock' else 'disabled'
     btn_label = {'instock': 'Přidat do košíku', 'comingsoon': 'Připravujeme'}.get(p['stock_status'], 'Vyprodáno')
-    # Candle accessories (nůžky, zhášedlo, aromalampa) live in the same
-    # "Přírodní svíčky" category as the candles themselves rather than under
-    # "Útulný domov" — cross-linking them from candle pages keeps them
-    # discoverable without needing a second category assignment.
+    # Candle accessories (nůžky, zhášedlo, aromalampa) live under Útulný
+    # domov, not Přírodní svíčky — cross-linking them from candle pages
+    # keeps them discoverable without needing a second category assignment.
     related_section = ''
     if 'svicky' in p['category_slugs'] and p['id'] not in ALLOWED_PRODUCT_IDS:
         accessories = [q for q in DATA['products'] if q['id'] in ALLOWED_PRODUCT_IDS]
@@ -785,7 +789,11 @@ def render_product_detail(p):
 <section class="section" style="padding-top:0">
   <div class="container">
     <div class="section-head"><h2>Hodí se k tomu</h2></div>
-    <div class="product-grid">{''.join(product_card(a) for a in accessories)}</div>
+    <div class="related-carousel">
+      <button type="button" class="carousel-arrow prev" aria-label="Předchozí">&#10094;</button>
+      <div class="carousel-track">{''.join(product_card(a) for a in accessories)}</div>
+      <button type="button" class="carousel-arrow next" aria-label="Další">&#10095;</button>
+    </div>
   </div>
 </section>'''
     body = f'''

@@ -82,6 +82,20 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  // "Hodí se k tomu" related-products carousel on product pages
+  document.querySelectorAll('.related-carousel').forEach(function (carousel) {
+    var track = carousel.querySelector('.carousel-track');
+    var prev = carousel.querySelector('.carousel-arrow.prev');
+    var next = carousel.querySelector('.carousel-arrow.next');
+    if (!track || !prev || !next) return;
+    function step() {
+      var card = track.querySelector('.product-card');
+      return card ? card.offsetWidth + 24 : 240;
+    }
+    prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: 'smooth' }); });
+    next.addEventListener('click', function () { track.scrollBy({ left: step(), behavior: 'smooth' }); });
+  });
+
   // Header search — filters the embedded product index client-side,
   // since this static site has no server to query.
   var searchToggle = document.querySelector('.search-toggle');

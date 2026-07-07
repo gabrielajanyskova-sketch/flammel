@@ -504,6 +504,26 @@ p { margin: 0 0 1em; }
 
 .empty-state { text-align: center; color: var(--text-muted); padding: 60px 0; }
 
+.related-carousel { display: flex; align-items: center; gap: 12px; }
+.related-carousel .carousel-track {
+  display: flex; gap: 24px; overflow-x: auto; scroll-snap-type: x mandatory;
+  scroll-behavior: smooth; padding-bottom: 4px;
+}
+.related-carousel .carousel-track::-webkit-scrollbar { height: 6px; }
+.related-carousel .carousel-track::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.related-carousel .carousel-track .product-card { flex: 0 0 240px; scroll-snap-align: start; }
+.related-carousel .carousel-arrow {
+  flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--white); color: var(--ink);
+  cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.2s, color 0.2s;
+}
+.related-carousel .carousel-arrow:hover { border-color: var(--gold); color: var(--gold-dark); }
+@media (max-width: 640px) {
+  .related-carousel .carousel-arrow { display: none; }
+  .related-carousel .carousel-track .product-card { flex-basis: 200px; }
+}
+
 /* ==========================================================================
    Product detail
    ========================================================================== */
