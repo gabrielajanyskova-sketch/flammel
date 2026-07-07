@@ -268,6 +268,11 @@ def apply_product_allowlist():
     DATA['products'] = [p for p in DATA['products'] if p['id'] in ALLOWED_PRODUCT_IDS]
     for p in removed:
         (ROOT / 'produkt' / f"{p['slug']}.html").unlink(missing_ok=True)
+    # Out-of-stock items from this curated list stay visible as "Připravujeme"
+    # (same treatment as the new_products.json items), not "Vyprodáno".
+    for p in DATA['products']:
+        if p['stock_status'] == 'outofstock':
+            p['stock_status'] = 'comingsoon'
     print(f'Ponechány jen produkty z tabulky Martiny ({len(DATA["products"])}), smazáno {len(removed)} ostatních.')
 
 
