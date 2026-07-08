@@ -56,9 +56,6 @@ function json(data, status, cors) {
   });
 }
 
-const SITE_URL = 'https://www.flammel.cz';
-const LOGO_URL = `${SITE_URL}/assets/img/favicon-192.png`;
-
 function escapeHtml(value) {
   return String(value == null ? '' : value).replace(/[&<>"']/g, (c) => (
     { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
@@ -76,8 +73,7 @@ function emailLayout(innerHtml) {
     <tr><td align="center">
       <table role="presentation" width="100%" style="max-width:480px;background:#ffffff;border:1px solid #e7ddc9;border-radius:12px;overflow:hidden;">
         <tr><td align="center" style="background:#faf6ee;padding:28px 24px;border-bottom:1px solid #e7ddc9;">
-          <img src="${LOGO_URL}" width="56" height="56" alt="flammel" style="display:block;margin:0 auto 10px;border-radius:50%;">
-          <div style="font-style:italic;font-size:28px;color:#7d631c;">flammel</div>
+          <div style="font-style:italic;font-size:36px;color:#7d631c;">flammel</div>
         </td></tr>
         <tr><td style="padding:28px 24px;font-size:15px;line-height:1.6;">
           ${innerHtml}
