@@ -180,13 +180,19 @@ async function getStock(request, env, cors) {
 
   const placeholders = ids.map(() => '?').join(',');
   const { results } = await env.DB.prepare(
-    `SELECT product_id, qty FROM product_stock WHERE product_id IN (${placeholders})`
+    `SELECT product_id, qty, regular_price, sale_price FROM product_stock WHERE product_id IN (${placeholders})`
   )
     .bind(...ids)
     .all();
 
   const stock = {};
-  for (const row of results) stock[row.product_id] = row.qty;
+  for (const row of results) {
+    stock[row.product_id] = {
+      qty: row.qty,
+      regularPrice: row.regular_price,
+      salePrice: row.sale_price,
+    };
+  }
   return json(stock, 200, cors);
 }
 

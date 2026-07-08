@@ -650,16 +650,21 @@ def product_card(p):
     all_slugs = p['category_slugs'] + p.get('collection_slugs', [])
     price = p.get('sale_price') or p.get('price') or p.get('regular_price')
     quick_add = ''
-    if p['stock_status'] == 'instock':
+    if p['stock_status'] != 'outofstock':
+        # Rendered disabled/"Připravujeme" for comingsoon items — live-stock
+        # JS re-enables it (and fills in the price) once D1 confirms both a
+        # price and available quantity for this product.
+        disabled = '' if p['stock_status'] == 'instock' else 'disabled'
+        btn_label = 'Přidat do košíku' if p['stock_status'] == 'instock' else 'Připravujeme'
         quick_add = f'''<div class="quick-add">
           <div class="qty-input qty-input--sm">
             <button type="button" data-qty-dec>−</button>
             <input type="text" value="1" readonly>
             <button type="button" data-qty-inc>+</button>
           </div>
-          <button type="button" class="btn btn-quick-add" data-add-to-cart
+          <button type="button" class="btn btn-quick-add" {disabled} data-add-to-cart
             data-id="{p['id']}" data-title="{html_lib.escape(p['title'])}"
-            data-price="{price}" data-image="{img}" data-url="/produkt/{p['slug']}.html">Přidat do košíku</button>
+            data-price="{price}" data-image="{img}" data-url="/produkt/{p['slug']}.html">{btn_label}</button>
         </div>'''
     return f'''<div class="product-card" data-cats="{','.join(all_slugs)}">
       <a class="thumb" href="/produkt/{p['slug']}.html">
@@ -668,8 +673,8 @@ def product_card(p):
       <div class="body">
         <span class="cat">{cat}</span>
         <h3><a href="/produkt/{p['slug']}.html">{p['title']}</a></h3>
-        <div class="price-row">{price_block(p)}</div>
-        {stock_badge(p)} <span class="live-stock" data-product-id="{p['id']}"></span>
+        <div class="price-row"><span class="price-wrap" data-product-id="{p['id']}">{price_block(p)}</span></div>
+        <span class="stock-badge-wrap" data-product-id="{p['id']}">{stock_badge(p)}</span> <span class="live-stock" data-product-id="{p['id']}"></span>
         {quick_add}
       </div>
     </div>'''
@@ -807,7 +812,11 @@ def render_product_detail(p):
     <div class="product-info">
       <span class="cat">{cat}</span>
       <h1>{p['title']}</h1>
-      <div class="price-row">{price_block(p)} {stock_badge(p)} <span class="live-stock" data-product-id="{p['id']}"></span></div>
+      <div class="price-row">
+        <span class="price-wrap" data-product-id="{p['id']}">{price_block(p)}</span>
+        <span class="stock-badge-wrap" data-product-id="{p['id']}">{stock_badge(p)}</span>
+        <span class="live-stock" data-product-id="{p['id']}"></span>
+      </div>
       <div class="qty-row">
         <div class="qty-input">
           <button type="button" data-qty-dec>−</button>

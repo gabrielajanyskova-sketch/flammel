@@ -47,6 +47,15 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: wrangler d1 execute flammel-orders --remote --file=schema.sql
 
+      - name: Aplikovat migrace (ALTER TABLE) — tolerovat už-aplikované
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          for f in migrations/*.sql; do
+            wrangler d1 execute flammel-orders --remote --file="$f" || true
+          done
+
       - name: Nastavit RESEND_API_KEY jako Worker secret
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

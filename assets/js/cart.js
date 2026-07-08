@@ -524,13 +524,17 @@
     setupLiveStock();
   });
 
-  // Live stock counts for products tracked in D1 (product_stock table) —
-  // items with no row there are unlimited and are left untouched here.
+  // Live stock + price for products tracked in D1 (product_stock table) —
+  // items with no row there are unlimited/unpriced and are left untouched
+  // here (they keep whatever the generated HTML already says).
   function setupLiveStock() {
     var stockEls = document.querySelectorAll('.live-stock[data-product-id]');
+    var priceEls = document.querySelectorAll('.price-wrap[data-product-id]');
+    var badgeEls = document.querySelectorAll('.stock-badge-wrap[data-product-id]');
     var addBtns = document.querySelectorAll('[data-add-to-cart][data-id]');
     var ids = {};
     stockEls.forEach(function (el) { ids[el.dataset.productId] = true; });
+    priceEls.forEach(function (el) { ids[el.dataset.productId] = true; });
     addBtns.forEach(function (btn) { ids[btn.dataset.id] = true; });
     var idList = Object.keys(ids);
     if (idList.length === 0) return;
@@ -539,16 +543,38 @@
       .then(function (res) { return res.ok ? res.json() : {}; })
       .then(function (stock) {
         stockEls.forEach(function (el) {
-          var qty = stock[el.dataset.productId];
-          if (typeof qty !== 'number') return;
-          el.textContent = qty > 0 ? ('Skladem ' + qty + ' ks') : 'Vyprodáno';
-          el.classList.add(qty > 0 ? 'live-stock--in' : 'live-stock--out');
+          var info = stock[el.dataset.productId];
+          if (!info || typeof info.qty !== 'number') return;
+          el.textContent = info.qty > 0 ? ('Skladem ' + info.qty + ' ks') : 'Vyprodáno';
+          el.classList.add(info.qty > 0 ? 'live-stock--in' : 'live-stock--out');
         });
+
+        badgeEls.forEach(function (el) {
+          var info = stock[el.dataset.productId];
+          if (!info || typeof info.qty !== 'number') return;
+          el.innerHTML = info.qty > 0
+            ? '<span class="stock-badge in">Skladem</span>'
+            : '<span class="stock-badge out">Vyprodáno</span>';
+        });
+
+        priceEls.forEach(function (el) {
+          var info = stock[el.dataset.productId];
+          if (!info || !info.regularPrice) return;
+          el.innerHTML = (info.salePrice && info.salePrice !== info.regularPrice)
+            ? '<span class="price sale">' + formatPrice(info.salePrice) + '</span> <span class="price-old">' + formatPrice(info.regularPrice) + '</span>'
+            : '<span class="price">' + formatPrice(info.regularPrice) + '</span>';
+        });
+
         addBtns.forEach(function (btn) {
-          var qty = stock[btn.dataset.id];
-          if (qty === 0) {
+          var info = stock[btn.dataset.id];
+          if (!info) return;
+          if (info.qty === 0) {
             btn.disabled = true;
             btn.textContent = 'Vyprodáno';
+          } else if (info.regularPrice) {
+            btn.dataset.price = info.salePrice || info.regularPrice;
+            btn.disabled = false;
+            btn.textContent = 'Přidat do košíku';
           }
         });
       })
