@@ -385,7 +385,7 @@ def footer_html():
   <div class="footer-gold">
     <div class="container footer-top">
       <div class="footer-col">
-        <h4>O mně</h4>
+        <h3>O mně</h3>
         <ul>
           <li><a href="/zakladni-informace.html">Základní informace</a></li>
           <li><a href="/reference.html">Reference</a></li>
@@ -393,11 +393,11 @@ def footer_html():
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Produkty</h4>
+        <h3>Produkty</h3>
         <ul>{''.join(f'<li><a href="/kategorie/{slug}.html">{CAT_BY_SLUG[slug]["name"]}</a></li>' for slug in HOME_NAV_CATS)}</ul>
       </div>
       <div class="footer-col">
-        <h4>Důležité odkazy</h4>
+        <h3>Důležité odkazy</h3>
         <ul>
           <li><a href="/moznosti-doruceni.html">Možnosti doručení</a></li>
           <li><a href="/platebni-podminky.html">Platební podmínky</a></li>
@@ -544,7 +544,7 @@ def render_home():
           <a class="cat-card{' cat-card--dark' if slug in DARK_THEMED_CARDS else ''}" href="/kategorie/{slug}.html"{card_style(slug)}>
             {'<span class="collection-badge">Kolekce</span>' if show_badge else ''}
             <div class="cat-icon">{icon_html(slug)}</div>
-            <h3{' class="collection-title"' if slug in collection_slugs else ''}>{CAT_BY_SLUG[slug]['name']}</h3>
+            <h2{' class="collection-title"' if slug in collection_slugs else ''}>{CAT_BY_SLUG[slug]['name']}</h2>
             {'' if slug in collection_slugs else f'<p>{CATEGORY_TAGLINES[slug][0]}</p>'}
           </a>
           <a class="cat-tag-btn" href="/kategorie/{slug}.html">{CATEGORY_TAGLINES[slug][1]}</a>
@@ -580,6 +580,7 @@ def render_home():
     featured_cards = ''.join(product_card(p) for p in featured)
 
     body = f'''
+<h1 class="sr-only">{SITE_NAME} — {SITE_TAGLINE}</h1>
 <section class="hero-slider">
   <div class="slides">{slides}</div>
   <button class="slide-arrow prev" aria-label="Předchozí">&#10094;</button>
