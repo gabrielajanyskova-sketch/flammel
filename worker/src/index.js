@@ -56,6 +56,13 @@ function json(data, status, cors) {
   });
 }
 
+const SITE_URL = 'https://www.flammel.cz';
+// Rendered from the site's actual Darloune logo font (assets/fonts/Darloune.otf)
+// to a static image, since e-mail clients can't be relied on to load a
+// custom @font-face — see scripts/generate_site.py's asset pipeline for how
+// assets/img/logo-email.png was produced.
+const LOGO_URL = `${SITE_URL}/assets/img/logo-email.png`;
+
 function escapeHtml(value) {
   return String(value == null ? '' : value).replace(/[&<>"']/g, (c) => (
     { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
@@ -72,8 +79,8 @@ function emailLayout(innerHtml) {
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#faf6ee;padding:32px 16px;">
     <tr><td align="center">
       <table role="presentation" width="100%" style="max-width:480px;background:#ffffff;border:1px solid #e7ddc9;border-radius:12px;overflow:hidden;">
-        <tr><td align="center" style="background:#faf6ee;padding:28px 24px;border-bottom:1px solid #e7ddc9;">
-          <div style="font-style:italic;font-size:36px;color:#7d631c;">flammel</div>
+        <tr><td align="center" style="background:#faf6ee;padding:24px;border-bottom:1px solid #e7ddc9;">
+          <img src="${LOGO_URL}" width="180" height="51" alt="flammel" style="display:block;margin:0 auto;">
         </td></tr>
         <tr><td style="padding:28px 24px;font-size:15px;line-height:1.6;">
           ${innerHtml}
