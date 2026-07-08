@@ -25,3 +25,12 @@ CREATE TABLE IF NOT EXISTS order_items (
   price INTEGER NOT NULL,
   qty INTEGER NOT NULL
 );
+
+-- Products without a row here are treated as unlimited (no stock check).
+-- Edit quantities directly in the Cloudflare dashboard: Workers & Pages ->
+-- D1 -> flammel-orders -> Tables -> product_stock.
+CREATE TABLE IF NOT EXISTS product_stock (
+  product_id TEXT PRIMARY KEY,
+  title TEXT,
+  qty INTEGER NOT NULL DEFAULT 0
+);

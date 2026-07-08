@@ -1,7 +1,11 @@
 // Cloudflare Worker API for flammel.cz orders.
 // Endpoints:
-//   POST /api/orders                 – create an order, store it in D1, e-mail confirmation
-//   POST /api/orders/:orderNumber/cancel – cancel an order, e-mail confirmation
+//   POST /api/orders                     – create an order, check/decrement stock, e-mail confirmation
+//   POST /api/orders/:orderNumber/cancel – cancel an order, restore stock, e-mail confirmation
+//   GET  /api/stock?ids=a,b,c            – current quantities for tracked products (live display)
+//
+// Products with no row in product_stock are unlimited — no check, no display.
+// Quantities are edited directly in the Cloudflare dashboard's D1 table view.
 
 export default {
   async fetch(request, env) {
@@ -19,6 +23,9 @@ export default {
       const cancelMatch = url.pathname.match(/^\/api\/orders\/([^/]+)\/cancel$/);
       if (cancelMatch && request.method === 'POST') {
         return await cancelOrder(request, env, cors, decodeURIComponent(cancelMatch[1]));
+      }
+      if (url.pathname === '/api/stock' && request.method === 'GET') {
+        return await getStock(request, env, cors);
       }
       return json({ error: 'not_found' }, 404, cors);
     } catch (err) {
@@ -63,6 +70,24 @@ async function createOrder(request, env, cors) {
     return json({ error: 'missing_delivery_or_payment' }, 400, cors);
   }
 
+  // Stock check first, before writing anything — reject the whole order if
+  // any tracked (limited-quantity) item doesn't have enough left. Items with
+  // no row in product_stock are unlimited and skip this check entirely.
+  const trackedItems = [];
+  for (const item of body.items) {
+    const row = await env.DB.prepare('SELECT qty FROM product_stock WHERE product_id = ?').bind(item.id).first();
+    if (row) {
+      if (row.qty < item.qty) {
+        return json(
+          { error: 'insufficient_stock', productId: item.id, title: item.title, available: row.qty },
+          409,
+          cors
+        );
+      }
+      trackedItems.push(item);
+    }
+  }
+
   const orderNumber = generateOrderNumber();
   const subtotal = body.items.reduce((sum, i) => sum + i.price * i.qty, 0);
   const shipping = Number(body.shippingPrice) || 0;
@@ -98,7 +123,14 @@ async function createOrder(request, env, cors) {
       `INSERT INTO order_items (order_id, product_id, title, price, qty) VALUES (?, ?, ?, ?, ?)`
     ).bind(orderId, item.id, item.title, item.price, item.qty)
   );
-  await env.DB.batch(itemStmts);
+  const stockStmts = trackedItems.map((item) =>
+    env.DB.prepare('UPDATE product_stock SET qty = qty - ? WHERE product_id = ? AND qty >= ?').bind(
+      item.qty,
+      item.id,
+      item.qty
+    )
+  );
+  await env.DB.batch([...itemStmts, ...stockStmts]);
 
   await sendOrderEmails(env, { orderNumber, body, subtotal, shipping, paymentFee, total });
 
@@ -113,7 +145,16 @@ async function cancelOrder(request, env, cors, orderNumber) {
     return json({ error: 'email_mismatch' }, 403, cors);
   }
 
-  await env.DB.prepare("UPDATE orders SET status = 'zruseno' WHERE order_number = ?").bind(orderNumber).run();
+  const { results: items } = await env.DB.prepare(
+    'SELECT product_id, qty FROM order_items WHERE order_id = ?'
+  ).bind(order.id).all();
+  const restoreStmts = items.map((item) =>
+    env.DB.prepare('UPDATE product_stock SET qty = qty + ? WHERE product_id = ?').bind(item.qty, item.product_id)
+  );
+  restoreStmts.push(
+    env.DB.prepare("UPDATE orders SET status = 'zruseno' WHERE order_number = ?").bind(orderNumber)
+  );
+  await env.DB.batch(restoreStmts);
 
   await sendResendEmail(env, {
     to: order.customer_email,
@@ -127,6 +168,26 @@ async function cancelOrder(request, env, cors, orderNumber) {
   });
 
   return json({ orderNumber, status: 'zruseno' }, 200, cors);
+}
+
+async function getStock(request, env, cors) {
+  const url = new URL(request.url);
+  const ids = (url.searchParams.get('ids') || '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  if (ids.length === 0) return json({}, 200, cors);
+
+  const placeholders = ids.map(() => '?').join(',');
+  const { results } = await env.DB.prepare(
+    `SELECT product_id, qty FROM product_stock WHERE product_id IN (${placeholders})`
+  )
+    .bind(...ids)
+    .all();
+
+  const stock = {};
+  for (const row of results) stock[row.product_id] = row.qty;
+  return json(stock, 200, cors);
 }
 
 async function sendOrderEmails(env, { orderNumber, body, subtotal, shipping, paymentFee, total }) {

@@ -807,7 +807,7 @@ def render_product_detail(p):
     <div class="product-info">
       <span class="cat">{cat}</span>
       <h1>{p['title']}</h1>
-      <div class="price-row">{price_block(p)} {stock_badge(p)}</div>
+      <div class="price-row">{price_block(p)} {stock_badge(p)} <span class="live-stock" data-product-id="{p['id']}"></span></div>
       <div class="qty-row">
         <div class="qty-input">
           <button type="button" data-qty-dec>−</button>

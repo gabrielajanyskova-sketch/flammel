@@ -486,6 +486,9 @@ p { margin: 0 0 1em; }
 .stock-badge.in { color: #4c7a4c; }
 .stock-badge.out { color: var(--text-muted); }
 .stock-badge.soon { color: var(--gold-dark); }
+.live-stock { font-size: 0.82rem; color: var(--text-muted); }
+.live-stock.live-stock--in { color: #4c7a4c; }
+.live-stock.live-stock--out { color: var(--danger); }
 .price.price-tbd { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
 .quick-add {
   display: flex; align-items: center; gap: 8px; margin-top: 6px;

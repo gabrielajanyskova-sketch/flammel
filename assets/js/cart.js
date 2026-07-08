@@ -423,7 +423,15 @@
           body: JSON.stringify(payload),
         })
           .then(function (res) {
-            if (!res.ok) throw new Error('http_' + res.status);
+            if (res.status === 409) {
+              return res.json().then(function (err) {
+                throw new Error(
+                  'Bohužel u položky "' + err.title + '" máme skladem už jen ' + err.available +
+                  ' ks. Snižte prosím množství v košíku a zkuste to znovu.'
+                );
+              });
+            }
+            if (!res.ok) throw new Error('Odeslání objednávky se nepovedlo. Zkuste to prosím znovu, nebo nás rovnou kontaktujte na flammel@flammel.cz.');
             return res.json();
           })
           .then(function (result) {
@@ -461,10 +469,10 @@
                 });
             });
           })
-          .catch(function () {
+          .catch(function (err) {
             submitBtn.disabled = false;
             submitBtn.textContent = originalLabel;
-            alert('Odeslání objednávky se nepovedlo. Zkuste to prosím znovu, nebo nás rovnou kontaktujte na flammel@flammel.cz.');
+            alert(err.message || 'Odeslání objednávky se nepovedlo. Zkuste to prosím znovu, nebo nás rovnou kontaktujte na flammel@flammel.cz.');
           });
       });
     }
@@ -512,5 +520,38 @@
         }
       });
     });
+
+    setupLiveStock();
   });
+
+  // Live stock counts for products tracked in D1 (product_stock table) —
+  // items with no row there are unlimited and are left untouched here.
+  function setupLiveStock() {
+    var stockEls = document.querySelectorAll('.live-stock[data-product-id]');
+    var addBtns = document.querySelectorAll('[data-add-to-cart][data-id]');
+    var ids = {};
+    stockEls.forEach(function (el) { ids[el.dataset.productId] = true; });
+    addBtns.forEach(function (btn) { ids[btn.dataset.id] = true; });
+    var idList = Object.keys(ids);
+    if (idList.length === 0) return;
+
+    fetch(API_BASE + '/api/stock?ids=' + encodeURIComponent(idList.join(',')))
+      .then(function (res) { return res.ok ? res.json() : {}; })
+      .then(function (stock) {
+        stockEls.forEach(function (el) {
+          var qty = stock[el.dataset.productId];
+          if (typeof qty !== 'number') return;
+          el.textContent = qty > 0 ? ('Skladem ' + qty + ' ks') : 'Vyprodáno';
+          el.classList.add(qty > 0 ? 'live-stock--in' : 'live-stock--out');
+        });
+        addBtns.forEach(function (btn) {
+          var qty = stock[btn.dataset.id];
+          if (qty === 0) {
+            btn.disabled = true;
+            btn.textContent = 'Vyprodáno';
+          }
+        });
+      })
+      .catch(function () {});
+  }
 })();
