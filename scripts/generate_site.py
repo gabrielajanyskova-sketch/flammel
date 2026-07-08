@@ -669,7 +669,7 @@ def product_card(p):
         <span class="cat">{cat}</span>
         <h3><a href="/produkt/{p['slug']}.html">{p['title']}</a></h3>
         <div class="price-row">{price_block(p)}</div>
-        {stock_badge(p)}
+        {stock_badge(p)} <span class="live-stock" data-product-id="{p['id']}"></span>
         {quick_add}
       </div>
     </div>'''
