@@ -135,7 +135,9 @@ používá Web3Forms, protože to není objednávka.
 
 - `worker/src/index.js` — Worker s endpointy `POST /api/orders`
   (uloží objednávku do D1, pošle potvrzovací e-mail zákazníkovi a
-  oznámení na `flammel@flammel.cz` přes Resend), `POST /api/orders/:cislo/cancel`
+  oznámení na `flammel@flammel.cz` přes Resend — a pokud tím objednávka
+  srazí sklad nějaké položky na 2 kusy nebo míň, pošle na stejný e-mail
+  ještě zvlášť upozornění „Dochází sklad: …“), `POST /api/orders/:cislo/cancel`
   (zruší objednávku, pošle e-maily), `GET /api/stock?ids=...` (živý počet
   kusů/cena pro konkrétní produkty na webu) a `GET /api/products` (celá
   tabulka `product_stock` — z ní si `generate_site.py` při každém běhu

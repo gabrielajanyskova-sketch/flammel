@@ -1,6 +1,7 @@
 // Cloudflare Worker API for flammel.cz orders.
 // Endpoints:
 //   POST /api/orders                     – create an order, check/decrement stock, e-mail confirmation
+//                                           (+ low-stock alert to the shop when an item dips to ≤2 ks)
 //   POST /api/orders/:orderNumber/cancel – cancel an order, restore stock, e-mail confirmation
 //   GET  /api/stock?ids=a,b,c            – current quantities for tracked products (live display)
 //   GET  /api/products                   – full product_stock table (read-only, public — the
@@ -90,7 +91,7 @@ async function createOrder(request, env, cors) {
           cors
         );
       }
-      trackedItems.push(item);
+      trackedItems.push({ ...item, qtyBefore: row.qty });
     }
   }
 
@@ -139,8 +140,28 @@ async function createOrder(request, env, cors) {
   await env.DB.batch([...itemStmts, ...stockStmts]);
 
   await sendOrderEmails(env, { orderNumber, body, subtotal, shipping, paymentFee, total });
+  await sendLowStockAlerts(env, trackedItems);
 
   return json({ orderNumber, status: 'nova', total }, 200, cors);
+}
+
+// Only e-mails once per item per dip below the threshold — an order that
+// takes qty from, say, 5 straight to 0 still only crosses the line once,
+// and once it's at/under the threshold every further order of that item is
+// already blocked by the stock check above, so it can't re-fire.
+const LOW_STOCK_THRESHOLD = 2;
+
+async function sendLowStockAlerts(env, trackedItems) {
+  for (const item of trackedItems) {
+    const qtyAfter = item.qtyBefore - item.qty;
+    if (item.qtyBefore > LOW_STOCK_THRESHOLD && qtyAfter <= LOW_STOCK_THRESHOLD) {
+      await sendResendEmail(env, {
+        to: env.SHOP_NOTIFICATION_EMAIL,
+        subject: `Dochází sklad: ${item.title}`,
+        text: `Produkt "${item.title}" (ID ${item.id}) má skladem už jen ${qtyAfter} ks. Zvažte doplnění zásob.`,
+      });
+    }
+  }
 }
 
 async function cancelOrder(request, env, cors, orderNumber) {
