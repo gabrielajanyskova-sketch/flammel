@@ -1139,6 +1139,30 @@ Sitemap: {SITE_URL}/sitemap.xml
     write('robots.txt', robots)
 
 
+def render_llms_txt():
+    cat_links = '\n'.join(
+        f'- [{c["name"]}]({SITE_URL}/kategorie/{c["slug"]}.html)'
+        for c in DATA['product_cats']
+    )
+    llms = f'''# {SITE_NAME}
+
+> {SITE_TAGLINE}. {BASE_DESCRIPTION}
+
+## Kategorie
+
+{cat_links}
+
+## Další stránky
+
+- [Všechny produkty]({SITE_URL}/produkty.html)
+- [O Flammel]({SITE_URL}/o-nas.html)
+- [Blog]({SITE_URL}/blog.html)
+- [Kontakty]({SITE_URL}/kontakty.html)
+- [Možnosti doručení]({SITE_URL}/moznosti-doruceni.html)
+'''
+    write('llms.txt', llms)
+
+
 # ---------------------------------------------------------------------------
 # main
 # ---------------------------------------------------------------------------
@@ -1163,6 +1187,7 @@ def main():
     render_muj_ucet()
     render_blog()
     render_sitemap_and_robots()
+    render_llms_txt()
     print('Site generated.')
 
 
