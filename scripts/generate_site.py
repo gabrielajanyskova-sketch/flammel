@@ -877,8 +877,9 @@ def render_product_detail(p):
         'sku': p['id'],
         'url': product_url,
     }
-    if images and images[0]:
-        product_ld['image'] = [u if u.startswith('http') else f'{SITE_URL}{u}' for u in images]
+    real_images = [u for u in images if u and 'placeholder-produkt.svg' not in u]
+    if real_images:
+        product_ld['image'] = [u if u.startswith('http') else f'{SITE_URL}{u}' for u in real_images]
     if price:
         product_ld['offers'] = {
             '@type': 'Offer',
