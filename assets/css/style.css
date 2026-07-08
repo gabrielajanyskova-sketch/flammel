@@ -100,7 +100,7 @@ p { margin: 0 0 1em; }
    Announcement bar
    ========================================================================== */
 .announce-bar {
-  background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+  background: var(--gold);
   color: var(--ink);
 }
 .announce-bar .container {
