@@ -1,0 +1,61 @@
+name: Nasadit backend (Cloudflare Worker + D1)
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - claude/wordpress-to-html-migration-2tlbsu
+    paths:
+      - 'worker/**'
+      - '.github/workflows/deploy-worker.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: worker
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Nainstalovat wrangler
+        run: npm install -g wrangler
+
+      - name: Vytvořit D1 databázi (pokud ještě neexistuje) a doplnit její ID do wrangler.toml
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -e
+          wrangler d1 create flammel-orders || true
+          DB_ID=$(wrangler d1 list --json | node -e "
+            const data = JSON.parse(require('fs').readFileSync(0, 'utf8'));
+            const db = data.find(d => d.name === 'flammel-orders');
+            if (!db) { console.error('flammel-orders D1 databáze nenalezena'); process.exit(1); }
+            process.stdout.write(db.uuid);
+          ")
+          echo "D1 database id: $DB_ID"
+          sed -i "s/REPLACE_AFTER_CREATE/$DB_ID/" wrangler.toml
+
+      - name: Aplikovat databázové schéma
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: wrangler d1 execute flammel-orders --remote --file=schema.sql
+
+      - name: Nastavit RESEND_API_KEY jako Worker secret
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: echo "$RESEND_API_KEY" | wrangler secret put RESEND_API_KEY
+
+      - name: Nasadit Worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: wrangler deploy

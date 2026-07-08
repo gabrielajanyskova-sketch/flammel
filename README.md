@@ -125,3 +125,35 @@ Pro plnohodnotný e-shop s platbami a účty by bylo potřeba doplnit backend �
 to tento statický web úmyslně neřeší, protože WordPress export žádný takový
 kód/data pro bezpečné převzetí neobsahuje (a nemělo by smysl je z Wordpressu
 "opisovat", je lepší napojit standardní řešení typu platební bránu zvlášť).
+
+## Backend (Cloudflare Worker + D1 + Resend)
+
+Ve složce `worker/` je základní backend pro objednávky — zatím jen
+napsaný a nasaditelný, frontend (`assets/js/cart.js`) na něj ještě
+nevolá (dál používá Web3Forms, viz výše), dokud není worker skutečně
+nasazený a nemáme jeho URL.
+
+- `worker/src/index.js` — Worker s endpointy `POST /api/orders`
+  (uloží objednávku do D1, pošle potvrzovací e-mail zákazníkovi a
+  oznámení na `flammel@flammel.cz` přes Resend) a
+  `POST /api/orders/:cislo/cancel` (zruší objednávku, pošle e-maily).
+- `worker/schema.sql` — tabulky `orders` a `order_items` v D1.
+- `worker/wrangler.toml` — konfigurace Workeru; sklad/ceny produktů
+  dál zůstávají v Google Sheets/`products.csv`, D1 řeší jen objednávky.
+
+Nasazení běží přes `.github/workflows/deploy-worker.yml` (spustí se
+automaticky při změně `worker/**`, nebo ručně přes záložku Actions na
+GitHubu). Aby workflow prošel, je potřeba v repozitáři nastavit tyto
+GitHub Actions secrets (Settings → Secrets and variables → Actions):
+
+- **CLOUDFLARE_API_TOKEN** — token s právy `Account · Workers Scripts · Edit`
+  a `Account · D1 · Edit` (Cloudflare dashboard → My Profile → API Tokens →
+  Create Custom Token).
+- **CLOUDFLARE_ACCOUNT_ID** — najdete na Cloudflare dashboardu vpravo
+  v postranním panelu (Account ID).
+- **RESEND_API_KEY** — z resend.com (po ověření odesílací domény).
+
+Workflow si D1 databázi `flammel-orders` sám vytvoří (pokud ještě
+neexistuje), aplikuje schéma a nasadí Worker na `*.workers.dev`. Až
+worker poprvé úspěšně naběhne, jeho URL se propíše do `cart.js` jako
+další krok.
