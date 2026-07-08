@@ -45,9 +45,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Homepage hero image slider
+  // Homepage hero image slider — absent entirely on the placeholder hero
+  // (no real product photos yet), so guard every element lookup here.
   var slider = document.querySelector('.hero-slider');
-  if (slider) {
+  var prevArrow = slider && slider.querySelector('.slide-arrow.prev');
+  var nextArrow = slider && slider.querySelector('.slide-arrow.next');
+  if (slider && prevArrow && nextArrow) {
     var slides = slider.querySelectorAll('.slide');
     var dots = slider.querySelectorAll('.dot');
     var current = 0;
@@ -62,8 +65,8 @@ document.addEventListener('DOMContentLoaded', function () {
       clearInterval(timer);
       timer = setInterval(function () { goTo(current + 1); }, 5000);
     }
-    slider.querySelector('.slide-arrow.prev').addEventListener('click', function () { goTo(current - 1); restartAutoplay(); });
-    slider.querySelector('.slide-arrow.next').addEventListener('click', function () { goTo(current + 1); restartAutoplay(); });
+    prevArrow.addEventListener('click', function () { goTo(current - 1); restartAutoplay(); });
+    nextArrow.addEventListener('click', function () { goTo(current + 1); restartAutoplay(); });
     dots.forEach(function (dot, i) {
       dot.addEventListener('click', function () { goTo(i); restartAutoplay(); });
     });

@@ -278,6 +278,11 @@ def apply_product_allowlist():
         # pages keeps them cross-linked from Přírodní svíčky anyway.
         p['category_names'] = ['Bytové dekorace']
         p['category_slugs'] = ['bytove-dekorace']
+        # Drop the hotlinked WordPress photos — new photos are coming, so
+        # show the same "coming soon" placeholder as new_products.json
+        # items in the meantime rather than depend on the old host.
+        p['thumbnail_url'] = '/assets/img/placeholder-produkt.svg'
+        p['gallery_urls'] = []
     print(f'Ponechány jen produkty z tabulky Martiny ({len(DATA["products"])}), smazáno {len(removed)} ostatních.')
 
 
@@ -562,17 +567,36 @@ def render_home():
             slide_images.append(img)
         if len(slide_images) >= 5:
             break
-    slides = ''.join(
-        f'<div class="slide{" active" if i == 0 else ""}" style="background-image:url(\'{img}\')"></div>'
-        for i, img in enumerate(slide_images)
-    )
-    dots = ''.join(
-        f'<button class="dot{" active" if i == 0 else ""}" data-slide="{i}" aria-label="Snímek {i+1}"></button>'
-        for i in range(len(slide_images))
-    )
-    # The hero's first slide is the LCP element — it's a CSS background-image
-    # so it can't take fetchpriority itself, but preloading it gets the same effect.
-    extra_head = f'<link rel="preload" as="image" fetchpriority="high" href="{slide_images[0]}">' if slide_images else ''
+    # While every product is still on the placeholder thumbnail (no real
+    # photos yet), a full-bleed carousel of the same small icon looks
+    # broken — show a plain "coming soon" hero instead of stretching it.
+    no_real_photos = slide_images == ['/assets/img/placeholder-produkt.svg']
+    extra_head = ''
+    if no_real_photos:
+        hero = '''<section class="hero-slider hero-slider--placeholder">
+  <div class="hero-placeholder-content">
+    <p class="hero-wordmark">flammel</p>
+    <p class="hero-tagline">Nové fotky produktů už chystáme ✨</p>
+  </div>
+</section>'''
+    else:
+        slides = ''.join(
+            f'<div class="slide{" active" if i == 0 else ""}" style="background-image:url(\'{img}\')"></div>'
+            for i, img in enumerate(slide_images)
+        )
+        dots = ''.join(
+            f'<button class="dot{" active" if i == 0 else ""}" data-slide="{i}" aria-label="Snímek {i+1}"></button>'
+            for i in range(len(slide_images))
+        )
+        hero = f'''<section class="hero-slider">
+  <div class="slides">{slides}</div>
+  <button class="slide-arrow prev" aria-label="Předchozí">&#10094;</button>
+  <button class="slide-arrow next" aria-label="Další">&#10095;</button>
+  <div class="slide-dots">{dots}</div>
+</section>'''
+        # The hero's first slide is the LCP element — it's a CSS background-image
+        # so it can't take fetchpriority itself, but preloading it gets the same effect.
+        extra_head = f'<link rel="preload" as="image" fetchpriority="high" href="{slide_images[0]}">'
 
     testimonials = parse_testimonials()[:6]
     testi_cards = ''.join(
@@ -585,12 +609,7 @@ def render_home():
 
     body = f'''
 <h1 class="sr-only">{SITE_NAME} — {SITE_TAGLINE}</h1>
-<section class="hero-slider">
-  <div class="slides">{slides}</div>
-  <button class="slide-arrow prev" aria-label="Předchozí">&#10094;</button>
-  <button class="slide-arrow next" aria-label="Další">&#10095;</button>
-  <div class="slide-dots">{dots}</div>
-</section>
+{hero}
 
 <section class="section" style="padding-top:40px; padding-bottom:24px">
   <div class="container">

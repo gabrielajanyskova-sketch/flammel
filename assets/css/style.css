@@ -289,6 +289,16 @@ p { margin: 0 0 1em; }
   overflow: hidden;
   background: var(--cream);
 }
+.hero-slider--placeholder {
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(155deg, var(--cream) 0%, var(--gold-light) 100%);
+}
+.hero-placeholder-content { text-align: center; padding: 0 24px; }
+.hero-wordmark {
+  font-family: var(--font-display); font-weight: 400; line-height: 1;
+  font-size: clamp(2.6rem, 7vw, 4.2rem); color: var(--gold-dark); margin: 0;
+}
+.hero-tagline { color: var(--text-muted); font-size: 1.05rem; margin-top: 10px; }
 .hero-slider .slides { position: absolute; inset: 0; }
 .hero-slider .slide {
   position: absolute; inset: 0;
