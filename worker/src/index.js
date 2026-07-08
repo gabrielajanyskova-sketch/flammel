@@ -56,6 +56,56 @@ function json(data, status, cors) {
   });
 }
 
+const SITE_URL = 'https://www.flammel.cz';
+const LOGO_URL = `${SITE_URL}/assets/img/favicon-192.png`;
+
+function escapeHtml(value) {
+  return String(value == null ? '' : value).replace(/[&<>"']/g, (c) => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+
+// Shared branded wrapper (logo + brand colours) for every transactional
+// e-mail — Resend just sends whatever HTML we hand it, there is no template
+// editor on their side, so the look lives here in code.
+function emailLayout(innerHtml) {
+  return `<!doctype html>
+<html lang="cs"><head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#faf6ee;font-family:Georgia,'Times New Roman',serif;color:#4a4038;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#faf6ee;padding:32px 16px;">
+    <tr><td align="center">
+      <table role="presentation" width="100%" style="max-width:480px;background:#ffffff;border:1px solid #e7ddc9;border-radius:12px;overflow:hidden;">
+        <tr><td align="center" style="background:#faf6ee;padding:28px 24px;border-bottom:1px solid #e7ddc9;">
+          <img src="${LOGO_URL}" width="56" height="56" alt="flammel" style="display:block;margin:0 auto 10px;border-radius:50%;">
+          <div style="font-style:italic;font-size:28px;color:#7d631c;">flammel</div>
+        </td></tr>
+        <tr><td style="padding:28px 24px;font-size:15px;line-height:1.6;">
+          ${innerHtml}
+        </td></tr>
+        <tr><td style="padding:16px 24px;background:#faf6ee;border-top:1px solid #e7ddc9;text-align:center;font-size:12px;color:#736858;">
+          flammel.cz &middot; <a href="mailto:flammel@flammel.cz" style="color:#7d631c;">flammel@flammel.cz</a>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>`;
+}
+
+function itemRowsHtml(items) {
+  return items.map((i) => (
+    `<tr>
+      <td style="padding:6px 0;border-bottom:1px solid #e7ddc9;">${escapeHtml(i.title)} &times; ${i.qty}</td>
+      <td style="padding:6px 0;border-bottom:1px solid #e7ddc9;text-align:right;white-space:nowrap;">${i.price * i.qty} Kč</td>
+    </tr>`
+  )).join('');
+}
+
+function totalsRowsHtml(rows) {
+  return rows.map(([label, value]) => (
+    `<tr><td style="padding:3px 0;">${label}</td><td style="padding:3px 0;text-align:right;">${value}</td></tr>`
+  )).join('');
+}
+
 function generateOrderNumber() {
   const d = new Date();
   const pad = (n) => (n < 10 ? '0' : '') + n;
@@ -258,10 +308,23 @@ async function sendOrderEmails(env, { orderNumber, body, subtotal, shipping, pay
     'Brzy se vám ozveme s dalšími informacemi.',
   ].join('\n');
 
+  const customerHtml = emailLayout(`
+    <p style="margin:0 0 16px;font-size:17px;color:#211c17;">Děkujeme za objednávku č. <strong>${escapeHtml(orderNumber)}</strong>!</p>
+    <table role="presentation" width="100%" style="border-collapse:collapse;font-size:14px;">${itemRowsHtml(body.items)}</table>
+    <table role="presentation" width="100%" style="border-collapse:collapse;font-size:14px;margin-top:12px;">
+      ${totalsRowsHtml([['Mezisoučet', `${subtotal} Kč`], ['Doprava', `${shipping} Kč`], ['Platba', `${paymentFee} Kč`]])}
+    </table>
+    <table role="presentation" width="100%" style="border-collapse:collapse;margin-top:10px;background:#faf6ee;border-radius:8px;">
+      <tr><td style="padding:10px 14px;font-weight:bold;color:#211c17;">Celkem</td><td style="padding:10px 14px;text-align:right;font-weight:bold;color:#7d631c;font-size:17px;">${total} Kč</td></tr>
+    </table>
+    <p style="margin:20px 0 0;">Brzy se vám ozveme s dalšími informacemi.</p>
+  `);
+
   await sendResendEmail(env, {
     to: body.customer.email,
     subject: `Potvrzení objednávky ${orderNumber} – flammel.cz`,
     text: customerText,
+    html: customerHtml,
   });
 
   const shopText = [
@@ -279,14 +342,34 @@ async function sendOrderEmails(env, { orderNumber, body, subtotal, shipping, pay
     `Celkem: ${total} Kč`,
   ].join('\n');
 
+  const shopHtml = emailLayout(`
+    <p style="margin:0 0 16px;font-size:17px;color:#211c17;">Nová objednávka <strong>${escapeHtml(orderNumber)}</strong></p>
+    <table role="presentation" width="100%" style="border-collapse:collapse;font-size:14px;margin-bottom:16px;">
+      ${totalsRowsHtml([
+        ['Jméno', escapeHtml(body.customer.name)],
+        ['E-mail', escapeHtml(body.customer.email)],
+        ['Telefon', escapeHtml(body.customer.phone || '-')],
+        ['Doprava', `${escapeHtml(body.delivery.method)} — ${escapeHtml(body.delivery.detail || '')}`],
+        ['Fakturace', escapeHtml((body.billing && body.billing.detail) || 'Stejná jako dodací')],
+        ['Platba', escapeHtml(body.payment.method)],
+        ['Poznámka', escapeHtml(body.note || '-')],
+      ])}
+    </table>
+    <table role="presentation" width="100%" style="border-collapse:collapse;font-size:14px;">${itemRowsHtml(body.items)}</table>
+    <table role="presentation" width="100%" style="border-collapse:collapse;margin-top:10px;background:#faf6ee;border-radius:8px;">
+      <tr><td style="padding:10px 14px;font-weight:bold;color:#211c17;">Celkem</td><td style="padding:10px 14px;text-align:right;font-weight:bold;color:#7d631c;font-size:17px;">${total} Kč</td></tr>
+    </table>
+  `);
+
   await sendResendEmail(env, {
     to: env.SHOP_NOTIFICATION_EMAIL,
     subject: `Nová objednávka ${orderNumber}`,
     text: shopText,
+    html: shopHtml,
   });
 }
 
-async function sendResendEmail(env, { to, subject, text }) {
+async function sendResendEmail(env, { to, subject, text, html }) {
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
@@ -298,6 +381,7 @@ async function sendResendEmail(env, { to, subject, text }) {
       to: [to],
       subject,
       text,
+      html: html || emailLayout(`<p style="margin:0;white-space:pre-line;">${escapeHtml(text)}</p>`),
     }),
   });
   if (!res.ok) {
