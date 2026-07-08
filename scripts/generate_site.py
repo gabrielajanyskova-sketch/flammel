@@ -555,7 +555,7 @@ COLLECTION_ICON_IMAGES = {
     'bytove-dekorace': '/assets/img/icons/bytove-dekorace.png',
     'mineralni-kameny': '/assets/img/icons/mineralni-kameny.png',
 }
-CART_ICON = _icon('<path d="M6 8V6a6 6 0 0 1 12 0v2"/><rect x="3.5" y="8" width="17" height="13" rx="2"/>')
+CART_ICON = _icon('<path d="M6 9.5V7.5a6 6 0 0 1 12 0v2"/><rect x="3.5" y="9.5" width="17" height="13" rx="2"/>')
 SEARCH_ICON = _icon('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>')
 HEART_ICON = '<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.2 2 4.5 5.6 4a5 5 0 0 1 6.4 2.6A5 5 0 0 1 18.4 4c3.6.5 5.2 4.2 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg>'
 FACEBOOK_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.3-1.5 1.6-1.5h1.7V3.7C16.5 3.6 15.5 3.5 14.3 3.5c-2.4 0-4 1.5-4 4.1v2.3H7.6v3.1h2.7v8h3.2z"/></svg>'
