@@ -337,6 +337,61 @@ if 'obchodni-podminky' in PAGES_BY_SLUG:
 CAT_BY_SLUG = {c['slug']: c for c in DATA['product_cats']}
 
 
+WORKER_API_BASE = 'https://flammel-api.gabriela-janyskova.workers.dev'
+
+
+def fetch_d1_products():
+    """Pull price/sklad/kategorie z D1 přes Worker — postupně nahrazuje Google
+    Sheets jako zdroj pravdy. Když je nedostupné (žádná síť, výpadek), tiše
+    se použije to, co už je v products.csv/new_products.json — stejné
+    chování jako dosavadní pád zpět při nedostupnosti Google Sheets."""
+    try:
+        with urllib.request.urlopen(f'{WORKER_API_BASE}/api/products', timeout=10) as resp:
+            return json.loads(resp.read().decode('utf-8'))
+    except Exception as e:
+        print(f'Nepodařilo se stáhnout data z Cloudflare D1 ({e}), použiji poslední uložená data.')
+        return {}
+
+
+def apply_d1_overrides():
+    d1_products = fetch_d1_products()
+    if not d1_products:
+        return
+    applied = 0
+    for p in DATA['products']:
+        row = d1_products.get(p['id'])
+        if not row:
+            continue
+        applied += 1
+        regular = row.get('regularPrice')
+        sale = row.get('salePrice')
+        qty = row.get('qty')
+        if regular:
+            if sale and sale != regular:
+                p['price'] = str(sale)
+                p['sale_price'] = str(sale)
+                p['regular_price'] = str(regular)
+            else:
+                p['price'] = str(regular)
+                p['regular_price'] = str(regular)
+                p['sale_price'] = ''
+        if qty is not None:
+            if qty > 0:
+                p['stock_status'] = 'instock'
+            elif regular:
+                p['stock_status'] = 'outofstock'
+            else:
+                p['stock_status'] = 'comingsoon'
+        cat_slug = row.get('categorySlug')
+        if cat_slug and cat_slug in CAT_BY_SLUG:
+            p['category_slugs'] = [cat_slug]
+            p['category_names'] = [CAT_BY_SLUG[cat_slug]['name']]
+    print(f'Načteno {applied} produktů z Cloudflare D1 (cena/sklad/kategorie).')
+
+
+apply_d1_overrides()
+
+
 # ---------------------------------------------------------------------------
 # helpers
 # ---------------------------------------------------------------------------

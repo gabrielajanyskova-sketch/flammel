@@ -3,9 +3,12 @@
 //   POST /api/orders                     – create an order, check/decrement stock, e-mail confirmation
 //   POST /api/orders/:orderNumber/cancel – cancel an order, restore stock, e-mail confirmation
 //   GET  /api/stock?ids=a,b,c            – current quantities for tracked products (live display)
+//   GET  /api/products                   – full product_stock table (read-only, public — the
+//                                           static site generator pulls price/stock/category
+//                                           from here at build time instead of Google Sheets)
 //
 // Products with no row in product_stock are unlimited — no check, no display.
-// Quantities are edited directly in the Cloudflare dashboard's D1 table view.
+// Everything here is edited directly in the Cloudflare dashboard's D1 table view.
 
 export default {
   async fetch(request, env) {
@@ -26,6 +29,9 @@ export default {
       }
       if (url.pathname === '/api/stock' && request.method === 'GET') {
         return await getStock(request, env, cors);
+      }
+      if (url.pathname === '/api/products' && request.method === 'GET') {
+        return await getAllProducts(request, env, cors);
       }
       return json({ error: 'not_found' }, 404, cors);
     } catch (err) {
@@ -194,6 +200,24 @@ async function getStock(request, env, cors) {
     };
   }
   return json(stock, 200, cors);
+}
+
+async function getAllProducts(request, env, cors) {
+  const { results } = await env.DB.prepare(
+    'SELECT product_id, title, qty, regular_price, sale_price, category_slug FROM product_stock'
+  ).all();
+
+  const products = {};
+  for (const row of results) {
+    products[row.product_id] = {
+      title: row.title,
+      qty: row.qty,
+      regularPrice: row.regular_price,
+      salePrice: row.sale_price,
+      categorySlug: row.category_slug,
+    };
+  }
+  return json(products, 200, cors);
 }
 
 async function sendOrderEmails(env, { orderNumber, body, subtotal, shipping, paymentFee, total }) {

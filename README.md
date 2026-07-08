@@ -135,11 +135,36 @@ používá Web3Forms, protože to není objednávka.
 
 - `worker/src/index.js` — Worker s endpointy `POST /api/orders`
   (uloží objednávku do D1, pošle potvrzovací e-mail zákazníkovi a
-  oznámení na `flammel@flammel.cz` přes Resend) a
-  `POST /api/orders/:cislo/cancel` (zruší objednávku, pošle e-maily).
-- `worker/schema.sql` — tabulky `orders` a `order_items` v D1.
-- `worker/wrangler.toml` — konfigurace Workeru; sklad/ceny produktů
-  dál zůstávají v Google Sheets/`products.csv`, D1 řeší jen objednávky.
+  oznámení na `flammel@flammel.cz` přes Resend), `POST /api/orders/:cislo/cancel`
+  (zruší objednávku, pošle e-maily), `GET /api/stock?ids=...` (živý počet
+  kusů/cena pro konkrétní produkty na webu) a `GET /api/products` (celá
+  tabulka `product_stock` — z ní si `generate_site.py` při každém běhu
+  stahuje cenu/sklad/kategorii, viz níž).
+- `worker/schema.sql` + `worker/migrations/` — tabulky `orders`,
+  `order_items` a `product_stock` (sloupce `qty`, `regular_price`,
+  `sale_price`, `category_slug`) v D1.
+
+### Cena/sklad/kategorie — D1 nahrazuje Google Sheets
+
+Tabulka `product_stock` v Cloudflare D1 (dashboard → Workers & Pages →
+D1 → flammel-orders → Explore Data) je teď hlavní zdroj pravdy pro
+cenu, počet kusů skladem a kategorii — `generate_site.py` si ji při
+každém běhu stáhne přes `GET /api/products` a přepíše jí, co by jinak
+vzalo z `products.csv`/Google Sheets. Produkt, který v tabulce ještě
+řádek nemá, prostě zůstane u staré hodnoty (nic se nerozbije).
+
+Sloupce, které tam upravujete:
+- **product_id** — ID produktu (číslo)
+- **title** — jen pro přehlednost
+- **qty** — počet kusů skladem (0 = vyprodáno/vypnuté tlačítko)
+- **regular_price**, **sale_price** — cena; `sale_price` vyplňte jen
+  při slevě, jinak nechte prázdné
+- **category_slug** — jedna z: `svicky`, `mineralni-kameny`,
+  `bytove-dekorace`, `darkove-balicky`, `drevene-dekorace`,
+  `krasa-a-zdravi`, `elegantni-sklo`, `nezarazene`
+
+Google Sheets/`products.csv` (viz výše) pořád funguje jako záloha —
+používá se jen pro produkty, které v D1 zatím řádek nemají.
 
 Nasazení běží přes `.github/workflows/deploy-worker.yml` (spustí se
 automaticky při změně `worker/**`, nebo ručně přes záložku Actions na
