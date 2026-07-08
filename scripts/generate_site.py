@@ -22,6 +22,24 @@ DATA = json.loads((ROOT / 'data' / 'content.json').read_text(encoding='utf-8'))
 SITE_NAME = 'flammel'
 SITE_TAGLINE = 'Ručně vyráběné přírodní dárky a dekorace s duší'
 BASE_DESCRIPTION = 'Ručně vyráběné sójové svíčky, medvídci z růží, šperky a bytové dekorace. Přírodní materiály, poctivá řemeslná výroba.'
+SITE_URL = 'https://www.flammel.cz'
+SOCIAL_LINKS = [
+    'http://www.facebook.com/Flammel-109217181002268',
+    'https://instagram.com/flammel.cz',
+]
+
+
+def organization_jsonld():
+    return json.dumps({
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        'name': SITE_NAME,
+        'url': SITE_URL + '/',
+        'logo': SITE_URL + '/assets/img/favicon-512.png',
+        'email': 'flammel@flammel.cz',
+        'telephone': '+420734518868',
+        'sameAs': SOCIAL_LINKS,
+    }, ensure_ascii=False)
 
 # Display-name overrides — the client wants "Bytové dekorace" rebranded
 # without touching the underlying WordPress category slug/URLs.
@@ -421,15 +439,33 @@ def footer_html():
 '''
 
 
-def base_layout(title, description, body, extra_head=''):
+def base_layout(title, description, body, extra_head='', path='', noindex=False):
     full_title = f'{title} | {SITE_NAME}' if title else f'{SITE_NAME} — {SITE_TAGLINE}'
+    desc = description or BASE_DESCRIPTION
+    desc_attr = html_lib.escape(desc)
+    title_attr = html_lib.escape(full_title)
+    canonical = f'{SITE_URL}/{path}' if path else f'{SITE_URL}/'
+    og_image = f'{SITE_URL}/assets/img/favicon-512.png'
+    robots_tag = '<meta name="robots" content="noindex,nofollow">\n' if noindex else ''
     return f'''<!DOCTYPE html>
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{full_title}</title>
-<meta name="description" content="{html_lib.escape(description or BASE_DESCRIPTION)}">
+<meta name="description" content="{desc_attr}">
+{robots_tag}<link rel="canonical" href="{canonical}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{SITE_NAME}">
+<meta property="og:locale" content="cs_CZ">
+<meta property="og:title" content="{title_attr}">
+<meta property="og:description" content="{desc_attr}">
+<meta property="og:url" content="{canonical}">
+<meta property="og:image" content="{og_image}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{title_attr}">
+<meta name="twitter:description" content="{desc_attr}">
+<meta name="twitter:image" content="{og_image}">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16.png">
@@ -440,6 +476,7 @@ def base_layout(title, description, body, extra_head=''):
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;700;800&display=swap"></noscript>
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/Darloune.woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/style.css">
+<script type="application/ld+json">{organization_jsonld()}</script>
 {extra_head}
 </head>
 <body>
@@ -661,7 +698,7 @@ def render_home():
   </div>
 </section>
 '''
-    write('index.html', base_layout('', BASE_DESCRIPTION, body, extra_head))
+    write('index.html', base_layout('', BASE_DESCRIPTION, body, extra_head, path=''))
 
 
 # ---------------------------------------------------------------------------
@@ -772,7 +809,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 </script>''' if show_filter else ''
-    write(path, base_layout(title, description, body, extra_js))
+    write(path, base_layout(title, description, body, extra_js, path=path))
 
 
 def render_products_and_categories():
@@ -825,6 +862,40 @@ def render_product_detail(p):
     </div>
   </div>
 </section>'''
+    product_path = f'produkt/{p["slug"]}.html'
+    product_url = f'{SITE_URL}/{product_path}'
+    availability = {
+        'instock': 'https://schema.org/InStock',
+        'comingsoon': 'https://schema.org/PreOrder',
+    }.get(p['stock_status'], 'https://schema.org/OutOfStock')
+    plain_description = re.sub('<[^<]+?>', '', p['description']).strip()[:500]
+    product_ld = {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        'name': p['title'],
+        'description': plain_description,
+        'sku': p['id'],
+        'url': product_url,
+    }
+    if images and images[0]:
+        product_ld['image'] = [u if u.startswith('http') else f'{SITE_URL}{u}' for u in images]
+    if price:
+        product_ld['offers'] = {
+            '@type': 'Offer',
+            'url': product_url,
+            'priceCurrency': 'CZK',
+            'price': str(price),
+            'availability': availability,
+        }
+    breadcrumb_items = [{'@type': 'ListItem', 'position': 1, 'name': 'Produkty', 'item': f'{SITE_URL}/produkty.html'}]
+    if cat_slug:
+        breadcrumb_items.append({'@type': 'ListItem', 'position': 2, 'name': cat, 'item': f'{SITE_URL}/kategorie/{cat_slug}.html'})
+    breadcrumb_items.append({'@type': 'ListItem', 'position': len(breadcrumb_items) + 1, 'name': p['title'], 'item': product_url})
+    breadcrumb_ld = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': breadcrumb_items}
+    product_extra_head = (
+        f'<script type="application/ld+json">{json.dumps(product_ld, ensure_ascii=False)}</script>\n'
+        f'<script type="application/ld+json">{json.dumps(breadcrumb_ld, ensure_ascii=False)}</script>'
+    )
     body = f'''
 <section class="container" style="padding-top:32px">
   <div class="breadcrumb"><a href="/produkty.html">Produkty</a> / {breadcrumb_cat}{p['title']}</div>
@@ -860,7 +931,7 @@ def render_product_detail(p):
 </section>
 {related_section}
 '''
-    write(f'produkt/{p["slug"]}.html', base_layout(p['title'], f"{p['title']} — {cat}, flammel.cz", body))
+    write(product_path, base_layout(p['title'], f"{p['title']} — {cat}, flammel.cz", body, product_extra_head, path=product_path))
 
 
 # ---------------------------------------------------------------------------
@@ -873,7 +944,8 @@ def render_prose_page(slug, title, path=None):
 <section class="page-header container"><h1>{title}</h1></section>
 <section class="section"><div class="container prose">{page['content']}</div></section>
 '''
-    write(path or f'{slug}.html', base_layout(title, '', body))
+    page_path = path or f'{slug}.html'
+    write(page_path, base_layout(title, '', body, path=page_path))
 
 
 def render_odstoupeni_od_smlouvy():
@@ -922,7 +994,7 @@ def render_odstoupeni_od_smlouvy():
   </div>
 </section>
 '''
-    write('odstoupeni-od-smlouvy.html', base_layout('Odstoupení od smlouvy', 'Formulář pro odstoupení od kupní smlouvy do 14 dnů.', body))
+    write('odstoupeni-od-smlouvy.html', base_layout('Odstoupení od smlouvy', 'Formulář pro odstoupení od kupní smlouvy do 14 dnů.', body, path='odstoupeni-od-smlouvy.html'))
 
 
 def render_kontakty():
@@ -946,7 +1018,7 @@ def render_kontakty():
   </div>
 </section>
 '''
-    write('kontakty.html', base_layout('Kontakty', 'Kontaktní údaje a bankovní spojení flammel.cz', body))
+    write('kontakty.html', base_layout('Kontakty', 'Kontaktní údaje a bankovní spojení flammel.cz', body, path='kontakty.html'))
 
 
 def render_reference():
@@ -959,7 +1031,7 @@ def render_reference():
 <section class="page-header container"><h1>Reference</h1><p style="color:var(--text-muted)">Co o nás říkají naši zákazníci</p></section>
 <section class="section"><div class="container testi-grid">{cards}</div></section>
 '''
-    write('reference.html', base_layout('Reference', 'Reference a hodnocení zákazníků flammel.cz', body))
+    write('reference.html', base_layout('Reference', 'Reference a hodnocení zákazníků flammel.cz', body, path='reference.html'))
 
 
 def render_o_nas():
@@ -972,7 +1044,7 @@ def render_o_nas():
   </div>
 </section>
 '''
-    write('o-nas.html', base_layout('O Flammel', 'Příběh Flammel — ručně vyráběné přírodní produkty s láskou.', body))
+    write('o-nas.html', base_layout('O Flammel', 'Příběh Flammel — ručně vyráběné přírodní produkty s láskou.', body, path='o-nas.html'))
 
 
 def render_zakladni_informace():
@@ -985,7 +1057,7 @@ def render_zakladni_informace():
   </div>
 </section>
 '''
-    write('zakladni-informace.html', base_layout('Základní informace', 'Příběh Flammel — ručně vyráběné přírodní produkty s láskou.', body))
+    write('zakladni-informace.html', base_layout('Základní informace', 'Příběh Flammel — ručně vyráběné přírodní produkty s láskou.', body, path='zakladni-informace.html'))
 
 
 def render_informace():
@@ -1000,7 +1072,7 @@ def render_informace():
 <section class="page-header container"><h1>Informace</h1></section>
 <section class="section"><div class="container cat-grid">{cards}</div></section>
 '''
-    write('informace.html', base_layout('Informace', 'Důležité informace k nákupu na flammel.cz', body))
+    write('informace.html', base_layout('Informace', 'Důležité informace k nákupu na flammel.cz', body, path='informace.html'))
 
 
 def render_kosik():
@@ -1013,7 +1085,7 @@ def render_kosik():
   </div>
 </section>
 '''
-    write('kosik.html', base_layout('Košík', '', body))
+    write('kosik.html', base_layout('Košík', '', body, path='kosik.html', noindex=True))
 
 
 def render_pokladna():
@@ -1087,7 +1159,7 @@ def render_pokladna():
 </section>
 '''
     extra_head = '<script src="https://widget.packeta.com/v6/www/js/library.js"></script>'
-    write('pokladna.html', base_layout('Pokladna', '', body, extra_head))
+    write('pokladna.html', base_layout('Pokladna', '', body, extra_head, path='pokladna.html', noindex=True))
 
 
 def render_muj_ucet():
@@ -1100,7 +1172,7 @@ def render_muj_ucet():
   </div>
 </section>
 '''
-    write('muj-ucet.html', base_layout('Můj účet', '', body))
+    write('muj-ucet.html', base_layout('Můj účet', '', body, path='muj-ucet.html', noindex=True))
 
 
 def render_blog():
@@ -1114,7 +1186,7 @@ def render_blog():
 <section class="page-header container"><h1>Blog</h1></section>
 <section class="section"><div class="container post-grid">{cards}</div></section>
 '''
-    write('blog.html', base_layout('Blog', 'Rady a tipy flammel — péče o svíčky a ruční výrobky.', body))
+    write('blog.html', base_layout('Blog', 'Rady a tipy flammel — péče o svíčky a ruční výrobky.', body, path='blog.html'))
 
     for p in posts:
         pbody = f'''
@@ -1122,10 +1194,19 @@ def render_blog():
 <article class="post section"><div class="container prose">{p['content']}</div></article>
 <section class="container"><a class="btn btn-outline" href="/blog.html">&larr; Zpět na blog</a></section>
 '''
-        write(f'blog/{p["slug"]}.html', base_layout(p['title'], '', pbody))
+        post_path = f'blog/{p["slug"]}.html'
+        excerpt = re.sub('<[^<]+?>', '', p['content'])[:200].strip()
+        article_jsonld = json.dumps({
+            '@context': 'https://schema.org',
+            '@type': 'BlogPosting',
+            'headline': p['title'],
+            'description': excerpt,
+            'url': f'{SITE_URL}/{post_path}',
+            'publisher': {'@type': 'Organization', 'name': SITE_NAME, 'url': SITE_URL + '/'},
+        }, ensure_ascii=False)
+        extra_head = f'<script type="application/ld+json">{article_jsonld}</script>'
+        write(post_path, base_layout(p['title'], excerpt, pbody, extra_head, path=post_path))
 
-
-SITE_URL = 'https://www.flammel.cz'
 
 # Cart/checkout/account are transactional, user-specific pages with no
 # evergreen content — deliberately left out of the sitemap.
