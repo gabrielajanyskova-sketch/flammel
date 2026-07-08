@@ -549,12 +549,12 @@
           el.classList.add(info.qty > 0 ? 'live-stock--in' : 'live-stock--out');
         });
 
+        // The live-stock span below already says "Skladem X ks" / "Vyprodáno" —
+        // hide the plain badge instead of showing the same thing twice.
         badgeEls.forEach(function (el) {
           var info = stock[el.dataset.productId];
           if (!info || typeof info.qty !== 'number') return;
-          el.innerHTML = info.qty > 0
-            ? '<span class="stock-badge in">Skladem</span>'
-            : '<span class="stock-badge out">Vyprodáno</span>';
+          el.innerHTML = '';
         });
 
         priceEls.forEach(function (el) {
