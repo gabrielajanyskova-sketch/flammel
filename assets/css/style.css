@@ -520,8 +520,11 @@ p { margin: 0 0 1em; }
 @media (hover: none) {
   .quick-add { opacity: 1; transform: none; pointer-events: auto; }
 }
-.qty-input--sm button { width: 32px; height: 32px; font-size: 0.9rem; }
-.qty-input--sm input { width: 30px; font-size: 0.85rem; }
+/* Extra class-selector weight so this reliably beats the mobile
+   ".qty-input button" override below, even though both share a
+   ".qty-input" ancestor and would otherwise tie on specificity. */
+.qty-input.qty-input--sm button { width: 32px; height: 32px; font-size: 0.9rem; }
+.qty-input.qty-input--sm input[type="text"] { width: 30px; height: 32px; font-size: 0.85rem; }
 .btn-quick-add { flex: 1; padding: 8px 8px; font-size: 0.74rem; text-align: center; line-height: 1.2; }
 
 .empty-state { text-align: center; color: var(--text-muted); padding: 60px 0; }
@@ -572,7 +575,7 @@ p { margin: 0 0 1em; }
 .qty-input {
   display: flex; align-items: center; border: 1.5px solid var(--border); border-radius: 999px; overflow: hidden;
 }
-.qty-input button { width: 38px; height: 38px; border: none; background: var(--cream); font-size: 1.1rem; }
+.qty-input button { width: 38px; height: 38px; flex-shrink: 0; border: none; background: var(--cream); font-size: 1.1rem; }
 .qty-input input[type="text"] { width: 46px; padding: 0; text-align: center; border: none; font-size: 1rem; font-family: inherit; }
 .product-desc { margin-top: 8px; color: var(--text); }
 .product-desc h3 { margin-top: 1.3em; font-size: 1.15rem; }
