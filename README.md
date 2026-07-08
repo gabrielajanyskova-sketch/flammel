@@ -141,19 +141,19 @@ používá Web3Forms, protože to není objednávka.
   (zruší objednávku, pošle e-maily), `GET /api/stock?ids=...` (živý počet
   kusů/cena pro konkrétní produkty na webu) a `GET /api/products` (celá
   tabulka `product_stock` — z ní si `generate_site.py` při každém běhu
-  stahuje cenu/sklad/kategorii, viz níž).
+  stahuje cenu/sklad, viz níž).
 - `worker/schema.sql` + `worker/migrations/` — tabulky `orders`,
   `order_items` a `product_stock` (sloupce `qty`, `regular_price`,
-  `sale_price`, `category_slug`) v D1.
+  `sale_price`) v D1.
 
-### Cena/sklad/kategorie — D1 nahrazuje Google Sheets
+### Cena/sklad — D1 nahrazuje Google Sheets
 
 Tabulka `product_stock` v Cloudflare D1 (dashboard → Workers & Pages →
 D1 → flammel-orders → Explore Data) je teď hlavní zdroj pravdy pro
-cenu, počet kusů skladem a kategorii — `generate_site.py` si ji při
-každém běhu stáhne přes `GET /api/products` a přepíše jí, co by jinak
-vzalo z `products.csv`/Google Sheets. Produkt, který v tabulce ještě
-řádek nemá, prostě zůstane u staré hodnoty (nic se nerozbije).
+cenu a počet kusů skladem — `generate_site.py` si ji při každém běhu
+stáhne přes `GET /api/products` a přepíše jí, co by jinak vzalo z
+`products.csv`/Google Sheets. Produkt, který v tabulce ještě řádek
+nemá, prostě zůstane u staré hodnoty (nic se nerozbije).
 
 Sloupce, které tam upravujete:
 - **product_id** — ID produktu (číslo)
@@ -161,9 +161,11 @@ Sloupce, které tam upravujete:
 - **qty** — počet kusů skladem (0 = vyprodáno/vypnuté tlačítko)
 - **regular_price**, **sale_price** — cena; `sale_price` vyplňte jen
   při slevě, jinak nechte prázdné
-- **category_slug** — jedna z: `svicky`, `mineralni-kameny`,
-  `bytove-dekorace`, `darkove-balicky`, `drevene-dekorace`,
-  `krasa-a-zdravi`, `elegantni-sklo`, `nezarazene`
+
+Kategorii produktu D1 neřeší (dashboard je jen holá tabulka bez
+výběrových okének, takže by se tam musel psát přesný slug ručně) —
+na změnu zařazení produktu do kategorie stačí napsat přímo sem do
+chatu, upraví se rovnou v kódu.
 
 Google Sheets/`products.csv` (viz výše) pořád funguje jako záloha —
 používá se jen pro produkty, které v D1 zatím řádek nemají.

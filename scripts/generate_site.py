@@ -341,8 +341,8 @@ WORKER_API_BASE = 'https://flammel-api.gabriela-janyskova.workers.dev'
 
 
 def fetch_d1_products():
-    """Pull price/sklad/kategorie z D1 přes Worker — postupně nahrazuje Google
-    Sheets jako zdroj pravdy. Když je nedostupné (žádná síť, výpadek), tiše
+    """Pull price/sklad z D1 přes Worker — postupně nahrazuje Google Sheets
+    jako zdroj pravdy. Když je nedostupné (žádná síť, výpadek), tiše
     se použije to, co už je v products.csv/new_products.json — stejné
     chování jako dosavadní pád zpět při nedostupnosti Google Sheets."""
     try:
@@ -382,11 +382,7 @@ def apply_d1_overrides():
                 p['stock_status'] = 'outofstock'
             else:
                 p['stock_status'] = 'comingsoon'
-        cat_slug = row.get('categorySlug')
-        if cat_slug and cat_slug in CAT_BY_SLUG:
-            p['category_slugs'] = [cat_slug]
-            p['category_names'] = [CAT_BY_SLUG[cat_slug]['name']]
-    print(f'Načteno {applied} produktů z Cloudflare D1 (cena/sklad/kategorie).')
+    print(f'Načteno {applied} produktů z Cloudflare D1 (cena/sklad).')
 
 
 apply_d1_overrides()

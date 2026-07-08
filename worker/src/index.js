@@ -5,8 +5,8 @@
 //   POST /api/orders/:orderNumber/cancel – cancel an order, restore stock, e-mail confirmation
 //   GET  /api/stock?ids=a,b,c            – current quantities for tracked products (live display)
 //   GET  /api/products                   – full product_stock table (read-only, public — the
-//                                           static site generator pulls price/stock/category
-//                                           from here at build time instead of Google Sheets)
+//                                           static site generator pulls price/stock from here
+//                                           at build time instead of Google Sheets)
 //
 // Products with no row in product_stock are unlimited — no check, no display.
 // Everything here is edited directly in the Cloudflare dashboard's D1 table view.
@@ -278,7 +278,7 @@ async function getStock(request, env, cors) {
 
 async function getAllProducts(request, env, cors) {
   const { results } = await env.DB.prepare(
-    'SELECT product_id, title, qty, regular_price, sale_price, category_slug FROM product_stock'
+    'SELECT product_id, title, qty, regular_price, sale_price FROM product_stock'
   ).all();
 
   const products = {};
@@ -288,7 +288,6 @@ async function getAllProducts(request, env, cors) {
       qty: row.qty,
       regularPrice: row.regular_price,
       salePrice: row.sale_price,
-      categorySlug: row.category_slug,
     };
   }
   return json(products, 200, cors);
