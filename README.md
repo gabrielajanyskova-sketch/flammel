@@ -116,9 +116,9 @@ Je to čistě statická prezentace bez backendu:
 
 - **Košík** funguje na straně prohlížeče (`localStorage`), přežije reload,
   ale není sdílený mezi zařízeními.
-- **Pokladna** nekomunikuje s žádnou platební bránou — po odeslání
-  formuláře se otevře e-mail s objednávkou adresovaný na
-  `flammel@flammel.cz`, který je potřeba ručně potvrdit.
+- **Pokladna** nekomunikuje s žádnou platební bránou — objednávka se uloží
+  a e-mailem potvrdí přes backend (viz níže), ale je potřeba ji ručně
+  vyřídit/poslat platební odkaz.
 - **Můj účet** nemá přihlašování/registraci (žádná databáze uživatelů).
 
 Pro plnohodnotný e-shop s platbami a účty by bylo potřeba doplnit backend —
@@ -128,10 +128,10 @@ kód/data pro bezpečné převzetí neobsahuje (a nemělo by smysl je z Wordpres
 
 ## Backend (Cloudflare Worker + D1 + Resend)
 
-Ve složce `worker/` je základní backend pro objednávky — zatím jen
-napsaný a nasaditelný, frontend (`assets/js/cart.js`) na něj ještě
-nevolá (dál používá Web3Forms, viz výše), dokud není worker skutečně
-nasazený a nemáme jeho URL.
+Ve složce `worker/` je backend pro objednávky, nasazený na
+`https://flammel-api.gabriela-janyskova.workers.dev` — pokladna
+(`assets/js/cart.js`) na něj volá přímo. Odstoupení od smlouvy dál
+používá Web3Forms, protože to není objednávka.
 
 - `worker/src/index.js` — Worker s endpointy `POST /api/orders`
   (uloží objednávku do D1, pošle potvrzovací e-mail zákazníkovi a

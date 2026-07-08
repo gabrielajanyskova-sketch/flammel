@@ -1,12 +1,13 @@
 // Client-side shopping cart backed by localStorage.
-// There is no backend or payment gateway behind this static site, so the
-// "checkout" step below sends the order straight to Web3Forms (which e-mails
-// it to flammel@flammel.cz) instead of charging a card — see the notice on
-// pokladna.html.
+// Checkout submits orders to the flammel-api Worker (D1 + Resend), which
+// stores the order and e-mails confirmations — there is still no payment
+// gateway behind it, see the notice on pokladna.html. The withdrawal-from-
+// contract form further down keeps using Web3Forms since it isn't an order.
 (function () {
   var STORAGE_KEY = 'flammel_cart';
   var PACKETA_API_KEY = 'b8b56c3f9361b7175d2bd60f70b40c7a';
   var WEB3FORMS_ACCESS_KEY = 'e7fbbc6f-f4d1-4485-a88a-0165a3875c0d';
+  var API_BASE = 'https://flammel-api.gabriela-janyskova.workers.dev';
 
   function getCart() {
     try {
@@ -44,14 +45,6 @@
     saveCart(cart);
   }
 
-  function generateOrderNumber() {
-    var d = new Date();
-    var pad = function (n) { return (n < 10 ? '0' : '') + n; };
-    var datePart = d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate());
-    var rand = Math.floor(1000 + Math.random() * 9000);
-    return 'FL-' + datePart + '-' + rand;
-  }
-
   function cartCount(cart) {
     return cart.reduce(function (sum, i) { return sum + i.qty; }, 0);
   }
@@ -64,23 +57,12 @@
     return Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' Kč';
   }
 
-  var DELIVERY_LABELS = {
-    zasilkovna_adresa: 'Zásilkovna – doručení na adresu',
-    zasilkovna_vydejni: 'Zásilkovna – výdejní místo',
-    zasilkovna_zbox: 'Zásilkovna – Z-BOX',
-    ceska_posta: 'Česká pošta',
-    osobni: 'Osobní vyzvednutí',
-  };
   var SHIPPING_PRICES = {
     zasilkovna_adresa: 89,
     zasilkovna_vydejni: 69,
     zasilkovna_zbox: 65,
     ceska_posta: 99,
     osobni: 0,
-  };
-  var PAYMENT_LABELS = {
-    online: 'Online platba kartou / Google Pay',
-    prevodem: 'Platba předem na účet',
   };
   var PAYMENT_SURCHARGE = {
     online: 0,
@@ -397,12 +379,8 @@
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         var data = new FormData(form);
-        var lines = cart.map(function (item) {
-          return '- ' + item.title + ' x' + item.qty + ' = ' + formatPrice(item.price * item.qty);
-        });
         var delivery = data.get('delivery');
         var payment = data.get('payment');
-        var orderNumber = generateOrderNumber();
         var shipping = shippingCostFor(delivery, cartTotal(cart));
         var paymentFee = PAYMENT_SURCHARGE[payment] || 0;
         var deliveryDetail;
@@ -419,47 +397,37 @@
           var billingParts = [data.get('fakt_street'), data.get('fakt_city'), data.get('fakt_zip')].filter(Boolean).join(', ');
           billingDetail = billingParts + (data.get('fakt_ico') ? ', IČO: ' + data.get('fakt_ico') : '');
         }
-        var body = [
-          'Číslo objednávky: ' + orderNumber,
-          'Jméno: ' + data.get('name'),
-          'E-mail: ' + data.get('email'),
-          'Telefon: ' + data.get('phone'),
-          'Doprava: ' + (DELIVERY_LABELS[delivery] || delivery) + ' (' + (shipping ? formatPrice(shipping) : 'zdarma') + ')',
-          'Doručovací adresa: ' + deliveryDetail,
-          'Fakturační adresa: ' + billingDetail,
-          'Platba: ' + (PAYMENT_LABELS[payment] || payment) + ' (' + (paymentFee ? formatPrice(paymentFee) : 'zdarma') + ')',
-          'Poznámka: ' + (data.get('note') || '-'),
-          '',
-          'Objednávka:',
-          lines.join('\n'),
-          '',
-          'Mezisoučet: ' + formatPrice(cartTotal(cart)),
-          'Doprava: ' + (shipping ? formatPrice(shipping) : 'Zdarma'),
-          'Platba: ' + (paymentFee ? formatPrice(paymentFee) : 'Zdarma'),
-          'Celkem k platbě: ' + formatPrice(cartTotal(cart) + shipping + paymentFee),
-        ]
-          .concat(payment === 'online' ? ['', 'Pozor: zákazník zvolil online platbu — je potřeba mu ručně poslat platební odkaz/QR platbu.'] : [])
-          .join('\n');
+
+        var customerEmail = data.get('email');
+        var payload = {
+          customer: { name: data.get('name'), email: customerEmail, phone: data.get('phone') },
+          delivery: { method: delivery, detail: deliveryDetail },
+          billing: { detail: billingDetail },
+          payment: { method: payment },
+          note: data.get('note') || '',
+          items: cart.map(function (item) {
+            return { id: item.id, title: item.title, price: item.price, qty: item.qty };
+          }),
+          shippingPrice: shipping,
+          paymentFee: paymentFee,
+        };
 
         var submitBtn = form.querySelector('button[type="submit"]');
         var originalLabel = submitBtn.textContent;
         submitBtn.disabled = true;
         submitBtn.textContent = 'Odesílám…';
 
-        fetch('https://api.web3forms.com/submit', {
+        fetch(API_BASE + '/api/orders', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({
-            access_key: WEB3FORMS_ACCESS_KEY,
-            subject: 'Nová objednávka ' + orderNumber + ' z webu flammel.cz',
-            from_name: data.get('name'),
-            email: data.get('email'),
-            message: body,
-          }),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
         })
-          .then(function (res) { return res.json(); })
+          .then(function (res) {
+            if (!res.ok) throw new Error('http_' + res.status);
+            return res.json();
+          })
           .then(function (result) {
-            if (!result.success) throw new Error(result.message || 'unknown error');
+            var orderNumber = result.orderNumber;
             saveCart([]);
             form.style.display = 'none';
 
@@ -474,20 +442,16 @@
               var cancelBtn = this;
               cancelBtn.disabled = true;
               cancelBtn.textContent = 'Ruším…';
-              fetch('https://api.web3forms.com/submit', {
+              fetch(API_BASE + '/api/orders/' + encodeURIComponent(orderNumber) + '/cancel', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-                body: JSON.stringify({
-                  access_key: WEB3FORMS_ACCESS_KEY,
-                  subject: 'Žádost o zrušení objednávky ' + orderNumber,
-                  from_name: data.get('name'),
-                  email: data.get('email'),
-                  message: 'Zákazník žádá o zrušení objednávky č. ' + orderNumber + '.\nJméno: ' + data.get('name') + '\nE-mail: ' + data.get('email') + '\nTelefon: ' + data.get('phone'),
-                }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: customerEmail }),
               })
-                .then(function (res) { return res.json(); })
-                .then(function (result) {
-                  if (!result.success) throw new Error(result.message || 'unknown error');
+                .then(function (res) {
+                  if (!res.ok) throw new Error('http_' + res.status);
+                  return res.json();
+                })
+                .then(function () {
                   cancelBtn.outerHTML = '<p style="margin-top:14px">Žádost o zrušení objednávky byla odeslána, brzy se vám ozveme.</p>';
                 })
                 .catch(function () {
