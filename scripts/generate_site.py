@@ -612,6 +612,16 @@ COLLECTION_ICON_IMAGES = {
 }
 CART_ICON = _icon('<path d="M6 9.5V7.5a6 6 0 0 1 12 0v2"/><rect x="3.5" y="9.5" width="17" height="13" rx="2"/>')
 SEARCH_ICON = _icon('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>')
+
+def _option_icon(path_d):
+    return f'<span class="option-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{path_d}</svg></span>'
+
+# Ikony k rozlišení způsobů dopravy/platby v pokladně.
+PARCEL_ICON = _option_icon('<path d="M12 3l8 4.2v9.6L12 21l-8-4.2V7.2L12 3z"/><path d="M4 7.2L12 11l8-4.2"/><path d="M12 11v10"/>')
+POST_ICON = _option_icon('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>')
+STORE_ICON = _option_icon('<path d="M4 10V6a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v4"/><path d="M4 10a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0"/><path d="M5 10v9h14v-9"/>')
+CARD_ICON = _option_icon('<rect x="2.5" y="5.5" width="19" height="13" rx="2"/><path d="M2.5 9.5h19"/><path d="M6 14.5h4"/>')
+BANK_ICON = _option_icon('<path d="M4 10l8-5 8 5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/><path d="M3.5 20h17"/>')
 HEART_ICON = '<svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.2 2 4.5 5.6 4a5 5 0 0 1 6.4 2.6A5 5 0 0 1 18.4 4c3.6.5 5.2 4.2 3.6 7.7C19.5 16.4 12 21 12 21z"/></svg>'
 FACEBOOK_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.3-1.5 1.6-1.5h1.7V3.7C16.5 3.6 15.5 3.5 14.3 3.5c-2.4 0-4 1.5-4 4.1v2.3H7.6v3.1h2.7v8h3.2z"/></svg>'
 INSTAGRAM_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="0.7" fill="currentColor" stroke="none"/></svg>'
@@ -1155,9 +1165,9 @@ def render_pokladna():
       <form id="checkout-form">
         <h2 class="checkout-section-title">Doprava</h2>
         <div class="option-group">
-          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_adresa" checked><span>Zásilkovna – doručení na adresu</span><span class="option-price" data-shipping-price="89">89 Kč</span></label>
-          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_vydejni"><span>Zásilkovna – výdejní místo</span><span class="option-price" data-shipping-price="69">69 Kč</span></label>
-          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_zbox"><span>Zásilkovna – Z-BOX</span><span class="option-price" data-shipping-price="65">65 Kč</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_adresa" checked>''' + PARCEL_ICON + '''<span>Zásilkovna – doručení na adresu</span><span class="option-price" data-shipping-price="89">89 Kč</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_vydejni">''' + PARCEL_ICON + '''<span>Zásilkovna – výdejní místo</span><span class="option-price" data-shipping-price="69">69 Kč</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_zbox">''' + PARCEL_ICON + '''<span>Zásilkovna – Z-BOX</span><span class="option-price" data-shipping-price="65">65 Kč</span></label>
           <div class="form-group" id="pickup-point-field">
             <label for="pickup_point">Vybraná pobočka / Z-BOX</label>
             <div class="pickup-picker">
@@ -1166,15 +1176,15 @@ def render_pokladna():
             </div>
             <input type="hidden" id="pickup_point_id" name="pickup_point_id">
           </div>
-          <label class="option-item"><input type="radio" name="delivery" value="ceska_posta"><span>Česká pošta</span><span class="option-price" data-shipping-price="99">99 Kč</span></label>
-          <label class="option-item"><input type="radio" name="delivery" value="osobni"><span>Osobní vyzvednutí</span><span class="option-price">Zdarma</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="ceska_posta">''' + POST_ICON + '''<span>Česká pošta</span><span class="option-price" data-shipping-price="99">99 Kč</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="osobni">''' + STORE_ICON + '''<span>Osobní vyzvednutí</span><span class="option-price">Zdarma</span></label>
           <p class="option-note" id="osobni-note">Termín osobního vyzvednutí domluvíme e-mailem po odeslání objednávky.</p>
         </div>
 
         <h2 class="checkout-section-title">Platba</h2>
         <div class="option-group">
-          <label class="option-item"><input type="radio" name="payment" value="online" checked><span>Online platba kartou / Google Pay</span><span class="option-price">Zdarma</span></label>
-          <label class="option-item"><input type="radio" name="payment" value="prevodem"><span>Platba předem na účet</span><span class="option-price">Zdarma</span></label>
+          <label class="option-item"><input type="radio" name="payment" value="online" checked>''' + CARD_ICON + '''<span>Online platba kartou / Google Pay</span><span class="option-price">Zdarma</span></label>
+          <label class="option-item"><input type="radio" name="payment" value="prevodem">''' + BANK_ICON + '''<span>Platba předem na účet</span><span class="option-price">Zdarma</span></label>
         </div>
 
         <h2 class="checkout-section-title">Kontaktní a dodací údaje</h2>

@@ -649,6 +649,7 @@ textarea { resize: vertical; min-height: 90px; }
 .option-item:has(input:checked) { border-color: var(--gold); background: var(--cream); }
 .option-item input { accent-color: var(--gold-dark); width: 17px; height: 17px; flex-shrink: 0; }
 .option-item .option-price { margin-left: auto; font-weight: 700; color: var(--text-muted); font-size: 0.85rem; }
+.option-item .option-icon { display: flex; flex-shrink: 0; color: var(--gold-dark); }
 .option-item.option-item--checkbox { margin-bottom: 18px; }
 .option-note { font-size: 0.85rem; color: var(--text-muted); margin: -8px 0 20px; }
 .hidden-block { display: none; }

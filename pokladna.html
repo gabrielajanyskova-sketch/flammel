@@ -72,9 +72,9 @@
       <form id="checkout-form">
         <h2 class="checkout-section-title">Doprava</h2>
         <div class="option-group">
-          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_adresa" checked><span>Zásilkovna – doručení na adresu</span><span class="option-price" data-shipping-price="89">89 Kč</span></label>
-          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_vydejni"><span>Zásilkovna – výdejní místo</span><span class="option-price" data-shipping-price="69">69 Kč</span></label>
-          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_zbox"><span>Zásilkovna – Z-BOX</span><span class="option-price" data-shipping-price="65">65 Kč</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_adresa" checked><span class="option-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.2v9.6L12 21l-8-4.2V7.2L12 3z"/><path d="M4 7.2L12 11l8-4.2"/><path d="M12 11v10"/></svg></span><span>Zásilkovna – doručení na adresu</span><span class="option-price" data-shipping-price="89">89 Kč</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_vydejni"><span class="option-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.2v9.6L12 21l-8-4.2V7.2L12 3z"/><path d="M4 7.2L12 11l8-4.2"/><path d="M12 11v10"/></svg></span><span>Zásilkovna – výdejní místo</span><span class="option-price" data-shipping-price="69">69 Kč</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="zasilkovna_zbox"><span class="option-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.2v9.6L12 21l-8-4.2V7.2L12 3z"/><path d="M4 7.2L12 11l8-4.2"/><path d="M12 11v10"/></svg></span><span>Zásilkovna – Z-BOX</span><span class="option-price" data-shipping-price="65">65 Kč</span></label>
           <div class="form-group" id="pickup-point-field">
             <label for="pickup_point">Vybraná pobočka / Z-BOX</label>
             <div class="pickup-picker">
@@ -83,15 +83,15 @@
             </div>
             <input type="hidden" id="pickup_point_id" name="pickup_point_id">
           </div>
-          <label class="option-item"><input type="radio" name="delivery" value="ceska_posta"><span>Česká pošta</span><span class="option-price" data-shipping-price="99">99 Kč</span></label>
-          <label class="option-item"><input type="radio" name="delivery" value="osobni"><span>Osobní vyzvednutí</span><span class="option-price">Zdarma</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="ceska_posta"><span class="option-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><span>Česká pošta</span><span class="option-price" data-shipping-price="99">99 Kč</span></label>
+          <label class="option-item"><input type="radio" name="delivery" value="osobni"><span class="option-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10V6a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v4"/><path d="M4 10a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0"/><path d="M5 10v9h14v-9"/></svg></span><span>Osobní vyzvednutí</span><span class="option-price">Zdarma</span></label>
           <p class="option-note" id="osobni-note">Termín osobního vyzvednutí domluvíme e-mailem po odeslání objednávky.</p>
         </div>
 
         <h2 class="checkout-section-title">Platba</h2>
         <div class="option-group">
-          <label class="option-item"><input type="radio" name="payment" value="online" checked><span>Online platba kartou / Google Pay</span><span class="option-price">Zdarma</span></label>
-          <label class="option-item"><input type="radio" name="payment" value="prevodem"><span>Platba předem na účet</span><span class="option-price">Zdarma</span></label>
+          <label class="option-item"><input type="radio" name="payment" value="online" checked><span class="option-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="2"/><path d="M2.5 9.5h19"/><path d="M6 14.5h4"/></svg></span><span>Online platba kartou / Google Pay</span><span class="option-price">Zdarma</span></label>
+          <label class="option-item"><input type="radio" name="payment" value="prevodem"><span class="option-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l8-5 8 5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/><path d="M3.5 20h17"/></svg></span><span>Platba předem na účet</span><span class="option-price">Zdarma</span></label>
         </div>
 
         <h2 class="checkout-section-title">Kontaktní a dodací údaje</h2>
