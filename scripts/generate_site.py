@@ -432,7 +432,8 @@ def base_layout(title, description, body, extra_head=''):
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;700;800&display=swap"></noscript>
 <link rel="stylesheet" href="/assets/css/style.css">
 {extra_head}
 </head>
@@ -471,8 +472,8 @@ def base_layout(title, description, body, extra_head=''):
 </main>
 {footer_html()}
 <script>window.SEARCH_INDEX = {SEARCH_INDEX_JSON};</script>
-<script src="/assets/js/cart.js"></script>
-<script src="/assets/js/main.js"></script>
+<script src="/assets/js/cart.js" defer></script>
+<script src="/assets/js/main.js" defer></script>
 </body>
 </html>
 '''
@@ -569,6 +570,9 @@ def render_home():
         f'<button class="dot{" active" if i == 0 else ""}" data-slide="{i}" aria-label="Snímek {i+1}"></button>'
         for i in range(len(slide_images))
     )
+    # The hero's first slide is the LCP element — it's a CSS background-image
+    # so it can't take fetchpriority itself, but preloading it gets the same effect.
+    extra_head = f'<link rel="preload" as="image" fetchpriority="high" href="{slide_images[0]}">' if slide_images else ''
 
     testimonials = parse_testimonials()[:6]
     testi_cards = ''.join(
@@ -638,7 +642,7 @@ def render_home():
   </div>
 </section>
 '''
-    write('index.html', base_layout('', BASE_DESCRIPTION, body))
+    write('index.html', base_layout('', BASE_DESCRIPTION, body, extra_head))
 
 
 # ---------------------------------------------------------------------------
