@@ -577,6 +577,7 @@ p { margin: 0 0 1em; }
 }
 .qty-input button { width: 38px; height: 38px; flex-shrink: 0; border: none; background: var(--cream); font-size: 1.1rem; }
 .qty-input input[type="text"] { width: 46px; padding: 0; text-align: center; border: none; font-size: 1rem; font-family: inherit; }
+.qty-limit-note { color: var(--danger); font-size: 0.8rem; margin: 6px 0 0; }
 .product-desc { margin-top: 8px; color: var(--text); }
 .product-desc h3 { margin-top: 1.3em; font-size: 1.15rem; }
 .product-desc h4 { font-size: 1.05rem; margin-top: 1.4em; }

@@ -296,7 +296,8 @@
         '<td data-label="Cena">' + formatPrice(item.price) + '</td>' +
         '<td data-label="Množství"><div class="qty-input"><button data-dec="' + item.id + '" aria-label="Snížit množství">−</button>' +
         '<input type="text" value="' + item.qty + '" data-qty="' + item.id + '" readonly aria-label="Množství">' +
-        '<button data-inc="' + item.id + '" aria-label="Zvýšit množství">+</button></div></td>' +
+        '<button data-inc="' + item.id + '" aria-label="Zvýšit množství">+</button></div>' +
+        '<p class="qty-limit-note" data-limit-note="' + item.id + '" hidden></p></td>' +
         '<td data-label="Mezisoučet">' + formatPrice(item.price * item.qty) + '</td>' +
         '</tr>'
       );
@@ -308,10 +309,23 @@
       '<div class="cart-summary"><div class="total-row"><span>Celkem</span><span>' + formatPrice(cartTotal(cart)) + '</span></div>' +
       '<a class="btn" href="/pokladna.html">Pokračovat k pokladně</a></div>';
 
+    function showLimitNote(id, available) {
+      var note = root.querySelector('[data-limit-note="' + id + '"]');
+      if (!note) return;
+      note.textContent = available > 0 ? ('Skladem už jen ' + available + ' ks.') : 'Bohužel právě vyprodáno.';
+      note.hidden = false;
+    }
+
     root.querySelectorAll('[data-inc]').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        var item = getCart().find(function (i) { return i.id === btn.dataset.inc; });
-        updateQty(btn.dataset.inc, item.qty + 1);
+        var id = btn.dataset.inc;
+        var item = getCart().find(function (i) { return i.id === id; });
+        var limit = cartStockLimits[id];
+        if (typeof limit === 'number' && item.qty + 1 > limit) {
+          showLimitNote(id, limit);
+          return;
+        }
+        updateQty(id, item.qty + 1);
         renderCartPage();
       });
     });
@@ -328,7 +342,28 @@
         renderCartPage();
       });
     });
+
+    // Enforce real stock limits on the + button — items with no row in
+    // product_stock are unlimited and are simply left out of the response.
+    fetch(API_BASE + '/api/stock?ids=' + encodeURIComponent(cart.map(function (i) { return i.id; }).join(',')))
+      .then(function (res) { return res.ok ? res.json() : {}; })
+      .then(function (stock) {
+        cart.forEach(function (item) {
+          var info = stock[item.id];
+          if (!info || typeof info.qty !== 'number') return;
+          cartStockLimits[item.id] = info.qty;
+          if (info.qty > 0 && item.qty > info.qty) {
+            updateQty(item.id, info.qty);
+            showLimitNote(item.id, info.qty);
+            renderCartPage();
+          } else if (info.qty === 0) {
+            showLimitNote(item.id, 0);
+          }
+        });
+      })
+      .catch(function () {});
   }
+  var cartStockLimits = {};
 
   function renderCheckoutSummary() {
     var root = document.getElementById('checkout-summary');
