@@ -101,9 +101,8 @@ def apply_category_removal():
 
 
 O_NAS_FIGURE = (
-    '<figure><img src="https://www.flammel.cz/wp-content/uploads/elementor/thumbs/'
-    'ja-foto-flammel-qhqfq2gy22sofqb83fkmx6pj4xokacob7c5zpgd1o8.jpeg" title="ja-foto-flammel" '
-    'alt="ja-foto-flammel" loading="lazy" /><figcaption>Vaše M ♥ flammel</figcaption></figure>'
+    '<figure><img src="/assets/img/o-nas-martina.jpg" title="Martina" '
+    'alt="Martina" loading="lazy" /><figcaption>Vaše M ♥ flammel</figcaption></figure>'
 )
 O_NAS_TEXT = (
     '<p>Věřím, že ty nejkrásnější dárky nemusí být velké ani okázalé.</p>'
