@@ -90,7 +90,6 @@ p { margin: 0 0 1em; }
 .btn:hover { background: var(--gold); transform: translateY(-1px); }
 .btn.btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
 .btn.btn-outline:hover { background: var(--ink); color: var(--white); }
-.btn.btn-ghost { background: transparent; color: var(--gold-dark); border: 1.5px solid var(--gold); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
 /* ==========================================================================
@@ -319,8 +318,6 @@ p { margin: 0 0 1em; }
   padding: 0;
 }
 .slide-dots .dot.active { background: var(--gold); }
-
-.hero-cta { text-align: center; padding: 32px 0 0; }
 
 /* ==========================================================================
    Category grid
