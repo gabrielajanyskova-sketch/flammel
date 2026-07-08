@@ -975,6 +975,8 @@ def render_product_detail(p):
       <h1>{p['title']}</h1>
       <div class="price-row">
         <span class="price-wrap" data-product-id="{p['id']}">{price_block(p)}</span>
+      </div>
+      <div class="stock-line">
         <span class="stock-badge-wrap" data-product-id="{p['id']}">{stock_badge(p)}</span>
         <span class="live-stock" data-product-id="{p['id']}"></span>
       </div>

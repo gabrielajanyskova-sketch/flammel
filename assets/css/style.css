@@ -569,9 +569,12 @@ p { margin: 0 0 1em; }
 }
 .gallery-thumbs img.active { border-color: var(--gold); }
 .product-info h1 { font-size: 1.9rem; }
-.product-info .price-row { display: flex; align-items: baseline; gap: 12px; margin: 16px 0; }
+.product-info .price-row { display: flex; align-items: baseline; gap: 12px; margin: 16px 0 0; }
 .product-info .price { font-size: 1.6rem; }
-.qty-row { display: flex; align-items: center; gap: 14px; margin: 22px 0; }
+.stock-line { display: flex; align-items: baseline; gap: 8px; margin: 6px 0 0; }
+.stock-line .stock-badge { font-size: 0.8rem; }
+.stock-line .live-stock { font-size: 0.85rem; }
+.qty-row { display: flex; align-items: center; gap: 14px; margin: 20px 0; }
 .qty-input {
   display: flex; align-items: center; border: 1.5px solid var(--border); border-radius: 999px; overflow: hidden;
 }
