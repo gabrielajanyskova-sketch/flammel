@@ -1228,6 +1228,22 @@ def render_pokladna():
     write('pokladna.html', base_layout('Pokladna', '', body, extra_head, path='pokladna.html', noindex=True))
 
 
+def render_404():
+    body = '''
+<section class="page-header container"><h1>Stránka nenalezena</h1></section>
+<section class="section">
+  <div class="container prose" style="text-align:center">
+    <p>Omlouváme se, tuto stránku se nepodařilo najít — možná byla přesunuta nebo odkaz už neplatí.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:8px">
+      <a class="btn" href="/index.html">Zpět na hlavní stránku</a>
+      <a class="btn btn-outline" href="/produkty.html">Prohlédnout produkty</a>
+    </div>
+  </div>
+</section>
+'''
+    write('404.html', base_layout('Stránka nenalezena', '', body, path='404.html', noindex=True))
+
+
 def render_muj_ucet():
     body = '''
 <section class="page-header container"><h1>Přihlaste se nebo se registrujte</h1></section>
@@ -1352,6 +1368,7 @@ def main():
     render_pokladna()
     render_muj_ucet()
     render_blog()
+    render_404()
     render_sitemap_and_robots()
     render_llms_txt()
     print('Site generated.')
