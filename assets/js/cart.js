@@ -294,9 +294,9 @@
         '<a href="' + item.url + '">' + item.title + '</a>' +
         '</div></td>' +
         '<td data-label="Cena">' + formatPrice(item.price) + '</td>' +
-        '<td data-label="Množství"><div class="qty-input"><button data-dec="' + item.id + '">−</button>' +
-        '<input type="text" value="' + item.qty + '" data-qty="' + item.id + '" readonly>' +
-        '<button data-inc="' + item.id + '">+</button></div></td>' +
+        '<td data-label="Množství"><div class="qty-input"><button data-dec="' + item.id + '" aria-label="Snížit množství">−</button>' +
+        '<input type="text" value="' + item.qty + '" data-qty="' + item.id + '" readonly aria-label="Množství">' +
+        '<button data-inc="' + item.id + '" aria-label="Zvýšit množství">+</button></div></td>' +
         '<td data-label="Mezisoučet">' + formatPrice(item.price * item.qty) + '</td>' +
         '</tr>'
       );

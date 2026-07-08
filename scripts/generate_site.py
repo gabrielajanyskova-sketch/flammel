@@ -659,9 +659,9 @@ def product_card(p):
         btn_label = 'Přidat do košíku' if p['stock_status'] == 'instock' else 'Připravujeme'
         quick_add = f'''<div class="quick-add">
           <div class="qty-input qty-input--sm">
-            <button type="button" data-qty-dec>−</button>
-            <input type="text" value="1" readonly>
-            <button type="button" data-qty-inc>+</button>
+            <button type="button" data-qty-dec aria-label="Snížit množství">−</button>
+            <input type="text" value="1" readonly aria-label="Množství">
+            <button type="button" data-qty-inc aria-label="Zvýšit množství">+</button>
           </div>
           <button type="button" class="btn btn-quick-add" {disabled} data-add-to-cart
             data-id="{p['id']}" data-title="{html_lib.escape(p['title'])}"
@@ -820,9 +820,9 @@ def render_product_detail(p):
       </div>
       <div class="qty-row">
         <div class="qty-input">
-          <button type="button" data-qty-dec>−</button>
-          <input type="text" id="qty" value="1">
-          <button type="button" data-qty-inc>+</button>
+          <button type="button" data-qty-dec aria-label="Snížit množství">−</button>
+          <input type="text" id="qty" value="1" aria-label="Množství">
+          <button type="button" data-qty-inc aria-label="Zvýšit množství">+</button>
         </div>
         <button class="btn" {disabled} data-add-to-cart
           data-id="{p['id']}" data-title="{html_lib.escape(p['title'])}"
@@ -1102,6 +1102,39 @@ def render_blog():
         write(f'blog/{p["slug"]}.html', base_layout(p['title'], '', pbody))
 
 
+SITE_URL = 'https://www.flammel.cz'
+
+# Cart/checkout/account are transactional, user-specific pages with no
+# evergreen content — deliberately left out of the sitemap.
+STATIC_SITEMAP_PATHS = [
+    '', 'o-nas.html', 'zakladni-informace.html', 'kontakty.html', 'reference.html',
+    'moznosti-doruceni.html', 'platebni-podminky.html', 'obchodni-podminky.html',
+    'privacy-policy.html', 'odstoupeni-od-smlouvy.html', 'informace.html',
+    'produkty.html', 'blog.html',
+]
+
+
+def render_sitemap_and_robots():
+    paths = list(STATIC_SITEMAP_PATHS)
+    paths += [f'kategorie/{c["slug"]}.html' for c in DATA['product_cats']]
+    paths += [f'produkt/{p["slug"]}.html' for p in DATA['products']]
+    paths += [f'blog/{p["slug"]}.html' for p in DATA['posts']]
+
+    urls = ''.join(f'<url><loc>{SITE_URL}/{path}</loc></url>\n' for path in paths)
+    sitemap = f'''<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{urls}</urlset>
+'''
+    write('sitemap.xml', sitemap)
+
+    robots = f'''User-agent: *
+Allow: /
+
+Sitemap: {SITE_URL}/sitemap.xml
+'''
+    write('robots.txt', robots)
+
+
 # ---------------------------------------------------------------------------
 # main
 # ---------------------------------------------------------------------------
@@ -1125,6 +1158,7 @@ def main():
     render_pokladna()
     render_muj_ucet()
     render_blog()
+    render_sitemap_and_robots()
     print('Site generated.')
 
 
